@@ -30,6 +30,18 @@
     <ClInclude Include="include\cyclone\cyclone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\gl\glut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gl\freeglut.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gl\freeglut_ext.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\gl\freeglut_std.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\demos\demo_tp1\main.cpp">
@@ -41,5 +53,12 @@
     <ClCompile Include="src\particle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="lib\freeglut.dll" />
+    <None Include="bin\freeglut.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="lib\freeglut.lib" />
   </ItemGroup>
 </Project>

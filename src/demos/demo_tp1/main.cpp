@@ -1,4 +1,4 @@
-#include <GL/glut.h>
+#include <gl/glut.h>
 #include <iostream>
 #include <string>
 #include <cyclone/cyclone.h>
@@ -7,9 +7,9 @@
 Time time = Time::getInstance();
 
 // angle of rotation for the camera direction
-float angle = 0.0;
+float angle = 3.14;
 // actual vector representing the camera's direction
-float lx = 0.0f, lz = -1.0f;
+float lx = 0.0f, lz = 1.0f;
 // XZ position of the camera
 float x = 0.0f, z = 5.0f;
 
@@ -37,7 +37,7 @@ struct Bullet {
 		glColor3f(0, 0, 0);
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
-		glutSolidSphere(0.3f, 5, 4);
+		glutSolidSphere(0.3, 100, 100);
 		glPopMatrix();
 	}
 };
@@ -99,7 +99,7 @@ void fire()
 		break;
 	}
 	
-	shot->particle.setPosition(x, 1.5, z);
+	shot->particle.setPosition(x, 0.75, z);
 	shot->clockStart = time.getNow();
 	shot->type = holdedWeapon;
 
@@ -116,7 +116,6 @@ void renderBitmapString(float x, float y, float z, void* font, char* string) {
 }
 
 void update() {
-
 
 	time.update();
 
@@ -212,7 +211,6 @@ void display()
 void special(int key, int xx, int yy)
 {
 	float fraction = 0.5f;
-	gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
 	switch (key)
 	{
 	case GLUT_KEY_F1:
