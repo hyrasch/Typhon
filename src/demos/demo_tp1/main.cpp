@@ -34,7 +34,6 @@ struct Bullet {
 		cyclone::Vector3 position;
 		position = particle.getPosition();
 
-		//drawSphere(position);
 		glColor3f(0, 0, 0);
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -43,9 +42,7 @@ struct Bullet {
 	}
 };
 
-
 Bullet bullet[32];
-//Bullet ammo[ammoRound];
 
 void drawSphere(cyclone::Vector3 position)
 {
@@ -71,7 +68,6 @@ void fire()
 		if (shot->type == 0) break;
 	}
 
-	// Set the properties of the particle
 	switch (holdedWeapon)
 	{
 	case 1:
@@ -101,8 +97,6 @@ void fire()
 		shot->particle.setAcceleration(0, 1, 0); 
 		shot->particle.setDamping(1);
 		break;
-
-
 	}
 	
 	shot->particle.setPosition(x, 1.5, z);
@@ -126,30 +120,23 @@ void update() {
 
 	time.update();
 
-	// Find the duration of the last frame in seconds
 	float duration = (float)time.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	// Update the physics of each particle in turn
-	for (Bullet* shot = bullet; shot < bullet + 32; shot++)
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
 	{
 		if (shot->type != 0)
 		{
-			// Run the physics
 			shot->particle.integrate(duration);
 
-			// Check if the particle is now invalid
 			if (shot->particle.getPosition().y < 0.0f ||
 				shot->clockStart + 5000 < time.getNow() ||
 				shot->particle.getPosition().z > 200.0f)
 			{
-				// We simply set the shot type to be unused, so the
-				// memory it occupies can be reused by another shot.
 				shot->type = 0;
 			}
 		}
 	}
-
 	glutPostRedisplay();
 }
 
@@ -157,26 +144,14 @@ void update() {
 
 
 void reshape(int w, int h) {
-
-	// Prevent a divide by zero, when window is too short
-	// (you cant make a window of zero width).
 	if (h == 0)
 		h = 1;
 	float ratio = w * 1.0 / h;
 
-	// Use the Projection Matrix
 	glMatrixMode(GL_PROJECTION);
-
-	// Reset Matrix
 	glLoadIdentity();
-
-	// Set the viewport to be the entire window
 	glViewport(0, 0, w, h);
-
-	// Set the correct perspective.
 	gluPerspective(45.0f, ratio, 0.1f, 100.0f);
-
-	// Get Back to the Modelview
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -184,14 +159,9 @@ void reshape(int w, int h) {
 
 void display()
 {
-
-	// Clear Color and Depth Buffers
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	// Reset transformations
 	glLoadIdentity();
-	// Set the camera
+
 	if (view) 
 	{
 		gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
@@ -212,7 +182,7 @@ void display()
 	glEnd();
 
 	// Render each particle in turn
-	for (Bullet* shot = bullet; shot < bullet + 32; shot++)
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
 	{
 		if (shot->type != 0)
 		{
@@ -305,7 +275,6 @@ int main(int argc, char** argv)
 {
 	discharge();
 
-	// init GLUT and create window
 	glutInit(&argc, argv);
 	time.init();
 
@@ -314,14 +283,12 @@ int main(int argc, char** argv)
 	glutInitWindowSize(1280, 720);
 	glutCreateWindow("TP1 - Ballistic");
 
-	// register callbacks
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutIdleFunc(update);
 	glutKeyboardFunc(keyboard);
 	glutSpecialFunc(special);
 
-	// enter GLUT event processing cycle
 	glutMainLoop();
 	return EXIT_SUCCESS;
 }
