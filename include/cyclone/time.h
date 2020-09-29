@@ -57,14 +57,7 @@ struct Time
 
 	}
 
-#if TIMING_WINDOWS
-	unsigned long systemClock()
-	{
-		__asm {
-			rdtsc;
-		}
-	}
-#endif
+
 
 	void update() {
 		m_nbFrames++;

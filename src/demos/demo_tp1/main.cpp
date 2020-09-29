@@ -1,6 +1,8 @@
 #include <GL/glut.h>
 #include <iostream>
+#include <string>
 #include <cyclone/cyclone.h>
+
 
 Time time = Time::getInstance();
 
@@ -11,16 +13,28 @@ float lx = 0.0f, lz = -1.0f;
 // XZ position of the camera
 float x = 0.0f, z = 5.0f;
 
+char choose[50] = "Select your weapon";
+char pistol[50] = "F1 : Pistol";
+char artillery[50] = "F2 : Artillery";
+char laser[50] = "F3 : Laser";
+char fireball[50] = "F4 : Fireball";
+char viewF5[50] = "F5 : TPS";
+char viewF6[50] = "F6 : FPS";
+
+bool view = true;
+
+
 struct Bullet {
 	cyclone::Particle particle;
 	int type;
-	unsigned time;
+	unsigned clockStart;
 
-	void render()
+	void drawBullet()
 	{
 		cyclone::Vector3 position;
 		position = particle.getPosition();
 
+		//drawSphere(position);
 		glColor3f(0, 0, 0);
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -30,13 +44,17 @@ struct Bullet {
 };
 
 
-const static unsigned ammoRounds = 16;
+Bullet bullet[32];
+//Bullet ammo[ammoRound];
 
-Bullet ammo[ammoRounds];
-
-void func()
+void drawSphere(cyclone::Vector3 position)
 {
-	for (Bullet* shot = ammo; shot < ammo + ammoRounds; shot++)
+	
+}
+
+void discharge()
+{
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
 	{
 		shot->type = 0;
 	}
@@ -51,13 +69,13 @@ void fire()
 
 	// Find the first available round.
 	Bullet* shot;
-	for (shot = ammo; shot < ammo + ammoRounds; shot++)
+	for (shot = bullet; shot < bullet + 20; shot++)
 	{
 		if (shot->type == 0) break;
 	}
 
 	// If we didn't find a round, then exit - we can't fire.
-	if (shot >= ammo + ammoRounds) return;
+	if (shot >= bullet + 20) return;
 
 	// Set the properties of the particle
 	switch (holdedWeapon)
@@ -97,11 +115,20 @@ void fire()
 
 	// Set the data common to all particle types
 	shot->particle.setPosition(x, 1.5f, z);
-	shot->time = time.getNow();
+	shot->clockStart = time.getNow();
 	shot->type = holdedWeapon;
 
 	// Clear the force accumulators
 	shot->particle.clearAccumulator();
+}
+
+void renderBitmapString(float x, float y, float z, void* font, char* string) {
+
+	char* c;
+	glRasterPos3f(x, y, z);
+	for (c = string; *c != '\0'; c++) {
+		glutBitmapCharacter(font, *c);
+	}
 }
 
 void update() {
@@ -114,7 +141,7 @@ void update() {
 	if (duration <= 0.0f) return;
 
 	// Update the physics of each particle in turn
-	for (Bullet* shot = ammo; shot < ammo + ammoRounds; shot++)
+	for (Bullet* shot = bullet; shot < bullet + 32; shot++)
 	{
 		if (shot->type != 0)
 		{
@@ -123,7 +150,7 @@ void update() {
 
 			// Check if the particle is now invalid
 			if (shot->particle.getPosition().y < 0.0f ||
-				shot->time + 5000 < time.getNow() ||
+				shot->clockStart + 5000 < time.getNow() ||
 				shot->particle.getPosition().z > 200.0f)
 			{
 				// We simply set the shot type to be unused, so the
@@ -175,7 +202,15 @@ void display()
 	// Reset transformations
 	glLoadIdentity();
 	// Set the camera
-	gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
+	if (view == true) 
+	{
+		gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
+	}
+	else
+	{
+		gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
+	}
+		
 
 	// Draw ground
 	glColor3f(0.1f, 0.9f, 0.1f);
@@ -187,13 +222,25 @@ void display()
 	glEnd();
 
 	// Render each particle in turn
-	for (Bullet* shot = ammo; shot < ammo + ammoRounds; shot++)
+	for (Bullet* shot = bullet; shot < bullet + 32; shot++)
 	{
 		if (shot->type != 0)
 		{
-			shot->render();
+			shot->drawBullet();
 		}
 	}
+
+	char* choice;
+	
+
+	glColor3f(0, 0, 0);
+	renderBitmapString(92, 30, 12, GLUT_BITMAP_HELVETICA_10, choose);
+	renderBitmapString(92, 28, 12, GLUT_BITMAP_HELVETICA_10, pistol);
+	renderBitmapString(92, 26, 12, GLUT_BITMAP_HELVETICA_10, artillery);
+	renderBitmapString(92, 24, 12, GLUT_BITMAP_HELVETICA_10, laser);
+	renderBitmapString(92, 22, 12, GLUT_BITMAP_HELVETICA_10, fireball);
+	renderBitmapString(92, 18, 12, GLUT_BITMAP_HELVETICA_10, viewF5);
+	renderBitmapString(92, 16, 12, GLUT_BITMAP_HELVETICA_10, viewF6);
 
 	glutSwapBuffers();
 
@@ -205,7 +252,7 @@ void display()
 void special(int key, int xx, int yy)
 {
 	float fraction = 0.5f;
-
+	gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
 	switch (key)
 	{
 	case GLUT_KEY_F1:
@@ -223,6 +270,12 @@ void special(int key, int xx, int yy)
 	case GLUT_KEY_F4:
 		holdedWeapon = 4;
 		std::cout << "Arme choisie : LASER" << std::endl;
+		break;
+	case GLUT_KEY_F5:
+		view = true;
+		break;
+	case GLUT_KEY_F6:
+		view = false;
 		break;
 	case GLUT_KEY_LEFT:
 		angle -= (2 / fraction) * (0.01f);
@@ -260,7 +313,7 @@ void keyboard(unsigned char key, int x, int y)
 
 int main(int argc, char** argv)
 {
-	func();
+	discharge();
 
 	// init GLUT and create window
 	glutInit(&argc, argv);
@@ -269,7 +322,7 @@ int main(int argc, char** argv)
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
 	glutInitWindowSize(1280, 720);
-	glutCreateWindow("TP1");
+	glutCreateWindow("TP1 - Ballistic");
 
 	// register callbacks
 	glutDisplayFunc(display);
@@ -280,9 +333,5 @@ int main(int argc, char** argv)
 
 	// enter GLUT event processing cycle
 	glutMainLoop();
-
-	
-
 	return EXIT_SUCCESS;
-
 }
