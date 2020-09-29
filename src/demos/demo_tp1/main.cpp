@@ -65,60 +65,50 @@ int holdedWeapon = 1;
 void fire()
 {
 
-	std::cout << "BAANG!" << std::endl;
-
-	// Find the first available round.
 	Bullet* shot;
 	for (shot = bullet; shot < bullet + 20; shot++)
 	{
 		if (shot->type == 0) break;
 	}
 
-	// If we didn't find a round, then exit - we can't fire.
-	if (shot >= bullet + 20) return;
-
 	// Set the properties of the particle
 	switch (holdedWeapon)
 	{
 	case 1:
-		shot->particle.setMass(2.0f); // 2.0kg
-		shot->particle.setVelocity(0.0f, 0.0f, 35.0f); // 35m/s
-		shot->particle.setAcceleration(0.0f, -1.0f, 0.0f);
-		shot->particle.setDamping(1.0f);
+		shot->particle.setMass(10); 
+		shot->particle.setVelocity(0, 0, 50); 
+		shot->particle.setAcceleration(0, -2, 0);
+		shot->particle.setDamping(1);
 		break;
 
 	case 2:
-		shot->particle.setMass(200.0f); // 200.0kg
-		shot->particle.setVelocity(0.0f, 30.0f, 40.0f); // 50m/s
-		shot->particle.setAcceleration(0.0f, -20.0f, 0.0f);
-		shot->particle.setDamping(1.0f);
+		shot->particle.setMass(150); 
+		shot->particle.setVelocity(0, 25, 30);
+		shot->particle.setAcceleration(0, -20, 0);
+		shot->particle.setDamping(1);
 		break;
 
 	case 3:
-		// Note that this is the kind of laser bolt seen in films,
-		// not a realistic laser beam!
-		shot->particle.setMass(0.1f); // 0.1kg - almost no weight
-		shot->particle.setVelocity(0.0f, 0.0f, 100.0f); // 100m/s
-		shot->particle.setAcceleration(0.0f, 0.0f, 0.0f); // No gravity
-		shot->particle.setDamping(1.0f);
+		shot->particle.setMass(0.1); 
+		shot->particle.setVelocity(0, 0, 100);
+		shot->particle.setAcceleration(0, 0, 0); 
+		shot->particle.setDamping(1);
 		break;
 
 	case 4:
-		shot->particle.setMass(1.0f); // 1.0kg - mostly blast damage
-		shot->particle.setVelocity(0.0f, 0.0f, 10.0f); // 5m/s
-		shot->particle.setAcceleration(0.0f, 0.6f, 0.0f); // Floats up
-		shot->particle.setDamping(1.0f);
+		shot->particle.setMass(1); 
+		shot->particle.setVelocity(0, 0, 5); 
+		shot->particle.setAcceleration(0, 1, 0); 
+		shot->particle.setDamping(1);
 		break;
 
 
 	}
-
-	// Set the data common to all particle types
-	shot->particle.setPosition(x, 1.5f, z);
+	
+	shot->particle.setPosition(x, 1.5, z);
 	shot->clockStart = time.getNow();
 	shot->type = holdedWeapon;
 
-	// Clear the force accumulators
 	shot->particle.clearAccumulator();
 }
 
@@ -202,7 +192,7 @@ void display()
 	// Reset transformations
 	glLoadIdentity();
 	// Set the camera
-	if (view == true) 
+	if (view) 
 	{
 		gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
 	}
