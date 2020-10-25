@@ -96,7 +96,7 @@
       <AdditionalDependencies>freeglut.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy $(SolutionDir)bin\freeglut.dll $(OutDir)</Command>
+      <Command>copy $(SolutionDir)bin\freeglut.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -158,11 +158,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\cyclone\core.h" />
-    <ClInclude Include="include\cyclone\cyclone.h" />
-    <ClInclude Include="include\cyclone\particle.h" />
-    <ClInclude Include="include\cyclone\precision.h" />
-    <ClInclude Include="include\cyclone\time.h" />
+    <ClInclude Include="src\core.h" />
+    <ClInclude Include="src\particle.h" />
+    <ClInclude Include="src\precision.h" />
+    <ClInclude Include="src\time.h" />
     <ClInclude Include="include\gl\freeglut.h" />
     <ClInclude Include="include\gl\freeglut_ext.h" />
     <ClInclude Include="include\gl\freeglut_std.h" />
@@ -170,7 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp" />
-    <ClCompile Include="src\demos\demo_tp1\main.cpp" />
+    <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\particle.cpp" />
   </ItemGroup>
   <ItemGroup>

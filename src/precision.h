@@ -1,9 +1,9 @@
-#ifndef CYCLONE_PRECISION_H
-#define CYCLONE_PRECISION_H
+#ifndef TYPHON_PRECISION_H
+#define TYPHON_PRECISION_H
 
 #include <float.h>
 
-namespace cyclone {
+namespace typhon {
 
 #define DOUBLE_PRECISION
     typedef double real;
@@ -12,4 +12,4 @@ namespace cyclone {
 #define real_pow pow
 }
 
-#endif CYCLONE_PRECISION_H
+#endif TYPHON_PRECISION_H

@@ -67,7 +67,7 @@ struct Time
 		unsigned now = timeGetTime();
 
 		//std::cout << m_prevFrameTime << std::endl;
-		
+
 		m_frameDuration = now - m_prevFrameTime;
 		//std::cout << "Now : " << now << " ---- prevFrameTime : " << m_prevFrameTime << " ---- frameDuration : " << m_frameDuration << std::endl;
 
@@ -132,4 +132,4 @@ private:
 	unsigned m_nbFrames;
 };
 
-#endif
+#endif TIME_H
