@@ -1,14 +1,4 @@
-/*
- * Implementation file for the particle class.
- *
- * Part of the Cyclone physics system.
- *
- * Copyright (c) Icosagon 2003. All Rights Reserved.
- *
- * This software is distributed under licence. Use of this software
- * implies agreement with all terms and conditions of the accompanying
- * software licence.
- */
+
 
 #include <assert.h>
 #include <cyclone/particle.h>
@@ -16,33 +6,22 @@
 using namespace cyclone;
 
 
-/*
- * --------------------------------------------------------------------------
- * FUNCTIONS DECLARED IN HEADER:
- * --------------------------------------------------------------------------
- */
 
 void Particle::integrate(real duration)
 {
-    // We don't integrate things with zero mass.
     if (inverseMass <= 0.0f) return;
 
     assert(duration > 0.0);
 
-    // Update linear position.
     position.addScaledVector(velocity, duration);
 
-    // Work out the acceleration from the force
     Vector3 resultingAcc = acceleration;
     resultingAcc.addScaledVector(forceAccum, inverseMass);
 
-    // Update linear velocity from the acceleration.
     velocity.addScaledVector(resultingAcc, duration);
 
-    // Impose drag.
     velocity *= real_pow(damping, duration);
 
-    // Clear the forces.
     clearAccumulator();
 }
 

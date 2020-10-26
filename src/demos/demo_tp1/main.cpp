@@ -44,11 +44,6 @@ struct Bullet {
 
 Bullet bullet[32];
 
-void drawSphere(cyclone::Vector3 position)
-{
-	
-}
-
 void discharge()
 {
 	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
