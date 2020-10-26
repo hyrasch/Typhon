@@ -54,6 +54,15 @@
     <ClInclude Include="include\typhon\typhon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\typhon\pcontacts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\pfgen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\plinks.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -63,6 +72,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\plinks.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pfgen.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pcontacts.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
