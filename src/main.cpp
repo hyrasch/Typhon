@@ -1,9 +1,7 @@
 #include <gl/freeglut.h>
 #include <iostream>
 #include <string>
-#include "core.h"
-#include "particle.h"
-#include "time.h"
+#include <typhon/typhon.h>
 
 
 Time time = Time::getInstance();
