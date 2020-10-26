@@ -1,7 +1,9 @@
-#include <gl/glut.h>
+#include <gl/freeglut.h>
 #include <iostream>
 #include <string>
-#include <cyclone/cyclone.h>
+#include "core.h"
+#include "particle.h"
+#include "time.h"
 
 
 Time time = Time::getInstance();
@@ -25,13 +27,12 @@ bool view = true;
 
 
 struct Bullet {
-	cyclone::Particle particle;
+	Particle particle;
 	int type;
 	unsigned clockStart;
 
-	void drawBullet()
-	{
-		cyclone::Vector3 position;
+	void drawBullet() {
+		Vector3 position;
 		position = particle.getPosition();
 
 		glColor3f(0, 0, 0);
@@ -44,56 +45,53 @@ struct Bullet {
 
 Bullet bullet[32];
 
-void discharge()
-{
-	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
-	{
+void drawSphere(Vector3 position) {}
+
+void discharge() {
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++) {
 		shot->type = 0;
 	}
 }
 
 int holdedWeapon = 1;
 
-void fire()
-{
+void fire() {
 
 	Bullet* shot;
-	for (shot = bullet; shot < bullet + 20; shot++)
-	{
+	for (shot = bullet; shot < bullet + 20; shot++) {
 		if (shot->type == 0) break;
 	}
 
-	switch (holdedWeapon)
-	{
+	switch (holdedWeapon) {
 	case 1:
-		shot->particle.setMass(10); 
-		shot->particle.setVelocity(0, 0, 50); 
+		shot->particle.setMass(10);
+		shot->particle.setVelocity(0, 0, 50);
 		shot->particle.setAcceleration(0, -2, 0);
 		shot->particle.setDamping(1);
 		break;
 
 	case 2:
-		shot->particle.setMass(150); 
+		shot->particle.setMass(150);
 		shot->particle.setVelocity(0, 25, 30);
 		shot->particle.setAcceleration(0, -20, 0);
 		shot->particle.setDamping(1);
 		break;
 
 	case 3:
-		shot->particle.setMass(0.1); 
+		shot->particle.setMass(0.1);
 		shot->particle.setVelocity(0, 0, 100);
-		shot->particle.setAcceleration(0, 0, 0); 
+		shot->particle.setAcceleration(0, 0, 0);
 		shot->particle.setDamping(1);
 		break;
 
 	case 4:
-		shot->particle.setMass(1); 
-		shot->particle.setVelocity(0, 0, 5); 
-		shot->particle.setAcceleration(0, 1, 0); 
+		shot->particle.setMass(1);
+		shot->particle.setVelocity(0, 0, 5);
+		shot->particle.setAcceleration(0, 1, 0);
 		shot->particle.setDamping(1);
 		break;
 	}
-	
+
 	shot->particle.setPosition(x, 0.75, z);
 	shot->clockStart = time.getNow();
 	shot->type = holdedWeapon;
@@ -117,16 +115,13 @@ void update() {
 	float duration = (float)time.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
-	{
-		if (shot->type != 0)
-		{
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++) {
+		if (shot->type != 0) {
 			shot->particle.integrate(duration);
 
 			if (shot->particle.getPosition().y < 0.0f ||
 				shot->clockStart + 5000 < time.getNow() ||
-				shot->particle.getPosition().z > 200.0f)
-			{
+				shot->particle.getPosition().z > 200.0f) {
 				shot->type = 0;
 			}
 		}
@@ -140,6 +135,7 @@ void update() {
 void reshape(int w, int h) {
 	if (h == 0)
 		h = 1;
+
 	float ratio = w * 1.0 / h;
 
 	glMatrixMode(GL_PROJECTION);
@@ -151,20 +147,17 @@ void reshape(int w, int h) {
 
 
 
-void display()
-{
+void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	if (view) 
-	{
+	if (view) {
 		gluLookAt(-25.0, 8.0, 5.0, 0.0, 5.0, 22.0, 0.0, 1.0, 0.0);
 	}
-	else
-	{
+	else {
 		gluLookAt(x, 1.0f, z, x + lx, 1.0f, z + lz, 0.0f, 1.0f, 0.0f);
 	}
-		
+
 
 	// Draw ground
 	glColor3f(0.1f, 0.9f, 0.1f);
@@ -176,16 +169,14 @@ void display()
 	glEnd();
 
 	// Render each particle in turn
-	for (Bullet* shot = bullet; shot < bullet + 20; shot++)
-	{
-		if (shot->type != 0)
-		{
+	for (Bullet* shot = bullet; shot < bullet + 20; shot++) {
+		if (shot->type != 0) {
 			shot->drawBullet();
 		}
 	}
 
 	char* choice;
-	
+
 
 	glColor3f(0, 0, 0);
 	renderBitmapString(92, 30, 12, GLUT_BITMAP_HELVETICA_10, choose);
@@ -203,11 +194,10 @@ void display()
 
 }
 
-void special(int key, int xx, int yy)
-{
+void special(int key, int xx, int yy) {
 	float fraction = 0.5f;
-	switch (key)
-	{
+
+	switch (key) {
 	case GLUT_KEY_F1:
 		holdedWeapon = 1;
 		std::cout << "Arme choisie : PISTOL" << std::endl;
@@ -251,11 +241,9 @@ void special(int key, int xx, int yy)
 	}
 }
 
-void keyboard(unsigned char key, int x, int y)
-{
+void keyboard(unsigned char key, int x, int y) {
 
-	switch (key)
-	{
+	switch (key) {
 	case 32: // Code ASCII de la barre espace, pas de raccourci défini il me semble.
 		fire();
 		break;
@@ -264,8 +252,7 @@ void keyboard(unsigned char key, int x, int y)
 	}
 }
 
-int main(int argc, char** argv)
-{
+int main(int argc, char** argv) {
 	discharge();
 
 	glutInit(&argc, argv);
