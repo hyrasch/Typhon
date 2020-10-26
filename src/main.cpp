@@ -1,10 +1,9 @@
 #include <gl/freeglut.h>
 #include <iostream>
 #include <string>
-#include "headers/core.h"
-#include "headers/particle.h"
-#include "headers/time.h"
+#include <typhon/typhon.h>
 
+using namespace typhon;
 
 Time time = Time::getInstance();
 

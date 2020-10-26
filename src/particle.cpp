@@ -1,7 +1,9 @@
 #include <stdexcept>
-#include "headers/particle.h"
+#include <typhon/particle.h>
 
-void Particle::integrate(typhon::real duration) {
+using namespace typhon;
+
+void Particle::integrate(real duration) {
 	// We don't integrate things with zero mass.
 	if (inverseMass <= 0.0f) return;
 
@@ -26,23 +28,23 @@ void Particle::integrate(typhon::real duration) {
 
 
 
-void Particle::setMass(const typhon::real mass) {
+void Particle::setMass(const real mass) {
 	if (mass == 0) throw std::invalid_argument("Must set a non-zero mass");
-	Particle::inverseMass = ((typhon::real)1.0) / mass;
+	Particle::inverseMass = ((real)1.0) / mass;
 }
 
-typhon::real Particle::getMass() const {
+real Particle::getMass() const {
 	if (inverseMass == 0)
 		return REAL_MAX;
 	else
-		return ((typhon::real)1.0) / inverseMass;
+		return ((real)1.0) / inverseMass;
 }
 
-void Particle::setInverseMass(const typhon::real inverseMass) {
+void Particle::setInverseMass(const real inverseMass) {
 	Particle::inverseMass = inverseMass;
 }
 
-typhon::real Particle::getInverseMass() const {
+real Particle::getInverseMass() const {
 	return inverseMass;
 }
 
@@ -50,11 +52,11 @@ bool Particle::hasFiniteMass() const {
 	return inverseMass >= 0.0f;
 }
 
-void Particle::setDamping(const typhon::real damping) {
+void Particle::setDamping(const real damping) {
 	Particle::damping = damping;
 }
 
-typhon::real Particle::getDamping() const {
+real Particle::getDamping() const {
 	return damping;
 }
 
@@ -62,7 +64,7 @@ void Particle::setPosition(const Vector3& position) {
 	Particle::position = position;
 }
 
-void Particle::setPosition(const typhon::real x, const typhon::real y, const typhon::real z) {
+void Particle::setPosition(const real x, const real y, const real z) {
 	position.x = x;
 	position.y = y;
 	position.z = z;
@@ -80,7 +82,7 @@ void Particle::setVelocity(const Vector3& velocity) {
 	Particle::velocity = velocity;
 }
 
-void Particle::setVelocity(const typhon::real x, const typhon::real y, const typhon::real z) {
+void Particle::setVelocity(const real x, const real y, const real z) {
 	velocity.x = x;
 	velocity.y = y;
 	velocity.z = z;
@@ -98,7 +100,7 @@ void Particle::setAcceleration(const Vector3& acceleration) {
 	Particle::acceleration = acceleration;
 }
 
-void Particle::setAcceleration(const typhon::real x, const typhon::real y, const typhon::real z) {
+void Particle::setAcceleration(const real x, const real y, const real z) {
 	acceleration.x = x;
 	acceleration.y = y;
 	acceleration.z = z;

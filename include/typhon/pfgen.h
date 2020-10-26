@@ -1,166 +1,171 @@
+#ifndef PFGEN_H
+#define PFGEN_H
+
 #include "core.h"
 #include "particle.h"
 #include <vector>
 
 namespace typhon {
 
-    class ParticleForceGenerator
-    {
-    public:
+	class ParticleForceGenerator
+	{
+	public:
 
-        virtual void updateForce(Particle* particle, real duration) = 0;
-    };
+		virtual void updateForce(Particle* particle, real duration) = 0;
+	};
 
-    class ParticleGravity : public ParticleForceGenerator
-    {
+	class ParticleGravity : public ParticleForceGenerator
+	{
 
-        Vector3 gravity;
+		Vector3 gravity;
 
-    public:
+	public:
 
-        ParticleGravity(const Vector3& gravity);
+		ParticleGravity(const Vector3& gravity);
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-    class ParticleDrag : public ParticleForceGenerator
-    {
+	class ParticleDrag : public ParticleForceGenerator
+	{
 
-        real k1;
+		real k1;
 
-        real k2;
+		real k2;
 
-    public:
+	public:
 
-        ParticleDrag(real k1, real k2);
+		ParticleDrag(real k1, real k2);
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-    class ParticleAnchoredSpring : public ParticleForceGenerator
-    {
-    protected:
+	class ParticleAnchoredSpring : public ParticleForceGenerator
+	{
+	protected:
 
-        Vector3* anchor;
+		Vector3* anchor;
 
-        real springConstant;
+		real springConstant;
 
-        real restLength;
+		real restLength;
 
-    public:
-        ParticleAnchoredSpring();
+	public:
+		ParticleAnchoredSpring();
 
-        ParticleAnchoredSpring(Vector3* anchor,
-            real springConstant,
-            real restLength);
+		ParticleAnchoredSpring(Vector3* anchor,
+			real springConstant,
+			real restLength);
 
-        const Vector3* getAnchor() const { return anchor; }
+		const Vector3* getAnchor() const { return anchor; }
 
-        void init(Vector3* anchor,
-            real springConstant,
-            real restLength);
+		void init(Vector3* anchor,
+			real springConstant,
+			real restLength);
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-    class ParticleAnchoredBungee : public ParticleAnchoredSpring
-    {
-    public:
+	class ParticleAnchoredBungee : public ParticleAnchoredSpring
+	{
+	public:
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-    
-    class ParticleFakeSpring : public ParticleForceGenerator
-    {
 
-        Vector3* anchor;
+	class ParticleFakeSpring : public ParticleForceGenerator
+	{
 
-        real springConstant;
+		Vector3* anchor;
 
-        real damping;
+		real springConstant;
 
-    public:
+		real damping;
 
-        ParticleFakeSpring(Vector3* anchor, real springConstant,
-            real damping);
+	public:
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		ParticleFakeSpring(Vector3* anchor, real springConstant,
+			real damping);
 
-    class ParticleSpring : public ParticleForceGenerator
-    {
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-        Particle* other;
+	class ParticleSpring : public ParticleForceGenerator
+	{
 
-        real springConstant;
+		Particle* other;
 
-        real restLength;
+		real springConstant;
 
-    public:
+		real restLength;
 
-        ParticleSpring(Particle* other,
-            real springConstant, real restLength);
+	public:
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		ParticleSpring(Particle* other,
+			real springConstant, real restLength);
 
-    class ParticleBungee : public ParticleForceGenerator
-    {
-        Particle* other;
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-        real springConstant;
+	class ParticleBungee : public ParticleForceGenerator
+	{
+		Particle* other;
 
-        real restLength;
+		real springConstant;
 
-    public:
+		real restLength;
 
-        ParticleBungee(Particle* other,
-            real springConstant, real restLength);
+	public:
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+		ParticleBungee(Particle* other,
+			real springConstant, real restLength);
 
-    class ParticleBuoyancy : public ParticleForceGenerator
-    {
-      
-        real maxDepth;
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-        real volume;
+	class ParticleBuoyancy : public ParticleForceGenerator
+	{
 
-        real waterHeight;
+		real maxDepth;
 
-        real liquidDensity;
+		real volume;
 
-    public:
+		real waterHeight;
 
-        ParticleBuoyancy(real maxDepth, real volume, real waterHeight,
-            real liquidDensity = 1000.0f);
+		real liquidDensity;
 
-        virtual void updateForce(Particle* particle, real duration);
-    };
+	public:
 
-    class ParticleForceRegistry
-    {
-    protected:
+		ParticleBuoyancy(real maxDepth, real volume, real waterHeight,
+			real liquidDensity = 1000.0f);
 
-        struct ParticleForceRegistration
-        {
-            Particle* particle;
-            ParticleForceGenerator* fg;
-        };
+		virtual void updateForce(Particle* particle, real duration);
+	};
 
-        typedef std::vector<ParticleForceRegistration> Registry;
-        Registry registrations;
+	class ParticleForceRegistry
+	{
+	protected:
 
-    public:
-       
-        void add(Particle* particle, ParticleForceGenerator* fg);
+		struct ParticleForceRegistration
+		{
+			Particle* particle;
+			ParticleForceGenerator* fg;
+		};
 
-        void remove(Particle* particle, ParticleForceGenerator* fg);
+		typedef std::vector<ParticleForceRegistration> Registry;
+		Registry registrations;
 
-        void clear();
+	public:
 
-        void updateForces(real duration);
-    };
+		void add(Particle* particle, ParticleForceGenerator* fg);
+
+		void remove(Particle* particle, ParticleForceGenerator* fg);
+
+		void clear();
+
+		void updateForces(real duration);
+	};
 }
+
+#endif PFGEN_H

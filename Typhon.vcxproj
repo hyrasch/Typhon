@@ -158,6 +158,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\typhon\core.h" />
+    <ClInclude Include="include\typhon\particle.h" />
+    <ClInclude Include="include\typhon\pcontacts.h" />
+    <ClInclude Include="include\typhon\pfgen.h" />
+    <ClInclude Include="include\typhon\plinks.h" />
+    <ClInclude Include="include\typhon\precision.h" />
+    <ClInclude Include="include\typhon\time.h" />
+    <ClInclude Include="include\typhon\typhon.h" />
     <ClInclude Include="src\headers\core.h" />
     <ClInclude Include="src\headers\particle.h" />
     <ClInclude Include="src\headers\precision.h" />
@@ -172,10 +180,16 @@
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\particle.cpp" />
+    <ClCompile Include="src\pcontacts.cpp" />
+    <ClCompile Include="src\pfgen.cpp" />
+    <ClCompile Include="src\plinks.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="bin\freeglut.dll" />
     <None Include="lib\freeglut.dll" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut.lib" />

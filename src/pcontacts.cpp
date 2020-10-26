@@ -20,7 +20,7 @@ void ParticleContact::resolveVelocity(real duration)
 
 	if (separatingVelocity > 0) return;
 
-		real newSepVelocity = -separatingVelocity * restitution;
+	real newSepVelocity = -separatingVelocity * restitution;
 
 	Vector3 accCausedVelocity = particle[0]->getAcceleration();
 	if (particle[1]) accCausedVelocity -= particle[1]->getAcceleration();

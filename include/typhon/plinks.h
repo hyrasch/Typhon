@@ -1,3 +1,6 @@
+#ifndef PLINKS_H
+#define PLINKS_H
+
 #include "pcontacts.h"
 
 namespace typhon {
@@ -35,7 +38,9 @@ namespace typhon {
 	public:
 
 		real currentLength() const;
-		
+
 		virtual unsigned fillContact(ParticleContact* contact, unsigned limit) const;
 	};
 }
+
+#endif PLINKS_H

@@ -1,67 +1,68 @@
+#ifndef PCONTACTS_H
+#define PCONTACTS_H
+
 #include "particle.h"
 
 namespace typhon {
 
-    class ParticleContactResolver;
+	class ParticleContact
+	{
 
-    class ParticleContact
-    {
-
-        friend class ParticleContactResolver;
+		friend class ParticleContactResolver;
 
 
-    public:
+	public:
 
-        Particle* particle[2];
+		Particle* particle[2];
 
-        real restitution;
+		real restitution;
 
-        Vector3 contactNormal;
+		Vector3 contactNormal;
 
-        real penetration;
+		real penetration;
 
-        Vector3 particleMovement[2];
+		Vector3 particleMovement[2];
 
-    protected:
+	protected:
 
-        void resolve(real duration);
+		void resolve(real duration);
 
-        real calculateSeparatingVelocity() const;
+		real calculateSeparatingVelocity() const;
 
-    private:
+	private:
 
-        void resolveVelocity(real duration);
+		void resolveVelocity(real duration);
 
-        void resolveInterpenetration(real duration);
+		void resolveInterpenetration(real duration);
 
-    };
+	};
 
-    class ParticleContactResolver
-    {
-    protected:
+	class ParticleContactResolver
+	{
+	protected:
 
-        unsigned iterations;
+		unsigned iterations;
 
-        unsigned iterationsUsed;
+		unsigned iterationsUsed;
 
-    public:
+	public:
 
-        ParticleContactResolver(unsigned iterations);
+		ParticleContactResolver(unsigned iterations);
 
-        void setIterations(unsigned iterations);
+		void setIterations(unsigned iterations);
 
-        void resolveContacts(ParticleContact* contactArray,
-            unsigned numContacts,
-            real duration);
-    };
+		void resolveContacts(ParticleContact* contactArray,
+			unsigned numContacts,
+			real duration);
+	};
 
-    class ParticleContactGenerator
-    {
-    public:
+	class ParticleContactGenerator
+	{
+	public:
 
-        virtual unsigned addContact(ParticleContact* contact,
-            unsigned limit) const = 0;
-    };
+		virtual unsigned addContact(ParticleContact* contact,
+			unsigned limit) const = 0;
+	};
 }
 
-
+#endif
