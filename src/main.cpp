@@ -1,7 +1,9 @@
 #include <gl/freeglut.h>
 #include <iostream>
 #include <string>
-#include <typhon/typhon.h>
+#include "headers/core.h"
+#include "headers/particle.h"
+#include "headers/time.h"
 
 
 Time time = Time::getInstance();
@@ -22,7 +24,6 @@ char viewF5[50] = "F5 : TPS";
 char viewF6[50] = "F6 : FPS";
 
 bool view = true;
-
 
 struct Bullet {
 	Particle particle;

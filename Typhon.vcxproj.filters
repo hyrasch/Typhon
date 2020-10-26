@@ -27,16 +27,19 @@
     <ClInclude Include="include\gl\freeglut_std.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core.h">
+    <ClInclude Include="src\headers\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\particle.h">
+    <ClInclude Include="src\headers\particle.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\precision.h">
+    <ClInclude Include="src\headers\precision.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\time.h">
+    <ClInclude Include="src\headers\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\headers\TyphonException.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\typhon\core.h">
