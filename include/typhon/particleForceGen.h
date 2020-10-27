@@ -119,7 +119,7 @@ namespace typhon {
 		real maxDepth;
 		// The water volume
 		real volume;
-		// The surface heigth of the water
+		// The surface height of the water
 		real waterHeight;
 		// The density of the water
 		real liquidDensity;

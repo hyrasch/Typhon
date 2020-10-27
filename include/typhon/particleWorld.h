@@ -44,6 +44,25 @@ namespace typhon {
 		// Hérité via ParticleContactGenerator
 		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
 	};
+
+	class BlobForceGenerator : public ParticleForceGenerator
+	{
+	private:
+		Particle* particles;
+		real maxRepulsion;
+		real maxAttraction;
+		real minNaturalDistance;
+		real maxNaturalDistance;
+		real floatHead;
+		unsigned maxFloat;
+		real maxDistance;
+	public:
+		
+		BlobForceGenerator(Particle* particles, real maxRepulsion, real maxAttraction, real minNaturalDistance, real maxNaturalDistance, real floatHead, unsigned maxFloat, real maxDistance)
+			: particles(particles), maxRepulsion(maxRepulsion), maxAttraction(maxAttraction), minNaturalDistance(minNaturalDistance), maxNaturalDistance(maxNaturalDistance), floatHead(floatHead), maxFloat(maxFloat), maxDistance(maxDistance) {}
+		virtual void updateForce(Particle* particle, real duration);
+
+	};
 }
 
 #endif TYPHON_PWORLD_H

@@ -5,16 +5,19 @@ using namespace typhon;
 ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxContacts(NB_PARTICLES) {
 	particles = new Particle[NB_PARTICLES];
 	ParticleGravity* pg = new ParticleGravity(Vector3::GRAVITY);
+	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 20.0, 10.0, PARTICLE_RADIUS * 0.75, PARTICLE_RADIUS * 1.5, PARTICLE_RADIUS * 3, 2, 8.0);
 
-	for (unsigned i = 0; i < NB_PARTICLES-1; i++) {
+
+	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		particles[i].setDamping(0.2);
 		particles[i].setAcceleration(Vector3::GRAVITY);
 		particles[i].setVelocity(0, 0, 0);
-		particles[i].setPosition(0, 15, 0);
+		particles[i].setPosition(10*i, 15, 0);
 		particles[i].setInverseMass(1);
 		particles[i].clearAccumulator();
 
 		registry.add(particles + i, pg);
+		registry.add(particles + i, bfg);
 	}
 
 	Platform* platform = new Platform();
@@ -71,15 +74,15 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		if (used >= limit) break;
 
-		real heigth = particles[i].getPosition().y - PARTICLE_RADIUS;
+		real height = particles[i].getPosition().y - PARTICLE_RADIUS;
 
-		if (heigth > 0) return used;
+		if (height > 0) return used;
 
 		if (particles[i].getPosition().x <= xMax && particles[i].getPosition().x >= xMin
 			&& particles[i].getPosition().z <= zMax && particles[i].getPosition().z >= zMin) {
 
 			contact->contactNormal = Vector3::UP;
-			contact->penetration = heigth;
+			contact->penetration = height;
 			contact->restitution = restitution;
 
 			contact->particle[0] = particles + i;
@@ -91,4 +94,49 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 	}
 
 	return used;
+}
+
+void BlobForceGenerator::updateForce(Particle* particle, real duration)
+{
+    unsigned joinCount = 0;
+    for (unsigned i = 0; i < NB_PARTICLES; i++)
+    {
+        // Don't attract yourself
+        if (particles + i == particle) continue;
+
+        // Work out the separation distance
+        typhon::Vector3 separation =
+            particles[i].getPosition() - particle->getPosition();
+        separation.z = 0.0f;
+        real distance = separation.magnitude();
+
+        if (distance < minNaturalDistance)
+        {
+            // Use a repulsion force.
+            distance = 1.0f - distance / minNaturalDistance;
+            particle->addForce(
+                separation.unit() * (1.0f - distance) * maxRepulsion * -1.0f
+            );
+            joinCount++;
+        }
+        else if (distance > maxNaturalDistance && distance < maxDistance)
+        {
+            // Use an attraction force.
+            distance =
+                (distance - maxNaturalDistance) /
+                (maxDistance - maxNaturalDistance);
+            particle->addForce(
+                separation.unit() * distance * maxAttraction
+            );
+            joinCount++;
+        }
+    }
+
+    if (particle == particles && joinCount > 0 && maxFloat > 0)
+    {
+        real force = real(joinCount / maxFloat) * floatHead;
+        if (force > floatHead) force = floatHead;
+        particle->addForce(typhon::Vector3(0, force, 0));
+    }
+
 }
