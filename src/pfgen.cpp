@@ -1,24 +1,41 @@
 #include <typhon/pfgen.h>
 
-
 using namespace typhon;
 
 void ParticleForceRegistry::updateForces(real duration)
 {
 	Registry::iterator i = registrations.begin();
+
 	for (; i != registrations.end(); i++)
 	{
 		i->fg->updateForce(i->particle, duration);
 	}
 }
 
+void ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg)
+{
+	ParticleForceRegistry::ParticleForceRegistration registration;
+	registration.particle = particle;
+	registration.fg = fg;
+	registrations.push_back(registration);
+}
+
+//----------------------- Gravity -------------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleGravity::updateForce(Particle* particle, real duration)
 {
+
 	if (!particle->hasFiniteMass()) return;
 
 	particle->addForce(gravity * particle->getMass());
 }
 
+//----------------------- Drag ----------------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleDrag::updateForce(Particle* particle, real duration)
 {
 	Vector3 force;
@@ -33,6 +50,10 @@ void ParticleDrag::updateForce(Particle* particle, real duration)
 	particle->addForce(force);
 }
 
+//----------------------- Spring --------------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleSpring::updateForce(Particle* particle, real duration)
 {
 	Vector3 force;
@@ -49,7 +70,12 @@ void ParticleSpring::updateForce(Particle* particle, real duration)
 	particle->addForce(force);
 }
 
-void ParticleAnchoredSpring::updateForce(Particle* particle, real duration)
+//----------------------- AnchoredSpring ------------------------------
+//
+//
+//---------------------------------------------------------------------
+void ParticleAnchoredSpring::updateForce(Particle* particle,
+	real duration)
 {
 	Vector3 force;
 	particle->getPosition(&force);
@@ -61,31 +87,42 @@ void ParticleAnchoredSpring::updateForce(Particle* particle, real duration)
 
 	force.normalise();
 	force *= -magnitude;
-
 	particle->addForce(force);
 }
 
+//----------------------- Bungee --------------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleBungee::updateForce(Particle* particle, real duration)
 {
+
 	Vector3 force;
 	particle->getPosition(&force);
 	force -= other->getPosition();
 
 	real magnitude = force.magnitude();
 	if (magnitude <= restLength) return;
+
 	magnitude = springConstant * (restLength - magnitude);
 
 	force.normalise();
 	force *= -magnitude;
 
 	particle->addForce(force);
+
 }
 
+//----------------------- Buoyancy ------------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleBuoyancy::updateForce(Particle* particle, real duration)
 {
-	real depth = particle->getPosition().y;
-	if (depth >= waterHeight + maxDepth) return;
 
+	real depth = particle->getPosition().y;
+
+	if (depth >= waterHeight + maxDepth) return;
 	Vector3 force(0, 0, 0);
 
 	if (depth <= waterHeight - maxDepth)
@@ -96,10 +133,13 @@ void ParticleBuoyancy::updateForce(Particle* particle, real duration)
 	}
 
 	force.y = liquidDensity * volume * (depth - maxDepth - waterHeight) / 2 * maxDepth;
-
 	particle->addForce(force);
 }
 
+//----------------------- FakeSpring ----------------------------------
+//
+//
+//---------------------------------------------------------------------
 void ParticleFakeSpring::updateForce(Particle* particle, real duration)
 {
 	if (!particle->hasFiniteMass()) return;
@@ -113,8 +153,10 @@ void ParticleFakeSpring::updateForce(Particle* particle, real duration)
 	if (gamma == 0.0f) return;
 
 	Vector3 c = position * (damping / (2.0f * gamma)) + particle->getVelocity() * (1.0f / gamma);
+
 	Vector3 target = position * real_cos(gamma * duration) + c * real_sin(gamma * duration);
 	target *= real_exp(-0.5f * duration * damping);
+
 	Vector3 accel = (target - position) * (1.0f / duration * duration) - particle->getVelocity() * duration;
 
 	particle->addForce(accel * particle->getMass());

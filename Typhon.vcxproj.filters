@@ -63,6 +63,9 @@
     <ClInclude Include="include\typhon\plinks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\typhon\pworld.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -81,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pcontacts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\pworld.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,67 +1,64 @@
+#ifndef TYPHON_PCONTACTS_H
+#define TYPHON_PCONTACTS_H
+
 #include "particle.h"
 
 namespace typhon {
 
-    class ParticleContactResolver;
+	class ParticleContactResolver;
 
-    class ParticleContact
-    {
+	class ParticleContact
+	{
 
-        friend class ParticleContactResolver;
+		friend class ParticleContactResolver;
 
+	public:
 
-    public:
+		Particle* particle[2];
 
-        Particle* particle[2];
+		real restitution;
 
-        real restitution;
+		Vector3 contactNormal;
 
-        Vector3 contactNormal;
+		real penetration;
 
-        real penetration;
+	protected:
 
-        Vector3 particleMovement[2];
+		void resolve(real duration);
 
-    protected:
+		real calculateSeparatingVelocity() const;
 
-        void resolve(real duration);
+	private:
 
-        real calculateSeparatingVelocity() const;
+		void resolveVelocity(real duration);
 
-    private:
+		void resolveInterpenetration(real duration);
+	};
 
-        void resolveVelocity(real duration);
+	class ParticleContactResolver
+	{
+	protected:
 
-        void resolveInterpenetration(real duration);
+		unsigned iterations;
 
-    };
+		unsigned iterationsUsed;
+	public:
 
-    class ParticleContactResolver
-    {
-    protected:
+		ParticleContactResolver(unsigned iterations);
 
-        unsigned iterations;
+		void setIterations(unsigned iterations);
 
-        unsigned iterationsUsed;
+		void resolveContacts(ParticleContact* contactArray, unsigned numContacts, real duration);
+	};
 
-    public:
+	class ParticleContactGenerator
+	{
+	public:
 
-        ParticleContactResolver(unsigned iterations);
+		virtual unsigned addContact(ParticleContact* contact,
+			unsigned limit) const = 0;
+	};
 
-        void setIterations(unsigned iterations);
-
-        void resolveContacts(ParticleContact* contactArray,
-            unsigned numContacts,
-            real duration);
-    };
-
-    class ParticleContactGenerator
-    {
-    public:
-
-        virtual unsigned addContact(ParticleContact* contact,
-            unsigned limit) const = 0;
-    };
 }
 
-
+#endif
