@@ -44,7 +44,7 @@ namespace typhon {
 
 	public:
 		// Constructor
-		ParticleContactResolver(unsigned iterations) : iterations(iterations) {}
+		ParticleContactResolver(unsigned iterations) : iterations(iterations), iterationsUsed(0) {}
 		// Setting up the iterations
 		void setIterations(unsigned iterations);
 		// Resolving contacts (velocity + interpenetration) between 2 particles
@@ -55,8 +55,7 @@ namespace typhon {
 	class ParticleContactGenerator {
 	public:
 		// Adding a new contact
-		virtual unsigned addContact(ParticleContact* contact,
-			unsigned limit) const = 0;
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const = 0;
 	};
 }
 

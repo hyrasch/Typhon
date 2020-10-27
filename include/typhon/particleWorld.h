@@ -2,21 +2,23 @@
 #define TYPHON_PWORLD_H
 
 #include "particleForceGen.h"
+#include "particleContacts.h"
 #include "particleLinks.h"
+#include "blob.h"
 
 namespace typhon {
 
-	class ParticleWorld {
-	private:
-		struct ParticleRegistration {
-			Particle* particle;
-			ParticleRegistration* next;
-		};
+#define NB_PARTICLES 1
+#define PARTICLE_RADIUS 1.0
 
-		ParticleRegistration* firstParticle;
+	class ParticleWorld {
+	public:
+		Particle* particles;
+		ParticleForceRegistry registry;
+		std::vector<ParticleContactGenerator*> contactGenerators;
 
 	public:
-		ParticleWorld(unsigned maxContacts, unsigned iterations = 0);
+		ParticleWorld(unsigned iterations = 0);
 		void startFrame();
 		unsigned generateContacts();
 		void integrate(real duration);
@@ -24,16 +26,24 @@ namespace typhon {
 		bool calculateIterations;
 
 	protected:
-		struct ContactGenRegistration {
-			ParticleContactGenerator* gen;
-			ContactGenRegistration* next;
-		};
 
-		ParticleForceRegistry registry;
 		ParticleContactResolver resolver;
-		ContactGenRegistration* firstContactGen;
 		ParticleContact* contacts;
 		unsigned maxContacts;
+	};
+
+	class Platform : public ParticleContactGenerator {
+	public:
+		const real xMin = -50.0;
+		const real xMax = 50.0;
+		const real zMin = -50.0;
+		const real zMax = 50.0;
+
+	public:
+		Particle* particles;
+
+		// Hérité via ParticleContactGenerator
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
 	};
 }
 

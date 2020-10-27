@@ -84,6 +84,7 @@
     <None Include=".gitattributes" />
     <None Include="README.md" />
     <None Include=".gitignore" />
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut.lib" />

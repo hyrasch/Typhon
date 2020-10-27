@@ -8,7 +8,7 @@ real ParticleLink::currentLength() const {
 	return relativePos.magnitude();
 }
 
-unsigned ParticleCable::fillContact(ParticleContact* contact, unsigned limit) const {
+unsigned ParticleCable::addContact(ParticleContact* contact, unsigned limit) const {
 	// Current length at this frame
 	real length = currentLength();
 
@@ -28,7 +28,7 @@ unsigned ParticleCable::fillContact(ParticleContact* contact, unsigned limit) co
 	return 1;
 }
 
-unsigned ParticleRod::fillContact(ParticleContact* contact, unsigned limit) const {
+unsigned ParticleRod::addContact(ParticleContact* contact, unsigned limit) const {
 	// Current length in the frame
 	real currentLen = currentLength();
 

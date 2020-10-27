@@ -5,7 +5,7 @@
 
 namespace typhon {
 
-	class ParticleLink {
+	class ParticleLink : ParticleContactGenerator {
 	public:
 		// A pair of particle
 		Particle* particle[2];
@@ -15,8 +15,9 @@ namespace typhon {
 		real currentLength() const;
 
 	public:
+
 		// Generates a contact to ensure that the link is preserved
-		virtual unsigned fillContact(ParticleContact* contact, unsigned limit) const = 0;
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const = 0;
 	};
 
 	// =============================================
@@ -29,7 +30,7 @@ namespace typhon {
 		real restitution;
 
 		// Creating a contact so that the cable does not overextends
-		virtual unsigned fillContact(ParticleContact* contact, unsigned limit) const;
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
 	};
 
 	// =============================================
@@ -40,7 +41,7 @@ namespace typhon {
 		real length;
 
 		// Creating a contact so that the ends stand at the same distance
-		virtual unsigned fillContact(ParticleContact* contact, unsigned limit) const;
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
 	};
 }
 

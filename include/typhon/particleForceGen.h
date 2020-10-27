@@ -16,7 +16,7 @@ namespace typhon {
 
 	// Registry for forces
 	class ParticleForceRegistry {
-	protected:
+	public:
 		// Each registry has a particle and a force generator
 		struct ParticleForceRegistration {
 			Particle* particle;
@@ -43,8 +43,7 @@ namespace typhon {
 		Vector3 gravity;
 
 	public:
-		ParticleGravity(const Vector3& gravity)
-			: gravity(gravity) {}
+		ParticleGravity(const Vector3& gravity) : gravity(gravity) {}
 		virtual void updateForce(Particle* particle, real duration);
 	};
 

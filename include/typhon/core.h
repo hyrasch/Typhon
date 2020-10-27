@@ -5,6 +5,7 @@
 #include "precision.h"
 
 namespace typhon {
+
 	class Vector3 {
 	public:
 		real x;

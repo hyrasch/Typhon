@@ -185,6 +185,7 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="bin\freeglut.dll" />
+    <None Include="ClassDiagram.cd" />
     <None Include="lib\freeglut.dll" />
     <None Include="README.md" />
   </ItemGroup>
