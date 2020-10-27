@@ -166,15 +166,10 @@
     <ClInclude Include="include\typhon\precision.h" />
     <ClInclude Include="include\typhon\time.h" />
     <ClInclude Include="include\typhon\typhon.h" />
-    <ClInclude Include="src\headers\core.h" />
-    <ClInclude Include="src\headers\particle.h" />
-    <ClInclude Include="src\headers\precision.h" />
-    <ClInclude Include="src\headers\time.h" />
     <ClInclude Include="include\gl\freeglut.h" />
     <ClInclude Include="include\gl\freeglut_ext.h" />
     <ClInclude Include="include\gl\freeglut_std.h" />
     <ClInclude Include="include\gl\glut.h" />
-    <ClInclude Include="src\headers\TyphonException.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp" />
