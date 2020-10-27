@@ -6,7 +6,7 @@ ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxCon
 	particles = new Particle[NB_PARTICLES];
 	ParticleGravity* pg = new ParticleGravity(Vector3::GRAVITY);
 
-	for (unsigned i = 0; i < NB_PARTICLES; i++) {
+	for (unsigned i = 0; i < NB_PARTICLES-1; i++) {
 		particles[i].setDamping(0.2);
 		particles[i].setAcceleration(Vector3::GRAVITY);
 		particles[i].setVelocity(0, 0, 0);
