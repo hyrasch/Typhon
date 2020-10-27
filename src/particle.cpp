@@ -1,6 +1,5 @@
-#include <assert.h>
-
-#include <typhon/typhon.h>
+#include <stdexcept>
+#include <typhon/particle.h>
 
 using namespace typhon;
 
@@ -8,7 +7,7 @@ void Particle::integrate(real duration) {
 	// We don't integrate things with zero mass.
 	if (inverseMass <= 0.0f) return;
 
-	assert(duration > 0.0);
+	if (duration < 0.0) throw std::invalid_argument("Can't integrate on negative duration");
 
 	// Update linear position.
 	position.addScaledVector(velocity, duration);
@@ -30,11 +29,11 @@ void Particle::integrate(real duration) {
 
 
 void Particle::setMass(const real mass) {
-	assert(mass != 0);
+	if (mass == 0) throw std::invalid_argument("Must set a non-zero mass");
 	Particle::inverseMass = ((real)1.0) / mass;
 }
 
-typhon::real Particle::getMass() const {
+real Particle::getMass() const {
 	if (inverseMass == 0)
 		return REAL_MAX;
 	else
@@ -45,7 +44,7 @@ void Particle::setInverseMass(const real inverseMass) {
 	Particle::inverseMass = inverseMass;
 }
 
-typhon::real Particle::getInverseMass() const {
+real Particle::getInverseMass() const {
 	return inverseMass;
 }
 
@@ -57,7 +56,7 @@ void Particle::setDamping(const real damping) {
 	Particle::damping = damping;
 }
 
-typhon::real Particle::getDamping() const {
+real Particle::getDamping() const {
 	return damping;
 }
 

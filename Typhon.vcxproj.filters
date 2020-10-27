@@ -27,31 +27,10 @@
     <ClInclude Include="include\gl\freeglut_std.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="src\core.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\precision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="src\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\typhon\core.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\typhon\particle.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\typhon\precision.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\typhon\time.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="include\typhon\typhon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\typhon\pcontacts.h">
@@ -63,7 +42,13 @@
     <ClInclude Include="include\typhon\plinks.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\typhon\pworld.h">
+    <ClInclude Include="include\typhon\precision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\time.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\typhon.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -77,22 +62,22 @@
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\pcontacts.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="src\plinks.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\pfgen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\pcontacts.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\pworld.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\freeglut.dll" />
     <None Include="bin\freeglut.dll" />
+    <None Include=".gitattributes" />
+    <None Include="README.md" />
+    <None Include=".gitignore" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut.lib" />

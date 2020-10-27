@@ -96,8 +96,7 @@
       <AdditionalDependencies>freeglut.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>copy $(SolutionDir)bin\freeglut.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -135,8 +134,7 @@
       <AdditionalDependencies>freeglut.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>
-      </Command>
+      <Command>xcopy $(SolutionDir)bin\freeglut.dll $(OutDir)</Command>
     </PostBuildEvent>
     <PreBuildEvent>
       <Command>
@@ -169,10 +167,6 @@
     <ClInclude Include="include\typhon\pworld.h" />
     <ClInclude Include="include\typhon\time.h" />
     <ClInclude Include="include\typhon\typhon.h" />
-    <ClInclude Include="src\core.h" />
-    <ClInclude Include="src\particle.h" />
-    <ClInclude Include="src\precision.h" />
-    <ClInclude Include="src\time.h" />
     <ClInclude Include="include\gl\freeglut.h" />
     <ClInclude Include="include\gl\freeglut_ext.h" />
     <ClInclude Include="include\gl\freeglut_std.h" />
@@ -188,8 +182,11 @@
     <ClCompile Include="src\pworld.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitattributes" />
+    <None Include=".gitignore" />
     <None Include="bin\freeglut.dll" />
     <None Include="lib\freeglut.dll" />
+    <None Include="README.md" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut.lib" />
