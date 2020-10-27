@@ -56,15 +56,30 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	gluLookAt(-25.0, 10.0, 0.0, 0, 5, 0, 0.0, 1.0, 0.0);
+	gluLookAt(pw.particles[0].getPosition().x - 25.0, pw.particles[0].getPosition().y + 10.0, pw.particles[0].getPosition().z, pw.particles[0].getPosition().x, pw.particles[0].getPosition().y, pw.particles[0].getPosition().z, 0.0, 1.0, 0.0);
 
 	// Draw ground
 	glColor3f(0.1f, 0.9f, 0.1f);
 	glBegin(GL_QUADS);
-	glVertex3f(-100.0f, 0.0f, -100.0f);
-	glVertex3f(-100.0f, 0.0f, 100.0f);
-	glVertex3f(100.0f, 0.0f, 100.0f);
-	glVertex3f(100.0f, 0.0f, -100.0f);
+	glVertex3f(-50, 0.0f, -50);
+	glVertex3f(-50, 0.0f, 50);
+	glVertex3f(50, 0.0f, 50);
+	glVertex3f(50, 0.0f, -50);
+	glEnd();
+
+	glColor3f(0.2f, 0.6f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-10, 0.1f, -50);
+	glVertex3f(10, 0.1f, -50);
+	glVertex3f(10, 0.1f, -30);
+	glVertex3f(-10, 0.1f, -30);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glVertex3f(-10, 0.1f, -50);
+	glVertex3f(-10, -100, -50);
+	glVertex3f(10, -100, -50);
+	glVertex3f(10, 0.1f, -50);
 	glEnd();
 
 	// Render each particle in turn
@@ -79,21 +94,41 @@ void display() {
 		glPopMatrix();
 	}
 
-	std::cout << pw.particles[0].getPosition().y << std::endl;
-
 	glutSwapBuffers();
 
 	glClearColor(0.9f, 0.95f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 }
 
-void special(int key, int xx, int yy) {}
+void special(int key, int xx, int yy) {
+	std::cout << key << std::endl;
+	switch (key)
+	{
+	default:
+		break;
+	}
+}
 
 void keyboard(unsigned char key, int x, int y) {
 
+	
 	switch (key) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
+	case 'z':
+		pw.particles[0].setPosition(pw.particles[0].getPosition()+ Vector3(0.5, 0, 0));
+		break;
+	case 'q':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, -0.5));
+		break;
+	case 's':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(-0.5, 0, 0));
+		break;
+	case 'd':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, 0.5));
+		break;
+	case 'f':
+		break;
 	}
 }
 
