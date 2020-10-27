@@ -7,7 +7,7 @@
 
 namespace typhon {
 
-#define NB_PARTICLES 2
+#define NB_PARTICLES 1
 #define PARTICLE_RADIUS 1.0
 
 	class ParticleWorld {

@@ -56,7 +56,7 @@ void display() {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	gluLookAt(-25.0, 10.0, 0.0, 0, 5, 0, 0.0, 1.0, 0.0);
+	gluLookAt(pw.particles[0].getPosition().x - 25.0, pw.particles[0].getPosition().y + 10.0, pw.particles[0].getPosition().z, pw.particles[0].getPosition().x, pw.particles[0].getPosition().y, pw.particles[0].getPosition().z, 0.0, 1.0, 0.0);
 
 	// Draw ground
 	glColor3f(0.1f, 0.9f, 0.1f);
@@ -79,21 +79,41 @@ void display() {
 		glPopMatrix();
 	}
 
-	std::cout << pw.particles[0].getPosition().y << std::endl;
-
 	glutSwapBuffers();
 
 	glClearColor(0.9f, 0.95f, 1.0f, 1.0f);
 	glEnable(GL_DEPTH_TEST);
 }
 
-void special(int key, int xx, int yy) {}
+void special(int key, int xx, int yy) {
+	std::cout << key << std::endl;
+	switch (key)
+	{
+	default:
+		break;
+	}
+}
 
 void keyboard(unsigned char key, int x, int y) {
 
+	
 	switch (key) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
+	case 'z':
+		pw.particles[0].setPosition(pw.particles[0].getPosition()+ Vector3(0.5, 0, 0));
+		break;
+	case 'q':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, -0.5));
+		break;
+	case 's':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(-0.5, 0, 0));
+		break;
+	case 'd':
+		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, 0.5));
+		break;
+	case 'f':
+		break;
 	}
 }
 
