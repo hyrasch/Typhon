@@ -1,43 +1,33 @@
-#include <typhon/pfgen.h>
+#include <typhon/particleForceGen.h>
 
 using namespace typhon;
 
-void ParticleForceRegistry::updateForces(real duration)
-{
-	Registry::iterator i = registrations.begin();
+void ParticleForceRegistry::updateForces(real duration) {
+	std::vector<ParticleForceRegistration>::iterator i = registrations.begin();
 
 	for (; i != registrations.end(); i++)
-	{
 		i->fg->updateForce(i->particle, duration);
-	}
 }
 
-void ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg)
-{
+void ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) {
 	ParticleForceRegistry::ParticleForceRegistration registration;
 	registration.particle = particle;
 	registration.fg = fg;
 	registrations.push_back(registration);
 }
 
-//----------------------- Gravity -------------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleGravity::updateForce(Particle* particle, real duration)
-{
+// =============================================
+// Gravity
+void ParticleGravity::updateForce(Particle* particle, real duration) {
 
 	if (!particle->hasFiniteMass()) return;
 
 	particle->addForce(gravity * particle->getMass());
 }
 
-//----------------------- Drag ----------------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleDrag::updateForce(Particle* particle, real duration)
-{
+// =============================================
+// Drag
+void ParticleDrag::updateForce(Particle* particle, real duration) {
 	Vector3 force;
 	particle->getVelocity(&force);
 
@@ -50,12 +40,9 @@ void ParticleDrag::updateForce(Particle* particle, real duration)
 	particle->addForce(force);
 }
 
-//----------------------- Spring --------------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleSpring::updateForce(Particle* particle, real duration)
-{
+// =============================================
+// Spring
+void ParticleSpring::updateForce(Particle* particle, real duration) {
 	Vector3 force;
 	particle->getPosition(&force);
 	force -= other->getPosition();
@@ -70,13 +57,9 @@ void ParticleSpring::updateForce(Particle* particle, real duration)
 	particle->addForce(force);
 }
 
-//----------------------- AnchoredSpring ------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleAnchoredSpring::updateForce(Particle* particle,
-	real duration)
-{
+// =============================================
+// Anchored spring
+void ParticleAnchoredSpring::updateForce(Particle* particle, real duration) {
 	Vector3 force;
 	particle->getPosition(&force);
 	force -= *anchor;
@@ -90,13 +73,9 @@ void ParticleAnchoredSpring::updateForce(Particle* particle,
 	particle->addForce(force);
 }
 
-//----------------------- Bungee --------------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleBungee::updateForce(Particle* particle, real duration)
-{
-
+// =============================================
+// Bungee
+void ParticleBungee::updateForce(Particle* particle, real duration) {
 	Vector3 force;
 	particle->getPosition(&force);
 	force -= other->getPosition();
@@ -110,23 +89,17 @@ void ParticleBungee::updateForce(Particle* particle, real duration)
 	force *= -magnitude;
 
 	particle->addForce(force);
-
 }
 
-//----------------------- Buoyancy ------------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleBuoyancy::updateForce(Particle* particle, real duration)
-{
-
+// =============================================
+// Buoyancy
+void ParticleBuoyancy::updateForce(Particle* particle, real duration) {
 	real depth = particle->getPosition().y;
 
 	if (depth >= waterHeight + maxDepth) return;
 	Vector3 force(0, 0, 0);
 
-	if (depth <= waterHeight - maxDepth)
-	{
+	if (depth <= waterHeight - maxDepth) {
 		force.y = liquidDensity * volume;
 		particle->addForce(force);
 		return;
@@ -136,12 +109,9 @@ void ParticleBuoyancy::updateForce(Particle* particle, real duration)
 	particle->addForce(force);
 }
 
-//----------------------- FakeSpring ----------------------------------
-//
-//
-//---------------------------------------------------------------------
-void ParticleFakeSpring::updateForce(Particle* particle, real duration)
-{
+// =============================================
+// Fake spring
+void ParticleFakeSpring::updateForce(Particle* particle, real duration){
 	if (!particle->hasFiniteMass()) return;
 
 	Vector3 position;

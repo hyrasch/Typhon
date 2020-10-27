@@ -182,6 +182,13 @@ namespace typhon {
 			y = -y;
 			z = -z;
 		}
+
+		// Returns an inverted vector
+		Vector3 opposite() const {
+			Vector3 res = *this;
+			res.invert();
+			return res;
+		}
 	};
 }
 #endif TYPHON_CORE_H

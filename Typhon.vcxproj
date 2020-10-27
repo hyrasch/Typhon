@@ -160,11 +160,11 @@
   <ItemGroup>
     <ClInclude Include="include\typhon\core.h" />
     <ClInclude Include="include\typhon\particle.h" />
-    <ClInclude Include="include\typhon\pcontacts.h" />
-    <ClInclude Include="include\typhon\pfgen.h" />
-    <ClInclude Include="include\typhon\plinks.h" />
+    <ClInclude Include="include\typhon\particleContacts.h" />
+    <ClInclude Include="include\typhon\particleForceGen.h" />
+    <ClInclude Include="include\typhon\particleLinks.h" />
     <ClInclude Include="include\typhon\precision.h" />
-    <ClInclude Include="include\typhon\pworld.h" />
+    <ClInclude Include="include\typhon\particleWorld.h" />
     <ClInclude Include="include\typhon\time.h" />
     <ClInclude Include="include\typhon\typhon.h" />
     <ClInclude Include="include\gl\freeglut.h" />
@@ -176,10 +176,10 @@
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\mainTp2.cpp" />
     <ClCompile Include="src\particle.cpp" />
-    <ClCompile Include="src\pcontacts.cpp" />
-    <ClCompile Include="src\pfgen.cpp" />
-    <ClCompile Include="src\plinks.cpp" />
-    <ClCompile Include="src\pworld.cpp" />
+    <ClCompile Include="src\particleContacts.cpp" />
+    <ClCompile Include="src\particleForceGen.cpp" />
+    <ClCompile Include="src\particleLinks.cpp" />
+    <ClCompile Include="src\particleWorld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

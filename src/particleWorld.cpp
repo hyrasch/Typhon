@@ -1,4 +1,4 @@
-#include <typhon/pworld.h>
+#include <typhon/particleWorld.h>
 
 using namespace typhon;
 
