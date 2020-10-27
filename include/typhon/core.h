@@ -130,16 +130,6 @@ namespace typhon {
 			return x * x + y * y + z * z;
 		}
 
-		// Maximize vector size
-		void trim(real size) {
-			if (squareMagnitude() > size * size) {
-				normalise();
-				x *= size;
-				y *= size;
-				z *= size;
-			}
-		}
-
 		// Vector vormalization
 		void normalise() {
 			real l = magnitude();

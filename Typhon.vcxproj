@@ -173,7 +173,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp" />
-    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\mainTp2.cpp" />
     <ClCompile Include="src\particle.cpp" />
     <ClCompile Include="src\pcontacts.cpp" />
     <ClCompile Include="src\pfgen.cpp" />
