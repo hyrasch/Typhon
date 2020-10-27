@@ -14,8 +14,10 @@ real ParticleContact::calculateSeparatingVelocity() const
 	if (particle[1]) relativeVelocity -= particle[1]->getVelocity();
 	return relativeVelocity * contactNormal;
 }
+
 void ParticleContact::resolveVelocity(real duration)
 {
+
 	real separatingVelocity = calculateSeparatingVelocity();
 
 	if (separatingVelocity > 0) return;
@@ -24,7 +26,8 @@ void ParticleContact::resolveVelocity(real duration)
 
 	Vector3 accCausedVelocity = particle[0]->getAcceleration();
 	if (particle[1]) accCausedVelocity -= particle[1]->getAcceleration();
-	real accCausedSepVelocity = accCausedVelocity * contactNormal * duration;
+	real accCausedSepVelocity = accCausedVelocity *
+		contactNormal * duration;
 
 	if (accCausedSepVelocity < 0)
 	{
@@ -50,8 +53,7 @@ void ParticleContact::resolveVelocity(real duration)
 	}
 }
 
-
-void ParticleContact::resolveInterpenetration(real duration)
+void ParticleContact::resolveInterpenetration(real duration) 
 {
 	if (penetration <= 0) return;
 
@@ -62,12 +64,24 @@ void ParticleContact::resolveInterpenetration(real duration)
 
 	Vector3 movePerIMass = contactNormal * (-penetration / totalInverseMass);
 
-	particle[0]->setPosition(particle[0]->getPosition() + movePerIMass * particle[0]->getInverseMass());
-
+	particle[0]->setPosition(particle[0]->getPosition() +
+		movePerIMass * particle[0]->getInverseMass());
 	if (particle[1])
 	{
-		particle[1]->setPosition(particle[1]->getPosition() + movePerIMass * particle[1]->getInverseMass());
+		particle[1]->setPosition(particle[1]->getPosition() +
+			movePerIMass * particle[1]->getInverseMass());
 	}
+}
+
+ParticleContactResolver::ParticleContactResolver(unsigned iterations)
+	:
+	iterations(iterations)
+{
+}
+
+void ParticleContactResolver::setIterations(unsigned iterations)
+{
+	ParticleContactResolver::iterations = iterations;
 }
 
 void ParticleContactResolver::resolveContacts(ParticleContact* contactArray,

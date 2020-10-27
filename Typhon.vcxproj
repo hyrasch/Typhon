@@ -164,6 +164,7 @@
     <ClInclude Include="include\typhon\pfgen.h" />
     <ClInclude Include="include\typhon\plinks.h" />
     <ClInclude Include="include\typhon\precision.h" />
+    <ClInclude Include="include\typhon\pworld.h" />
     <ClInclude Include="include\typhon\time.h" />
     <ClInclude Include="include\typhon\typhon.h" />
     <ClInclude Include="include\gl\freeglut.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="src\pcontacts.cpp" />
     <ClCompile Include="src\pfgen.cpp" />
     <ClCompile Include="src\plinks.cpp" />
+    <ClCompile Include="src\pworld.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

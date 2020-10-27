@@ -1,15 +1,16 @@
-#ifndef PCONTACTS_H
-#define PCONTACTS_H
+#ifndef TYPHON_PCONTACTS_H
+#define TYPHON_PCONTACTS_H
 
 #include "particle.h"
 
 namespace typhon {
 
+	class ParticleContactResolver;
+
 	class ParticleContact
 	{
 
 		friend class ParticleContactResolver;
-
 
 	public:
 
@@ -20,8 +21,6 @@ namespace typhon {
 		Vector3 contactNormal;
 
 		real penetration;
-
-		Vector3 particleMovement[2];
 
 	protected:
 
@@ -34,7 +33,6 @@ namespace typhon {
 		void resolveVelocity(real duration);
 
 		void resolveInterpenetration(real duration);
-
 	};
 
 	class ParticleContactResolver
@@ -44,16 +42,13 @@ namespace typhon {
 		unsigned iterations;
 
 		unsigned iterationsUsed;
-
 	public:
 
 		ParticleContactResolver(unsigned iterations);
 
 		void setIterations(unsigned iterations);
 
-		void resolveContacts(ParticleContact* contactArray,
-			unsigned numContacts,
-			real duration);
+		void resolveContacts(ParticleContact* contactArray, unsigned numContacts, real duration);
 	};
 
 	class ParticleContactGenerator
@@ -63,6 +58,7 @@ namespace typhon {
 		virtual unsigned addContact(ParticleContact* contact,
 			unsigned limit) const = 0;
 	};
+
 }
 
 #endif
