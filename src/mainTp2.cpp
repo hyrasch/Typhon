@@ -61,10 +61,25 @@ void display() {
 	// Draw ground
 	glColor3f(0.1f, 0.9f, 0.1f);
 	glBegin(GL_QUADS);
-	glVertex3f(-100.0f, 0.0f, -100.0f);
-	glVertex3f(-100.0f, 0.0f, 100.0f);
-	glVertex3f(100.0f, 0.0f, 100.0f);
-	glVertex3f(100.0f, 0.0f, -100.0f);
+	glVertex3f(-50, 0.0f, -50);
+	glVertex3f(-50, 0.0f, 50);
+	glVertex3f(50, 0.0f, 50);
+	glVertex3f(50, 0.0f, -50);
+	glEnd();
+
+	glColor3f(0.2f, 0.6f, 1.0f);
+	glBegin(GL_QUADS);
+	glVertex3f(-10, 0.1f, -50);
+	glVertex3f(10, 0.1f, -50);
+	glVertex3f(10, 0.1f, -30);
+	glVertex3f(-10, 0.1f, -30);
+	glEnd();
+
+	glBegin(GL_QUADS);
+	glVertex3f(-10, 0.1f, -50);
+	glVertex3f(-10, -100, -50);
+	glVertex3f(10, -100, -50);
+	glVertex3f(10, 0.1f, -50);
 	glEnd();
 
 	// Render each particle in turn

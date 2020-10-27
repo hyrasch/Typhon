@@ -71,12 +71,16 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		if (used >= limit) break;
 
+		bool underGround = false;
+
+		if (particles[i].getPosition().y < 0) { underGround = true; }
+
 		real heigth = particles[i].getPosition().y - PARTICLE_RADIUS;
 
 		if (heigth > 0) return used;
 
 		if (particles[i].getPosition().x <= xMax && particles[i].getPosition().x >= xMin
-			&& particles[i].getPosition().z <= zMax && particles[i].getPosition().z >= zMin) {
+			&& particles[i].getPosition().z <= zMax && particles[i].getPosition().z >= zMin && particles[i].getPosition().y && !underGround) {
 
 			contact->contactNormal = Vector3::UP;
 			contact->penetration = heigth;
