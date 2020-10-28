@@ -9,18 +9,21 @@ void ParticleForceRegistry::updateForces(real duration) {
 		i->fg->updateForce(i->particle, duration);
 }
 
-void ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) {
+int ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) {
 	ParticleForceRegistry::ParticleForceRegistration registration;
 	registration.particle = particle;
 	registration.fg = fg;
+	int index = registrations.size();
 	registrations.push_back(registration);
+
+	return index;
 }
 
-void ParticleForceRegistry::remove(Particle* particle, ParticleForceGenerator* fg) {
+void ParticleForceRegistry::remove(Particle* particle, int index) {
 	ParticleForceRegistry::ParticleForceRegistration registration;
 	registration.particle = particle;
-	registration.fg = fg;
-	registrations.pop_back();
+	if(index < registrations.size())
+		registrations.erase(registrations.begin() + index);
 }
 
 // =============================================

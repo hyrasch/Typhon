@@ -18,9 +18,7 @@ namespace typhon {
 		bool onGround = true;
 		bool onWater = false;
 
-		bool toggle = true;
-		bool waterToGround = false;
-		bool groundToWater = false;
+		int indexBuo = 0;
 
 
 	public:
@@ -64,14 +62,9 @@ namespace typhon {
 		void setGround(bool ground);
 		bool getGround();
 
-		void setToogle(bool toogle);
-		bool getToogle();
+		void setIndexBuo(int indexbuo);
+		int getIndexBuo();
 
-		void setWatToGrnd(bool wattogrnd);
-		bool getWatToGrnd();
-
-		void setGrndToWat(bool grndtowat);
-		bool getGrndToWat();
 	};
 }
 #endif  TYPHON_PARTICLE_H

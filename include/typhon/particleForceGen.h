@@ -27,9 +27,9 @@ namespace typhon {
 
 	public:
 		// Creating register
-		void add(Particle* particle, ParticleForceGenerator* fg);
+		int add(Particle* particle, ParticleForceGenerator* fg);
 		// Deleting register
-		void remove(Particle* particle, ParticleForceGenerator* fg);
+		void remove(Particle* particle, int index);
 		// Clearing registry
 		void clear();
 		// Updating forces applied to a particle

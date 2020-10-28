@@ -91,16 +91,11 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 
 		if (height > 0) return used;
 
-		if (particles[i].getFlaque()) particles[i].setWatToGrnd(true);
-
-		if (particles[i].getGround()) particles[i].setGrndToWat(true);
-
 		particles[i].setGround();
 		particles[i].setFlaque();
 
 		if (particles[i].getGround() && !underGround) {
-			particles[i].setGround(true);
-			particles[i].setFlaque(false);
+			
 
 			contact->contactNormal = Vector3::UP;
 			contact->penetration = height;
@@ -115,8 +110,7 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 		}
 
 		else if (particles[i].getFlaque() && !underGround) {
-			particles[i].setGround(false);
-			particles[i].setFlaque(true);
+			
 		}
 
 	}

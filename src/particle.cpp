@@ -158,32 +158,11 @@ bool Particle::getGround() {
 	return onGround;
 }
 
-void Particle::setToogle(bool toogle) {
-	toggle = toogle;
-}
-
-bool Particle::getToogle() {
-	return toggle;
-}
-
-void Particle::setWatToGrnd(bool wattogrnd)
+void Particle::setIndexBuo(int indexbuo)
 {
-	waterToGround = wattogrnd;
-	groundToWater = false;
+	indexBuo = indexbuo;
 }
-
-bool Particle::getWatToGrnd()
+int Particle::getIndexBuo()
 {
-	return waterToGround;
-}
-
-void Particle::setGrndToWat(bool grndtowat)
-{
-	groundToWater = grndtowat;
-	waterToGround = false;
-}
-
-bool Particle::getGrndToWat()
-{
-	return groundToWater;
+	return indexBuo;
 }

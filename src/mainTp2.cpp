@@ -37,22 +37,18 @@ void update() {
 	{
 		ParticleBuoyancy* buoyancy = new ParticleBuoyancy(0.5, 0.03, 1);
 
-		if (pw.particles[i].getFlaque()) {
+		if (pw.particles[i].getFlaque() && pw.particles[i].getIndexBuo() == 0) {
 
-			if (pw.particles[i].getGrndToWat() && pw.particles[i].getToogle())
-			{
-				pw.registry.add(pw.particles + i, buoyancy);
-				pw.particles[i].setGrndToWat(false);
-				pw.particles[i].setToogle(false);
-			}
+			pw.particles[i].setIndexBuo(pw.registry.add(pw.particles + i, buoyancy));
 
-			if (pw.particles[i].getWatToGrnd() && !pw.particles[i].getToogle() && pw.particles[i].getGround())
-			{
-				pw.registry.remove(pw.particles + i, buoyancy);
-				pw.particles[i].setWatToGrnd(false);
-				pw.particles[i].setToogle(true);
-			}
 		}
+
+		else if (!pw.particles[i].getFlaque() && pw.particles[i].getIndexBuo() != 0)
+		{
+				pw.registry.remove(pw.particles + i, pw.particles[i].getIndexBuo());
+				pw.particles[i].setIndexBuo(0);
+		}
+		
 
 	}
 
