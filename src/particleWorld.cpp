@@ -5,7 +5,7 @@ using namespace typhon;
 ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxContacts(NB_PARTICLES) {
 	particles = new Particle[NB_PARTICLES];
 	ParticleGravity* pg = new ParticleGravity(Vector3::HIGH_GRAVITY);
-	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 40.0, 20.0, PARTICLE_RADIUS * 0.5, PARTICLE_RADIUS * 2, 8.0);
+	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 40.0, 20.0, PARTICLE_RADIUS * 0.5, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 5);
 
 
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
@@ -65,6 +65,7 @@ void ParticleWorld::integrate(real duration)
 		particles[i].integrate(duration);
 
 }
+
 void ParticleWorld::runPhysics(real duration) {
 	registry.updateForces(duration);
 
@@ -76,7 +77,12 @@ void ParticleWorld::runPhysics(real duration) {
 	resolver.resolveContacts(contacts, usedContacts, duration);
 }
 
+// =================================
+// Specific to the TP2 simulation
+
 unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
+	// 0 => no rebound
+	// 1 => constant rebound
 	const static real restitution = 0.8;
 
 	unsigned used = 0;
@@ -87,66 +93,62 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 		bool underGround = false;
 		if (particles[i].getPosition().y < 0) { underGround = true; }
 
+		// Getting the bottom of the particle
 		real height = particles[i].getPosition().y - PARTICLE_RADIUS;
 
 		if (height > 0) return used;
 
+		// Knowing where we are
 		particles[i].setGround();
 		particles[i].setFlaque();
 
+		// If we're on the ground
 		if (particles[i].getGround() && !underGround) {
-			
-
 			contact->contactNormal = Vector3::UP;
 			contact->penetration = height;
 			contact->restitution = restitution;
 
 			contact->particle[0] = particles + i;
+			// This is the ground
 			contact->particle[1] = nullptr;
 
 			used++;
 			contact++;
-
 		}
-
-		else if (particles[i].getFlaque() && !underGround) {
-			
-		}
-
 	}
 
 	return used;
 }
 
 void BlobForceGenerator::updateForce(Particle* particle, real duration) {
-	int joinCount = 0;
-	for (int i = 0; i < NB_PARTICLES; i++) {
-		// Pour éviter que les particules s'attirent elles-mêmes et rentrent dans le sol, ou encore que les particules qui sont tombées se magnétisent "sous terre".
+	for (unsigned i = 0; i < NB_PARTICLES; i++) {
+		// If it's the same particle, or if it's underground
 		if (particles + i == particle || particle->getPosition().y < 0) continue;
 
+		// Direction + magnitude of the vector
 		Vector3 separation = particles[i].getPosition() - particle->getPosition();
 		real distance = separation.magnitude();
 
-		if (distance < minNaturalDistance) {
-			// Répulsion
-			distance = PARTICLE_RADIUS - distance / minNaturalDistance;
-			particle->addForce(separation.unit() * (1.0f - distance) * maxRepulsion * -1.0f);
-			joinCount++;
+		// Repulsion
+		if (distance < minRepulsDist) {
+			distance = PARTICLE_RADIUS - distance / minRepulsDist;
+			particle->addForce(separation.unit() * (1.0 - distance) * repulsion * -1.0f);
 		}
-		else if (distance > maxNaturalDistance && distance < maxDistance) {
-			// Attraction
-			distance = (distance - maxNaturalDistance) / (maxDistance - maxNaturalDistance);
-			particle->addForce(separation.unit() * distance * maxAttraction);
-			joinCount++;
+		// Attraction
+		else if (distance > maxAttracDist && distance < cableDist) {
+			distance = (distance - maxAttracDist) / (cableDist - maxAttracDist);
+			particle->addForce(separation.unit() * distance * attraction);
 		}
+		// Cable
 		else {
 			Vector3 force;
 			particle->getPosition(&force);
+			// Attach to the head
 			Particle* other = particles;
 			force -= other->getPosition();
 
 			real magnitude = force.magnitude();
-			magnitude = real_abs(magnitude - maxDistance);
+			magnitude = real_abs(magnitude - cableDist);
 			magnitude *= 2;
 
 			force.normalise();

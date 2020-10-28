@@ -57,6 +57,15 @@ namespace typhon {
 		// Adding a new contact
 		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const = 0;
 	};
+
+	// Particle contact generator
+	class Platform : public ParticleContactGenerator {
+	public:
+		Particle* particles;
+
+		// Hérité via ParticleContactGenerator
+		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
+	};
 }
 
 #endif TYPHON_PCONTACTS_H

@@ -33,8 +33,7 @@ void update() {
 	float duration = (float)time.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	for (unsigned i = 0; i < NB_PARTICLES; i++)
-	{
+	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		ParticleBuoyancy* buoyancy = new ParticleBuoyancy(0.5, 0.03, 1);
 
 		if (pw.particles[i].getFlaque() && pw.particles[i].getIndexBuo() == 0) {
@@ -43,15 +42,11 @@ void update() {
 
 		}
 
-		else if (!pw.particles[i].getFlaque() && pw.particles[i].getIndexBuo() != 0)
-		{
-				pw.registry.remove(pw.particles + i, pw.particles[i].getIndexBuo());
-				pw.particles[i].setIndexBuo(0);
+		else if (!pw.particles[i].getFlaque() && pw.particles[i].getIndexBuo() != 0) {
+			pw.registry.remove(pw.particles + i, pw.particles[i].getIndexBuo());
+			pw.particles[i].setIndexBuo(0);
 		}
-		
-
 	}
-
 	pw.runPhysics(duration);
 
 	glutPostRedisplay();
@@ -85,7 +80,7 @@ void display() {
 	glVertex3f(50, 0.0f, 50);
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
-
+	// Water
 	glColor3f(0.2f, 0.6f, 1.0f);
 	glBegin(GL_QUADS);
 	glVertex3f(-10, 0.1f, -50);
@@ -93,7 +88,7 @@ void display() {
 	glVertex3f(10, 0.1f, -30);
 	glVertex3f(-10, 0.1f, -30);
 	glEnd();
-
+	// Cascade
 	glBegin(GL_QUADS);
 	glVertex3f(-10, 0.1f, -50);
 	glVertex3f(-10, -100, -50);
@@ -107,11 +102,11 @@ void display() {
 		position = pw.particles[i].getPosition();
 
 		if (i == 0)
-			glColor3f(1, 0, 0);
+			glColor3f(1, 0, 0); // RED
 		else if (i >= NB_PARTICLES / 2)
-			glColor3f(0, 0, 1);
+			glColor3f(0, 0, 1); // BLUE
 		else
-			glColor3f(0, 0, 0);
+			glColor3f(0, 0, 0); // BLACK
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
 		glutSolidSphere(PARTICLE_RADIUS, 10, 10);
@@ -125,17 +120,13 @@ void display() {
 }
 
 void special(int key, int xx, int yy) {
-	std::cout << key << std::endl;
-	switch (key)
-	{
+	switch (key) {
 	default:
 		break;
 	}
 }
 
 void keyboard(unsigned char key, int x, int y) {
-
-
 	switch (key) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);

@@ -147,6 +147,31 @@ namespace typhon {
 		virtual void updateForce(Particle* particle, real duration);
 	};
 
+	// =============================================
+	// Blob
+	class BlobForceGenerator : public ParticleForceGenerator {
+	private:
+		// All particles in the simulation
+		Particle* particles;
+		// Repulsion force
+		real repulsion;
+		// Attraction force
+		real attraction;
+		// Min value when to apply max repulsion
+		real minRepulsDist;
+		// Max value when to apply attraction
+		real maxAttracDist;
+		// Max value when to apply a cable-like force
+		real cableDist;
+
+	public:
+		BlobForceGenerator(Particle* particles, real repulsion, real maxAttraction, real minRepulsDist, real maxAttracDist, real cableDist)
+			: particles(particles), repulsion(repulsion), attraction(attraction),
+			minRepulsDist(minRepulsDist), maxAttracDist(maxAttracDist), cableDist(cableDist) {}
+
+		virtual void updateForce(Particle* particle, real duration);
+	};
+
 }
 
 #endif TYPHON_PFGEN_H

@@ -123,8 +123,7 @@ void Particle::addForce(const Vector3& force) {
 }
 
 void Particle::setFlaque() {
-	if (position.x <= 10 && position.x >= -10 && position.z <= -30 && position.z >= -50)
-	{
+	if (position.x <= 10 && position.x >= -10 && position.z <= -30 && position.z >= -50) {
 		onWater = true;
 		onGround = false;
 	}
@@ -141,8 +140,7 @@ bool Particle::getFlaque() {
 }
 
 void Particle::setGround() {
-	if (position.x <= 50 && position.x >= -50 && position.z <= 50 && position.z >= -50 && !onWater)
-	{
+	if (position.x <= 50 && position.x >= -50 && position.z <= 50 && position.z >= -50 && !onWater) {
 		onGround = true;
 		onWater = false;
 	}
@@ -158,11 +156,9 @@ bool Particle::getGround() {
 	return onGround;
 }
 
-void Particle::setIndexBuo(int indexbuo)
-{
+void Particle::setIndexBuo(int indexbuo) {
 	indexBuo = indexbuo;
 }
-int Particle::getIndexBuo()
-{
+int Particle::getIndexBuo() {
 	return indexBuo;
 }

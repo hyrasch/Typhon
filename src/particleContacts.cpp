@@ -2,21 +2,20 @@
 
 using namespace typhon;
 
-void ParticleContact::resolve(real duration)
-{
+void ParticleContact::resolve(real duration) {
 	resolveVelocity(duration);
 	resolveInterpenetration(duration);
 }
 
-real ParticleContact::calculateSeparatingVelocity() const
-{
+real ParticleContact::calculateSeparatingVelocity() const {
 	Vector3 relativeVelocity = particle[0]->getVelocity();
+	// If there is another particle
 	if (particle[1]) relativeVelocity -= particle[1]->getVelocity();
+
 	return relativeVelocity * contactNormal;
 }
 
-void ParticleContact::resolveVelocity(real duration)
-{
+void ParticleContact::resolveVelocity(real duration) {
 	// The velocity at the opposite of the contact
 	real separatingVelocity = calculateSeparatingVelocity();
 	// If the are separating or not moving, return

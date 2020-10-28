@@ -3,10 +3,9 @@
 using namespace typhon;
 
 void ParticleForceRegistry::updateForces(real duration) {
-	std::vector<ParticleForceRegistration>::iterator i = registrations.begin();
-
-	for (; i != registrations.end(); i++)
-		i->fg->updateForce(i->particle, duration);
+	for (ParticleForceRegistration r : registrations) {
+		r.fg->updateForce(r.particle, duration);
+	}
 }
 
 int ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) {
@@ -22,7 +21,7 @@ int ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) {
 void ParticleForceRegistry::remove(Particle* particle, int index) {
 	ParticleForceRegistry::ParticleForceRegistration registration;
 	registration.particle = particle;
-	if(index < registrations.size())
+	if (index < registrations.size())
 		registrations.erase(registrations.begin() + index);
 }
 
@@ -121,7 +120,7 @@ void ParticleBuoyancy::updateForce(Particle* particle, real duration) {
 
 // =============================================
 // Fake spring
-void ParticleFakeSpring::updateForce(Particle* particle, real duration){
+void ParticleFakeSpring::updateForce(Particle* particle, real duration) {
 	if (!particle->hasFiniteMass()) return;
 
 	Vector3 position;

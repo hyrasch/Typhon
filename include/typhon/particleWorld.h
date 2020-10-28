@@ -10,57 +10,37 @@ namespace typhon {
 #define NB_PARTICLES 10
 #define PARTICLE_RADIUS 0.4
 
-
-
+	// Holding our simulation
 	class ParticleWorld {
 	public:
+		// Array of particles simulated
 		Particle* particles;
+		// The registry for our forces applied to the particles
 		ParticleForceRegistry registry;
+		// The holder of the contacts generated in our simulation
 		std::vector<ParticleContactGenerator*> contactGenerators;
 
 	public:
 		ParticleWorld(unsigned iterations = 0);
+		// Clearing particles accum
 		void startFrame();
+		// Checking contacts that happens in the frame
 		unsigned generateContacts();
+		// Integration
 		void integrate(real duration);
+		// The routine of the simulation
+		// ==> Forces, contacts, integration, 
 		void runPhysics(real duration);
+		// Iterations are fixes or not
 		bool calculateIterations;
 
 	protected:
-
+		// Contact esolver
 		ParticleContactResolver resolver;
+		// Contact array
 		ParticleContact* contacts;
+		// Max contacts handled in one frame
 		unsigned maxContacts;
-	};
-
-	class Platform : public ParticleContactGenerator {
-
-	public:
-		Particle* particles;
-
-		// Hérité via ParticleContactGenerator
-		virtual unsigned addContact(ParticleContact* contact, unsigned limit) const override;
-	};
-
-	class BlobForceGenerator : public ParticleForceGenerator
-	{
-	private:
-		Particle* particles;
-		real maxRepulsion;
-		real maxAttraction;
-		real minNaturalDistance;
-		real maxNaturalDistance;
-		real floatHead;
-		unsigned maxFloat;
-		real maxDistance;
-	public:
-		
-		BlobForceGenerator(Particle* particles, real maxRepulsion, real maxAttraction, real minNaturalDistance, real maxNaturalDistance, real maxDistance)
-			: particles(particles), maxRepulsion(maxRepulsion),
-			maxAttraction(maxAttraction), minNaturalDistance(minNaturalDistance),
-			maxNaturalDistance(maxNaturalDistance), maxDistance(maxDistance) {}
-		virtual void updateForce(Particle* particle, real duration);
-
 	};
 }
 
