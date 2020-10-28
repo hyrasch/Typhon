@@ -5,19 +5,21 @@ using namespace typhon;
 ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxContacts(NB_PARTICLES) {
 	particles = new Particle[NB_PARTICLES];
 	ParticleGravity* pg = new ParticleGravity(Vector3::GRAVITY);
-	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 20.0, 10.0, PARTICLE_RADIUS * 0.75, PARTICLE_RADIUS * 1.5, PARTICLE_RADIUS * 3, 2, 8.0);
+	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 40.0, 20.0, PARTICLE_RADIUS*0.5, PARTICLE_RADIUS * 2, PARTICLE_RADIUS * 10, 2, 8.0);
 
 
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		particles[i].setDamping(0.2);
 		particles[i].setAcceleration(Vector3::GRAVITY);
 		particles[i].setVelocity(0, 0, 0);
-		particles[i].setPosition(10*i, 15, 0);
+		particles[i].setPosition(PARTICLE_RADIUS*3*i, 15, 0);
 		particles[i].setInverseMass(1);
 		particles[i].clearAccumulator();
 
 		registry.add(particles + i, pg);
-		registry.add(particles + i, bfg);
+		if (i != 0) {
+			registry.add(particles + i, bfg);
+		}
 	}
 
 	Platform* platform = new Platform();
@@ -104,22 +106,20 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 
 void BlobForceGenerator::updateForce(Particle* particle, real duration)
 {
-    unsigned joinCount = 0;
-    for (unsigned i = 0; i < NB_PARTICLES; i++)
+    int joinCount = 0;
+    for (int i = 0; i < NB_PARTICLES; i++)
     {
-        // Don't attract yourself
-        if (particles + i == particle) continue;
+        // Pour éviter que les particules s'attirent elles-mêmes et rentrent dans le sol, ou encore que les particules qui sont tombées se magnétisent "sous terre".
+        if (particles + i == particle || particle->getPosition().y < 0) continue;
 
-        // Work out the separation distance
-        typhon::Vector3 separation =
+        Vector3 separation =
             particles[i].getPosition() - particle->getPosition();
-        separation.z = 0.0f;
         real distance = separation.magnitude();
 
         if (distance < minNaturalDistance)
         {
-            // Use a repulsion force.
-            distance = 1.0f - distance / minNaturalDistance;
+            // Répulsion.
+            distance = PARTICLE_RADIUS - distance / minNaturalDistance;
             particle->addForce(
                 separation.unit() * (1.0f - distance) * maxRepulsion * -1.0f
             );
@@ -127,22 +127,38 @@ void BlobForceGenerator::updateForce(Particle* particle, real duration)
         }
         else if (distance > maxNaturalDistance && distance < maxDistance)
         {
-            // Use an attraction force.
-            distance =
-                (distance - maxNaturalDistance) /
-                (maxDistance - maxNaturalDistance);
+            // Attraction.
+            distance = (distance - maxNaturalDistance) / (maxDistance - maxNaturalDistance);
             particle->addForce(
                 separation.unit() * distance * maxAttraction
             );
             joinCount++;
         }
+
+		else {
+
+			Vector3 force;
+			particle->getPosition(&force);
+			Particle* other = particles;
+			force -= other->getPosition();
+
+			real magnitude = force.magnitude();
+			magnitude = real_abs(magnitude - maxDistance);
+			magnitude *= 2;
+
+			force.normalise();
+			force *= -magnitude;
+
+			particle->addForce(force);
+
+		}
     }
 
     if (particle == particles && joinCount > 0 && maxFloat > 0)
     {
         real force = real(joinCount / maxFloat) * floatHead;
         if (force > floatHead) force = floatHead;
-        particle->addForce(typhon::Vector3(0, force, 0));
+        particle->addForce(Vector3(0, force, 0));
     }
 
 }

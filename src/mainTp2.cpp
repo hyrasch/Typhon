@@ -116,16 +116,16 @@ void keyboard(unsigned char key, int x, int y) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
 	case 'z':
-		pw.particles[0].setPosition(pw.particles[0].getPosition()+ Vector3(0.5, 0, 0));
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity()+ Vector3(1, 0, 0));
 		break;
 	case 'q':
-		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, -0.5));
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(0, 0, -1));
 		break;
 	case 's':
-		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(-0.5, 0, 0));
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(-1, 0, 0));
 		break;
 	case 'd':
-		pw.particles[0].setPosition(pw.particles[0].getPosition() + Vector3(0, 0, 0.5));
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(0, 0, 1));
 		break;
 	case 'f':
 		break;
