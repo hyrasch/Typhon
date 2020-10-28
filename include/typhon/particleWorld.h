@@ -10,6 +10,8 @@ namespace typhon {
 #define NB_PARTICLES 1
 #define PARTICLE_RADIUS 1.0
 
+
+
 	class ParticleWorld {
 	public:
 		Particle* particles;
@@ -32,11 +34,6 @@ namespace typhon {
 	};
 
 	class Platform : public ParticleContactGenerator {
-	public:
-		const real xMin = -50.0;
-		const real xMax = 50.0;
-		const real zMin = -50.0;
-		const real zMax = 50.0;
 
 	public:
 		Particle* particles;

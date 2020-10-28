@@ -15,6 +15,14 @@ namespace typhon {
 		Vector3 forceAccum;
 		Vector3 acceleration;
 
+		bool onGround = true;
+		bool onWater = false;
+
+		bool toggle = true;
+		bool waterToGround = false;
+		bool groundToWater = false;
+
+
 	public:
 		void integrate(real duration);
 
@@ -47,6 +55,23 @@ namespace typhon {
 
 		void clearAccumulator();
 		void addForce(const Vector3& force);
+
+		void setFlaque();
+		void setFlaque(bool flaque);
+		bool getFlaque();
+
+		void setGround();
+		void setGround(bool ground);
+		bool getGround();
+
+		void setToogle(bool toogle);
+		bool getToogle();
+
+		void setWatToGrnd(bool wattogrnd);
+		bool getWatToGrnd();
+
+		void setGrndToWat(bool grndtowat);
+		bool getGrndToWat();
 	};
 }
 #endif  TYPHON_PARTICLE_H

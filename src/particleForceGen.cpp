@@ -16,6 +16,13 @@ void ParticleForceRegistry::add(Particle* particle, ParticleForceGenerator* fg) 
 	registrations.push_back(registration);
 }
 
+void ParticleForceRegistry::remove(Particle* particle, ParticleForceGenerator* fg) {
+	ParticleForceRegistry::ParticleForceRegistration registration;
+	registration.particle = particle;
+	registration.fg = fg;
+	registrations.pop_back();
+}
+
 // =============================================
 // Gravity
 void ParticleGravity::updateForce(Particle* particle, real duration) {

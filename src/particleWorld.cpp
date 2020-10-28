@@ -1,11 +1,11 @@
 #include <typhon/particleWorld.h>
+#include <iostream>
 
 using namespace typhon;
 
 ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxContacts(NB_PARTICLES) {
 	particles = new Particle[NB_PARTICLES];
 	ParticleGravity* pg = new ParticleGravity(Vector3::GRAVITY);
-	BlobForceGenerator* bfg = new BlobForceGenerator(particles, 20.0, 10.0, PARTICLE_RADIUS * 0.75, PARTICLE_RADIUS * 1.5, PARTICLE_RADIUS * 3, 2, 8.0);
 
 
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
@@ -17,10 +17,10 @@ ParticleWorld::ParticleWorld(unsigned iterations) : resolver(iterations), maxCon
 		particles[i].clearAccumulator();
 
 		registry.add(particles + i, pg);
-		registry.add(particles + i, bfg);
 	}
 
 	Platform* platform = new Platform();
+
 	platform->particles = particles;
 
 	contactGenerators.push_back(platform);
@@ -71,8 +71,6 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 
 	unsigned used = 0;
 
-	
-
 	for (unsigned i = 0; i < NB_PARTICLES; i++) {
 		if (used >= limit) break;
 
@@ -83,8 +81,17 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 
 		if (height > 0) return used;
 
-		if (particles[i].getPosition().x <= xMax && particles[i].getPosition().x >= xMin
-			&& particles[i].getPosition().z <= zMax && particles[i].getPosition().z >= zMin && !underGround) {
+		if (particles[i].getFlaque()) particles[i].setWatToGrnd(true);
+
+		if (particles[i].getGround()) particles[i].setGrndToWat(true);
+
+		particles[i].setGround();
+		particles[i].setFlaque();
+
+		if (particles[i].getGround() && !underGround) 
+		{
+			particles[i].setGround(true);
+			particles[i].setFlaque(false);
 
 			contact->contactNormal = Vector3::UP;
 			contact->penetration = height;
@@ -97,6 +104,13 @@ unsigned Platform::addContact(ParticleContact* contact, unsigned limit) const {
 			contact++;
 
 		}
+
+		else if (particles[i].getFlaque() && !underGround) 
+		{
+			particles[i].setGround(false);
+			particles[i].setFlaque(true);
+		}
+
 	}
 
 	return used;

@@ -121,3 +121,69 @@ void Particle::clearAccumulator() {
 void Particle::addForce(const Vector3& force) {
 	forceAccum += force;
 }
+
+void Particle::setFlaque() {
+	if (position.x <= 10 && position.x >= -10 && position.z <= -30 && position.z >= -50)
+	{
+		onWater = true;
+		onGround = false;
+	}
+	else
+		onWater = false;
+}
+
+void Particle::setFlaque(bool flaque) {
+	onWater = flaque;
+}
+
+bool Particle::getFlaque() {
+	return onWater;
+}
+
+void Particle::setGround() {
+	if (position.x <= 50 && position.x >= -50 && position.z <= 50 && position.z >= -50 && !onWater)
+	{
+		onGround = true;
+		onWater = false;
+	}
+	else
+		onGround = false;
+}
+
+void Particle::setGround(bool ground) {
+	onGround = ground;
+}
+
+bool Particle::getGround() {
+	return onGround;
+}
+
+void Particle::setToogle(bool toogle) {
+	toggle = toogle;
+}
+
+bool Particle::getToogle() {
+	return toggle;
+}
+
+void Particle::setWatToGrnd(bool wattogrnd)
+{
+	waterToGround = wattogrnd;
+	groundToWater = false;
+}
+
+bool Particle::getWatToGrnd()
+{
+	return waterToGround;
+}
+
+void Particle::setGrndToWat(bool grndtowat)
+{
+	groundToWater = grndtowat;
+	waterToGround = false;
+}
+
+bool Particle::getGrndToWat()
+{
+	return groundToWater;
+}
