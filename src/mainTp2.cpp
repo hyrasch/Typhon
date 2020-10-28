@@ -33,10 +33,10 @@ void update() {
 	float duration = (float)time.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	for (unsigned i = 0; i < NB_PARTICLES; i++) 
+	for (unsigned i = 0; i < NB_PARTICLES; i++)
 	{
 		ParticleBuoyancy* buoyancy = new ParticleBuoyancy(0.5, 0.03, 1);
-		
+
 		if (pw.particles[i].getFlaque()) {
 
 			if (pw.particles[i].getGrndToWat() && pw.particles[i].getToogle())
@@ -45,7 +45,7 @@ void update() {
 				pw.particles[i].setGrndToWat(false);
 				pw.particles[i].setToogle(false);
 			}
-			
+
 			if (pw.particles[i].getWatToGrnd() && !pw.particles[i].getToogle() && pw.particles[i].getGround())
 			{
 				pw.registry.remove(pw.particles + i, buoyancy);
@@ -110,7 +110,12 @@ void display() {
 		Vector3 position;
 		position = pw.particles[i].getPosition();
 
-		glColor3f(0, 0, 0);
+		if (i == 0)
+			glColor3f(1, 0, 0);
+		else if (i >= NB_PARTICLES / 2)
+			glColor3f(0, 0, 1);
+		else
+			glColor3f(0, 0, 0);
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
 		glutSolidSphere(PARTICLE_RADIUS, 10, 10);
@@ -134,12 +139,12 @@ void special(int key, int xx, int yy) {
 
 void keyboard(unsigned char key, int x, int y) {
 
-	
+
 	switch (key) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
 	case 'z':
-		pw.particles[0].setVelocity(pw.particles[0].getVelocity()+ Vector3(2, 0, 0));
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(2, 0, 0));
 		break;
 	case 'q':
 		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(0, 0, -2));
@@ -149,6 +154,9 @@ void keyboard(unsigned char key, int x, int y) {
 		break;
 	case 'd':
 		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3(0, 0, 2));
+		break;
+	case 32: // SPACE BAR
+		pw.particles[0].setVelocity(pw.particles[0].getVelocity() + Vector3::UP * 10);
 		break;
 	case 'f':
 		break;

@@ -7,8 +7,8 @@
 
 namespace typhon {
 
-#define NB_PARTICLES 4
-#define PARTICLE_RADIUS 1.0
+#define NB_PARTICLES 10
+#define PARTICLE_RADIUS 0.4
 
 
 
@@ -55,8 +55,10 @@ namespace typhon {
 		real maxDistance;
 	public:
 		
-		BlobForceGenerator(Particle* particles, real maxRepulsion, real maxAttraction, real minNaturalDistance, real maxNaturalDistance, real floatHead, unsigned maxFloat, real maxDistance)
-			: particles(particles), maxRepulsion(maxRepulsion), maxAttraction(maxAttraction), minNaturalDistance(minNaturalDistance), maxNaturalDistance(maxNaturalDistance), floatHead(floatHead), maxFloat(maxFloat), maxDistance(maxDistance) {}
+		BlobForceGenerator(Particle* particles, real maxRepulsion, real maxAttraction, real minNaturalDistance, real maxNaturalDistance, real maxDistance)
+			: particles(particles), maxRepulsion(maxRepulsion),
+			maxAttraction(maxAttraction), minNaturalDistance(minNaturalDistance),
+			maxNaturalDistance(maxNaturalDistance), maxDistance(maxDistance) {}
 		virtual void updateForce(Particle* particle, real duration);
 
 	};
