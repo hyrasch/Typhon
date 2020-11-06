@@ -7,15 +7,7 @@
 using namespace typhon;
 
 ParticleWorld pw;
-
 Time time = Time::getInstance();
-
-// angle of rotation for the camera direction
-float angle = 3.14;
-// actual vector representing the camera's direction
-float lx = 0.0f, lz = 1.0f;
-// XZ position of the camera
-float x = 0.0f, z = 5.0f;
 
 void renderBitmapString(float x, float y, float z, void* font, char* string) {
 

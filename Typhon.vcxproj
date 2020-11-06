@@ -174,7 +174,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp" />
-    <ClCompile Include="src\mainTp2.cpp" />
+    <ClCompile Include="src\mainTp3.cpp" />
     <ClCompile Include="src\particle.cpp" />
     <ClCompile Include="src\particleContacts.cpp" />
     <ClCompile Include="src\particleForceGen.cpp" />
