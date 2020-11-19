@@ -22,7 +22,7 @@ namespace typhon {
 
 		//Vélocité angulaire du RigidBody (WorldSpace)
 		Vector3 rotation;
-
+            
 		//Matrice permettant de passer du BodySpace au WorldSpace (et inversement)
 		Matrix4 transformMatrix;
 

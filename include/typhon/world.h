@@ -21,15 +21,6 @@ namespace typhon {
 
 		void runPhysics(real duration);
 	};
-
-	/*class Car
-	{
-		//CarForce carForce;
-		RigidBody car;
-		ForceRegistry registry;
-
-	};*/
-
 }
 
 #endif	TYPHON_WORLD_H

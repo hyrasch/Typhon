@@ -138,12 +138,10 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	//-------------------------------------------------
-
 	gluLookAt(massCenter.x - 15, massCenter.y + 10, massCenter.z, massCenter.x, massCenter.y, massCenter.z, 0.0, 1.0, 0.0);
 
 	// Draw ground
-	glColor3f(0, 0, 0);
+	glColor3f(0, 1, 0);
 	glBegin(GL_QUADS);
 	glVertex3f(-50, 0.0f, -50);
 	glVertex3f(-50, 0.0f, 50);
@@ -151,30 +149,8 @@ void display()
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
 
-	//Draw gizmo
-	glColor3f(0, 0, 1);
-	glPushMatrix();
-	glPopMatrix();
-
-	glBegin(GL_LINES);
-	glColor3f(1, 0, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(1,0,0);
-
-	glColor3f(0, 1, 0);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0,1,0);
-
-	glColor3f(0, 0, 1);
-	glVertex3f(0, 0, 0);
-	glVertex3f(0,0,1);
-
-	
 	DrawCube(massCenter, 1, 1, 1);
 	
-
-	//-------------------------------------------------
-
 	glutSwapBuffers();
 
 	glClearColor(0.9f, 0.95f, 1.0f, 1.0f);

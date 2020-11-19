@@ -1,10 +1,7 @@
 #include <typhon/typhon.h>
-#include <memory.h>
 #include <assert.h>
 
 using namespace typhon;
-
-
 
 inline void _calculateTransformMatrix(Matrix4& transformMatrix, const Vector3& position, const Quaternion& orientation)
 {
@@ -93,32 +90,33 @@ void RigidBody::calculateDerivedData()
 
 void RigidBody::integrate(real duration)
 {
-    // Calculate linear acceleration from force inputs.
+    // Calculer l'acceleration linéaire à partir de forceAccum
     lastFrameAcceleration = acceleration;
     lastFrameAcceleration.addScaledVector(forceAccum, inverseMass);
-    // Calculate angular acceleration from torque inputs.
-    Vector3 angularAcceleration = inverseInertiaTensorWorld.transform(torqueAccum);
-    // Adjust velocities
-    // Update linear velocity from both acceleration and impulse.
-    velocity.addScaledVector(lastFrameAcceleration, duration);
-    // Update angular velocity from both acceleration and impulse.
-    rotation.addScaledVector(angularAcceleration, duration);
-    // Impose drag.
-    velocity *= real_pow(linearDamping, duration);
-    rotation *= real_pow(angularDamping, duration);
-    // Adjust positions
-    // Update linear position.
-    position.addScaledVector(velocity, duration);
-    // Update angular position.
 
-        orientation.addScaledVector(rotation, duration);
-    // Impose drag.
+    // Calculer l'acceleration angulaire à partir de forceAccum
+    Vector3 angularAcceleration = inverseInertiaTensorWorld.transform(torqueAccum);
+
+    // Update vélocité linéaire
+    velocity.addScaledVector(lastFrameAcceleration, duration);
+
+    // Update vélocité angulaire
+    rotation.addScaledVector(angularAcceleration, duration);
+
+    // Ajouter le drag aux 2 vélocités
     velocity *= real_pow(linearDamping, duration);
     rotation *= real_pow(angularDamping, duration);
-    // Normalize the orientation, and update the matrices with the new
-    // position and orientation.
+
+    // Update position
+    position.addScaledVector(velocity, duration);
+
+    // Update rotation
+    orientation.addScaledVector(rotation, duration);
+
+    //Calculer les "DerivedData" (Matrice de transformation et tenseur d'inertie)
     calculateDerivedData();
-    // Clear accumulators.
+
+    // Clear accumulators
     clearAccumulators();
 }
 
