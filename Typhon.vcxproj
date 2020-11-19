@@ -158,7 +158,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\typhon\body.h" />
     <ClInclude Include="include\typhon\core.h" />
+    <ClInclude Include="include\typhon\forceGen.h" />
     <ClInclude Include="include\typhon\particle.h" />
     <ClInclude Include="include\typhon\particleContacts.h" />
     <ClInclude Include="include\typhon\particleForceGen.h" />
@@ -171,15 +173,19 @@
     <ClInclude Include="include\gl\freeglut_ext.h" />
     <ClInclude Include="include\gl\freeglut_std.h" />
     <ClInclude Include="include\gl\glut.h" />
+    <ClInclude Include="include\typhon\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\body.cpp" />
     <ClCompile Include="src\core.cpp" />
+    <ClCompile Include="src\forceGen.cpp" />
     <ClCompile Include="src\mainTp3.cpp" />
     <ClCompile Include="src\particle.cpp" />
     <ClCompile Include="src\particleContacts.cpp" />
     <ClCompile Include="src\particleForceGen.cpp" />
     <ClCompile Include="src\particleLinks.cpp" />
     <ClCompile Include="src\particleWorld.cpp" />
+    <ClCompile Include="src\world.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitattributes" />

@@ -234,6 +234,41 @@ namespace typhon {
 			j *= d;
 			k *= d;
 		}
+
+		//Multiplication du quaternion actuel avec un autre quaternion
+		void operator *=(const Quaternion& multiplier)
+		{
+			Quaternion q = *this;
+			r = q.r * multiplier.r - q.i * multiplier.i -
+				q.j * multiplier.j - q.k * multiplier.k;
+			i = q.r * multiplier.i + q.i * multiplier.r +
+				q.j * multiplier.k - q.k * multiplier.j;
+				j = q.r * multiplier.j + q.j * multiplier.r +
+				q.k * multiplier.i - q.i * multiplier.k;
+			k = q.r * multiplier.k + q.k * multiplier.r +
+				q.i * multiplier.j - q.j * multiplier.i;
+		}
+
+		//Rotation du quaternion autour d'un vecteur
+		void rotateByVector(const Vector3& vector)
+		{
+			Quaternion q(0, vector.x, vector.y, vector.z);
+			(*this) *= q;
+		}
+
+		//Met a jour l'orientation du quaternion à l'aide de la velocité angulaire
+		void addScaledVector(const Vector3& vector, real scale)
+		{
+			Quaternion q(0,
+				vector.x * scale,
+				vector.y * scale,
+				vector.z * scale);
+			q *= *this;
+			r += q.r * ((real)0.5);
+			i += q.i * ((real)0.5);
+			j += q.j * ((real)0.5);
+			k += q.k * ((real)0.5);
+		}
 	};
 
 	class Matrix3
@@ -258,6 +293,21 @@ namespace typhon {
 			val[0] = m0; val[1] = m1; val[2] = m2;
 			val[3] = m3; val[4] = m4; val[5] = m5;
 			val[6] = m6; val[7] = m7; val[8] = m8;
+		}
+
+		Vector3 operator*(const Vector3& vector) const
+		{
+			return Vector3(
+				vector.x * val[0] + vector.y * val[1] + vector.z * val[2],
+				vector.x * val[3] + vector.y * val[4] + vector.z * val[5],
+				vector.x * val[6] + vector.y * val[7] + vector.z * val[8]
+			);
+		}
+
+		//Transformé du vecteur3 par la matrice actuelle
+		Vector3 transform(const Vector3& vector) const
+		{
+			return (*this) * vector;
 		}
 
 		//Multiplication d'une matrice 3x3 par la matrice actuelle (3x3 aussi)
@@ -392,6 +442,11 @@ namespace typhon {
 			val[0] = val[5] = val[10] = 1;
 		}
 
+		Vector3 transform(const Vector3& vector) const
+		{
+			return (*this) * vector;
+		}
+
 		//Transformé d'un vecteur par la matrice actuelle
 		Vector3 operator*(const Vector3& vector) const
 		{
@@ -499,7 +554,7 @@ namespace typhon {
 			return result;
 		}
 
-		//IInverse la matrice actuelle
+		//Inverse la matrice actuelle
 		void invert()
 		{
 			setInverse(*this);
