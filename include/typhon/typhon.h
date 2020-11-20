@@ -6,6 +6,6 @@
 #include "particleLinks.h"
 #include "particleForceGen.h"
 #include "particleWorld.h"
-#include "body.h"
+#include "rigidBody.h"
 #include "world.h"
 #include "forceGen.h"

@@ -1,25 +1,23 @@
 #ifndef TYPHON_FGEN_H
 #define TYPHON_FGEN_H
 
-#include "body.h"
+#include "rigidBody.h"
 #include "particleForceGen.h"
 #include <vector>
 
 namespace typhon {
 
+	// Générateur de forces pour les corps
 	class ForceGenerator
 	{
 	public:
-
 		virtual void updateForce(RigidBody* body, real duration) = 0;
 	};
 
 	class ForceRegistry
 	{
 	protected:
-
-		struct ForceRegistration
-		{
+		struct ForceRegistration {
 			RigidBody* body;
 			ForceGenerator* fg;
 		};
@@ -28,7 +26,7 @@ namespace typhon {
 		Registry registrations;
 
 	public:
-
+		// Ajoute une entrée
 		void add(RigidBody* body, ForceGenerator* fg);
 
 		void updateForces(real duration);
@@ -36,9 +34,11 @@ namespace typhon {
 
 	class Gravity : public ForceGenerator
 	{
+	private:
 		Vector3 gravity;
-	public:
 
+	public:
+		// Constructeur
 		Gravity(const Vector3& gravity) : gravity(gravity) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
@@ -46,20 +46,20 @@ namespace typhon {
 
 	class Spring : public ForceGenerator
 	{
-
+	private:
 		Vector3 connectionPoint;
-
 		Vector3 otherConnectionPoint;
 
 		RigidBody* other;
 
 		real springConstant;
-
 		real restLength;
-	public:
 
+	public:
+		// Constructeur
 		Spring(const Vector3& localConnectionPt, RigidBody* other, const Vector3& otherConnectionPt, real springConstant, real restLength)
-			: connectionPoint(localConnectionPt), otherConnectionPoint(otherConnectionPt), other(other), springConstant(springConstant), restLength(restLength) {}
+			: connectionPoint(localConnectionPt), otherConnectionPoint(otherConnectionPt),
+			other(other), springConstant(springConstant), restLength(restLength) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};

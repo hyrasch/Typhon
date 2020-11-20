@@ -1,7 +1,7 @@
 #ifndef TYPHON_WORLD_H
 #define TYPHON_WORLD_H
 
-#include "body.h"
+#include "rigidBody.h"
 #include "forceGen.h"
 
 namespace typhon {

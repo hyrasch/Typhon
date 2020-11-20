@@ -8,7 +8,7 @@
 
 namespace typhon {
 
-	// Force generator
+	// Force generator for particles
 	class ParticleForceGenerator {
 	public:
 		virtual void updateForce(Particle* particle, real duration) = 0;

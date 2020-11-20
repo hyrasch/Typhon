@@ -3,23 +3,21 @@
 
 using namespace typhon;
 
-void World::startFrame()
-{
+void World::startFrame() {
 	BodyRegistration* reg = firstBody;
-	while (reg)
-	{
+
+	while (reg) {
 		reg->body->clearAccumulators();
-		reg->body->calculateDerivedData();
+		reg->body->calculateInertiaTensorWS();
 
 		reg = reg->next;
 	}
 }
 
-void World::runPhysics(real duration)
-{
-	BodyRegistration * reg = firstBody;
-	while (reg)
-	{
+void World::runPhysics(real duration) {
+	BodyRegistration* reg = firstBody;
+
+	while (reg) {
 		reg->body->integrate(duration);
 
 		reg = reg->next;

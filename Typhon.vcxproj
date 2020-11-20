@@ -158,7 +158,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\typhon\body.h" />
+    <ClInclude Include="include\typhon\rigidBody.h" />
     <ClInclude Include="include\typhon\core.h" />
     <ClInclude Include="include\typhon\forceGen.h" />
     <ClInclude Include="include\typhon\particle.h" />
@@ -177,7 +177,7 @@
     <ClInclude Include="include\typhon\world.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\body.cpp" />
+    <ClCompile Include="src\rigidBody.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\forceGen.cpp" />
     <ClCompile Include="src\mainTp3.cpp" />

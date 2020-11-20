@@ -185,7 +185,7 @@ namespace typhon {
 		}
 
 		// Returns an inverted vector
-		Vector3 opposite() const {
+		Vector3 invertVec() const {
 			Vector3 res = *this;
 			res.invert();
 			return res;
@@ -198,36 +198,37 @@ namespace typhon {
 		union {
 			struct {
 
-				//Partie réelle
+				// Partie réelle
 				real r;
 
-				//Partie imaginaire
+				// Partie imaginaire
 				real i;
 				real j;
 				real k;
 			};
 
-			//Stockage des valeurs;
+			// Stockage des valeurs;
 			real val[4];
 		};
 
-		//Constructeur vide
+		// Constructeur vide
 		Quaternion() : r(1), i(0), j(0), k(0) {}
 
-		//Constructeur avec arguments
-		Quaternion(const real r, const real i, const real j, const real k) : r(r), i(i), j(j), k(k) {}
+		// Constructeur avec arguments
+		Quaternion(const real r, const real i, const real j, const real k)
+			: r(r), i(i), j(j), k(k) {}
 
-		//Normalise le quaternion
-		//A utiliser fréquemment pour que le quaternion répresente une rotation à chaque instant (norme == 1)
-		void normalise()
-		{
+		// Normalise le quaternion
+		// Nécessaire pour qu'il représente une rotation uniquement
+		void normalise() {
 			real d = r * r + i * i + j * j + k * k;
 
-			//Si la norme est nulle -> partie réelle = 1
+			// Si la norme est nulle ==> partie réelle = 1
 			if (d == 0) {
 				r = 1;
 				return;
 			}
+
 			d = ((real)1.0) / real_sqrt(d);
 			r *= d;
 			i *= d;
@@ -235,34 +236,29 @@ namespace typhon {
 			k *= d;
 		}
 
-		//Multiplication du quaternion actuel avec un autre quaternion
-		void operator *=(const Quaternion& multiplier)
-		{
+		// Multiplication de quaternions
+		void operator *=(const Quaternion& other) {
 			Quaternion q = *this;
-			r = q.r * multiplier.r - q.i * multiplier.i -
-				q.j * multiplier.j - q.k * multiplier.k;
-			i = q.r * multiplier.i + q.i * multiplier.r +
-				q.j * multiplier.k - q.k * multiplier.j;
-				j = q.r * multiplier.j + q.j * multiplier.r +
-				q.k * multiplier.i - q.i * multiplier.k;
-			k = q.r * multiplier.k + q.k * multiplier.r +
-				q.i * multiplier.j - q.j * multiplier.i;
+
+			r = q.r * other.r - q.i * other.i - q.j * other.j - q.k * other.k;
+			i = q.r * other.i + q.i * other.r + q.j * other.k - q.k * other.j;
+			j = q.r * other.j + q.j * other.r + q.k * other.i - q.i * other.k;
+			k = q.r * other.k + q.k * other.r + q.i * other.j - q.j * other.i;
 		}
 
-		//Rotation du quaternion autour d'un vecteur
-		void rotateByVector(const Vector3& vector)
-		{
+		// Rotation du quaternion par un vecteur
+		void rotateByVector(const Vector3& vector) {
 			Quaternion q(0, vector.x, vector.y, vector.z);
 			(*this) *= q;
 		}
 
-		//Met a jour l'orientation du quaternion à l'aide de la velocité angulaire
-		void addScaledVector(const Vector3& vector, real scale)
-		{
+		// Oriente le quaternion avec une velocité angulaire
+		void addScaledVector(const Vector3& vector, real scale) {
 			Quaternion q(0,
 				vector.x * scale,
 				vector.y * scale,
 				vector.z * scale);
+
 			q *= *this;
 			r += q.r * ((real)0.5);
 			i += q.i * ((real)0.5);
@@ -275,28 +271,24 @@ namespace typhon {
 	{
 	public:
 
-		//Stockage des valeurs
+		/**
+		 * Matrice 3x3
+		 *
+		 * (00|01|02)
+		 * (03|04|05)
+		 * (06|07|08)
+		*/
 		real val[9];
 
-		//Constructeur vide
-		Matrix3() 
-		{
-			val[0] = val[1] = val[2] = 
-			val[3] = val[4] = val[5] = 
-			val[6] = val[7] = val[8] = 0;
-		}
+		// Constructeur vide
+		Matrix3() : val{ 0,0,0,0,0,0,0,0,0 } {}
 
-		//Constructeur avec arguments
-		Matrix3(real m0, real m1, real m2, real m3, real m4, real m5,
-			real m6, real m7, real m8)
-		{
-			val[0] = m0; val[1] = m1; val[2] = m2;
-			val[3] = m3; val[4] = m4; val[5] = m5;
-			val[6] = m6; val[7] = m7; val[8] = m8;
-		}
+		// Constructeur avec arguments
+		Matrix3(real m0, real m1, real m2, real m3, real m4, real m5, real m6, real m7, real m8)
+			: val{ m0,m1,m2,m3,m4,m5,m6,m7,m8 } {}
 
-		Vector3 operator*(const Vector3& vector) const
-		{
+		// Retourne la transformée du vecteur par la matrice3 actuelle
+		Vector3 operator*(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] + vector.y * val[1] + vector.z * val[2],
 				vector.x * val[3] + vector.y * val[4] + vector.z * val[5],
@@ -304,16 +296,12 @@ namespace typhon {
 			);
 		}
 
-		//Transformé du vecteur3 par la matrice actuelle
-		Vector3 transform(const Vector3& vector) const
-		{
+		Vector3 transform(const Vector3& vector) const {
 			return (*this) * vector;
 		}
 
-		//Multiplication d'une matrice 3x3 par la matrice actuelle (3x3 aussi)
-		Matrix3 operator*(const Matrix3& other) const
-		{
-			//On utilise le constructeur de Matrix3 pour renvoyer le résultat de la mutiplication
+		// Retourne le résultat du produit d'une matrice3 par la matrice3 actuelle
+		Matrix3 operator*(const Matrix3& other) const {
 			return Matrix3(
 				val[0] * other.val[0] + val[1] * other.val[3] + val[2] * other.val[6],
 				val[0] * other.val[1] + val[1] * other.val[4] + val[2] * other.val[7],
@@ -329,9 +317,8 @@ namespace typhon {
 			);
 		}
 
-		//Calcul determinant
-		real getDeterminant() const
-		{
+		// Calcul déterminant
+		real getDeterminant() const {
 			return val[0] * val[4] * val[8] -
 				val[0] * val[5] * val[7] -
 				val[1] * val[3] * val[8] +
@@ -340,37 +327,35 @@ namespace typhon {
 				val[2] * val[6] * val[4];
 		}
 
-		void setInverse(const Matrix3& matrix)
-		{
-			//Calcul determinant
+		void setInverse(const Matrix3& matrix) {
 			real t4 = matrix.val[0] * matrix.val[4];
 			real t6 = matrix.val[0] * matrix.val[5];
 			real t8 = matrix.val[1] * matrix.val[3];
 			real t10 = matrix.val[2] * matrix.val[3];
 			real t12 = matrix.val[1] * matrix.val[6];
 			real t14 = matrix.val[2] * matrix.val[6];
-			real t16 = (t4 * matrix.val[8] - t6 * matrix.val[7] - t8 * matrix.val[8] + t10 * matrix.val[7] + t12 * matrix.val[5] - t14 * matrix.val[4]);
+			//real t16 = (t4 * matrix.val[8] - t6 * matrix.val[7] - t8 * matrix.val[8] + t10 * matrix.val[7] + t12 * matrix.val[5] - t14 * matrix.val[4]);
 
-			//t16 = getDeterminant(); A VERIFIEEEEEEEEEEEEEEEEEEEEEEEEEER
+			real det = getDeterminant();
 
-			//Critère d'inversibilité ( det(matrix) != 0 )
-			if (t16 == (real)0.0f) return; 
+			// Critère d'inversibilité ( det(matrix) != 0 )
+			if (det == (real)0.0f) return;
 
-			//Calcul matrice inverse
-			real t17 = 1 / t16;
-			val[0] = (matrix.val[4] * matrix.val[8] - matrix.val[5] * matrix.val[7]) * t17;
-			val[1] = -(matrix.val[1] * matrix.val[8] - matrix.val[2] * matrix.val[7]) * t17;
-			val[2] = (matrix.val[1] * matrix.val[5] - matrix.val[2] * matrix.val[4]) * t17;
-			val[3] = -(matrix.val[3] * matrix.val[8] - matrix.val[5] * matrix.val[6]) * t17;
-			val[4] = (matrix.val[0] * matrix.val[8] - t14) * t17;
-			val[5] = -(t6 - t10) * t17;
-			val[6] = (matrix.val[3] * matrix.val[7] - matrix.val[4] * matrix.val[6]) * t17;
-			val[7] = -(matrix.val[0] * matrix.val[7] - t12) * t17;
-			val[8] = (t4 - t8) * t17;
+			// Matrice inverse
+			det = ((real)1) / det;
+			val[0] = (matrix.val[4] * matrix.val[8] - matrix.val[5] * matrix.val[7]) * det;
+			val[1] = -(matrix.val[1] * matrix.val[8] - matrix.val[2] * matrix.val[7]) * det;
+			val[2] = (matrix.val[1] * matrix.val[5] - matrix.val[2] * matrix.val[4]) * det;
+			val[3] = -(matrix.val[3] * matrix.val[8] - matrix.val[5] * matrix.val[6]) * det;
+			val[4] = (matrix.val[0] * matrix.val[8] - t14) * det;
+			val[5] = -(t6 - t10) * det;
+			val[6] = (matrix.val[3] * matrix.val[7] - matrix.val[4] * matrix.val[6]) * det;
+			val[7] = -(matrix.val[0] * matrix.val[7] - t12) * det;
+			val[8] = (t4 - t8) * det;
 		}
 
-		void setTranspose(const Matrix3& matrix)
-		{
+		// Transpose la matrice3
+		void setTranspose(const Matrix3& matrix) {
 			val[0] = matrix.val[0];
 			val[1] = matrix.val[3];
 			val[2] = matrix.val[6];
@@ -381,75 +366,66 @@ namespace typhon {
 			val[7] = matrix.val[5];
 			val[8] = matrix.val[8];
 		}
-		
-		//Créée une nouvelle matrice étant l'inverse de la matrice actuelle
-		Matrix3 inverse() const
-		{
+
+		// Retourne l'inverse de la matrice3
+		Matrix3 inverse() const {
 			Matrix3 result;
 			result.setInverse(*this);
 			return result;
 		}
 
-		//Inverse la matrice actuelle
-		void invert()
-		{
+		// Inverse la matrice3 actuelle
+		void invert() {
 			setInverse(*this);
 		}
 
-		//Créée une nouvelle matrice étant la transposée de la matrice actuelle
-		Matrix3 transpose() const
-		{
+		// Retourne la transposée de la matrice3
+		Matrix3 transpose() const {
 			Matrix3 result;
 			result.setTranspose(*this);
 			return result;
 		}
 
-		//Transpose la matrice actuelle
-		void transp()
-		{
+		// Transpose la matrice3 actuelle
+		void transp() {
 			setTranspose(*this);
 		}
 
-		//Définie la matrice actuelle comme matrice de rotation du quaternion
-		void setOrientation(const Quaternion& quaternion)
-		{
-			val[0] = 1 - (2 * quaternion.j * quaternion.j + 2 * quaternion.k * quaternion.k);
-			val[1] = 2 * quaternion.i * quaternion.j + 2 * quaternion.k * quaternion.r;
-			val[2] = 2 * quaternion.i * quaternion.k - 2 * quaternion.j * quaternion.r;
-			val[3] = 2 * quaternion.i * quaternion.j - 2 * quaternion.k * quaternion.r;
-			val[4] = 1 - (2 * quaternion.i * quaternion.i + 2 * quaternion.k * quaternion.k);
-			val[5] = 2 * quaternion.j * quaternion.k + 2 * quaternion.i * quaternion.r;
-			val[6] = 2 * quaternion.i * quaternion.k + 2 * quaternion.j * quaternion.r;
-			val[7] = 2 * quaternion.j * quaternion.k - 2 * quaternion.i * quaternion.r;
-			val[8] = 1 - (2 * quaternion.i * quaternion.i + 2 * quaternion.j * quaternion.j);
+		// Définit la matrice actuelle comme matrice de rotation du quaternion
+		void setOrientation(const Quaternion& quat) {
+			val[0] = 1 - (2 * quat.j * quat.j + 2 * quat.k * quat.k);
+			val[1] = 2 * quat.i * quat.j + 2 * quat.k * quat.r;
+			val[2] = 2 * quat.i * quat.k - 2 * quat.j * quat.r;
+			val[3] = 2 * quat.i * quat.j - 2 * quat.k * quat.r;
+			val[4] = 1 - (2 * quat.i * quat.i + 2 * quat.k * quat.k);
+			val[5] = 2 * quat.j * quat.k + 2 * quat.i * quat.r;
+			val[6] = 2 * quat.i * quat.k + 2 * quat.j * quat.r;
+			val[7] = 2 * quat.j * quat.k - 2 * quat.i * quat.r;
+			val[8] = 1 - (2 * quat.i * quat.i + 2 * quat.j * quat.j);
 		}
 	};
 
 	class Matrix4
 	{
 	public:
-
-		//Stockage des valeurs
+		/**
+		 * Matrice 4x3
+		 *
+		 * (00|01|02|03)
+		 * (04|05|06|07)
+		 * (08|09|10|11)
+		*/
 		real val[12];
 
-		//Constructeur vide
-		Matrix4()
-		{
-			val[1] = val[2] = val[3] =
-			val[4] = val[6] = val[7] =
-			val[8] = val[9] = val[11] = 0;
+		// Constructeur vide
+		Matrix4() : val{ 0,0,0,0,0,0,0,0,0,0,0,0 } {}
 
-			val[0] = val[5] = val[10] = 1;
-		}
-
-		Vector3 transform(const Vector3& vector) const
-		{
+		// Retourne le vecteur transformé par la matrice4
+		Vector3 transform(const Vector3& vector) const {
 			return (*this) * vector;
 		}
 
-		//Transformé d'un vecteur par la matrice actuelle
-		Vector3 operator*(const Vector3& vector) const
-		{
+		Vector3 operator*(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] +
 				vector.y * val[1] +
@@ -465,40 +441,28 @@ namespace typhon {
 			);
 		}
 
-		//Multiplication d'une matrice 4x4 par la matrice actuelle (4x4 aussi)
-		Matrix4 operator*(const Matrix4& other) const
-		{
+		// Retourne le produit d'une matrice4 par la matrice4 actuelle
+		Matrix4 operator*(const Matrix4& other) const {
 			Matrix4 result;
-			result.val[0] = (other.val[0] * val[0]) + (other.val[4] * val[1]) +
-				(other.val[8] * val[2]);
-			result.val[4] = (other.val[0] * val[4]) + (other.val[4] * val[5]) +
-				(other.val[8] * val[6]);
-			result.val[8] = (other.val[0] * val[8]) + (other.val[4] * val[9]) +
-				(other.val[8] * val[10]);
-			result.val[1] = (other.val[1] * val[0]) + (other.val[5] * val[1]) +
-				(other.val[9] * val[2]);
-			result.val[5] = (other.val[1] * val[4]) + (other.val[5] * val[5]) +
-				(other.val[9] * val[6]);
-			result.val[9] = (other.val[1] * val[8]) + (other.val[5] * val[9]) +
-				(other.val[9] * val[10]);
-			result.val[2] = (other.val[2] * val[0]) + (other.val[6] * val[1]) +
-				(other.val[10] * val[2]);
-			result.val[6] = (other.val[2] * val[4]) + (other.val[6] * val[5]) +
-				(other.val[10] * val[6]);
-			result.val[10] = (other.val[2] * val[8]) + (other.val[6] * val[9]) +
-				(other.val[10] * val[10]);
-			result.val[3] = (other.val[3] * val[0]) + (other.val[7] * val[1]) +
-				(other.val[11] * val[2]) + val[3];
-			result.val[7] = (other.val[3] * val[4]) + (other.val[7] * val[5]) +
-				(other.val[11] * val[6]) + val[7];
-			result.val[11] = (other.val[3] * val[8]) + (other.val[7] * val[9]) +
-				(other.val[11] * val[10]) + val[11];
+
+			result.val[0] = (other.val[0] * val[0]) + (other.val[4] * val[1]) + (other.val[8] * val[2]);
+			result.val[4] = (other.val[0] * val[4]) + (other.val[4] * val[5]) + (other.val[8] * val[6]);
+			result.val[8] = (other.val[0] * val[8]) + (other.val[4] * val[9]) + (other.val[8] * val[10]);
+			result.val[1] = (other.val[1] * val[0]) + (other.val[5] * val[1]) + (other.val[9] * val[2]);
+			result.val[5] = (other.val[1] * val[4]) + (other.val[5] * val[5]) + (other.val[9] * val[6]);
+			result.val[9] = (other.val[1] * val[8]) + (other.val[5] * val[9]) + (other.val[9] * val[10]);
+			result.val[2] = (other.val[2] * val[0]) + (other.val[6] * val[1]) + (other.val[10] * val[2]);
+			result.val[6] = (other.val[2] * val[4]) + (other.val[6] * val[5]) + (other.val[10] * val[6]);
+			result.val[10] = (other.val[2] * val[8]) + (other.val[6] * val[9]) + (other.val[10] * val[10]);
+			result.val[3] = (other.val[3] * val[0]) + (other.val[7] * val[1]) + (other.val[11] * val[2]) + val[3];
+			result.val[7] = (other.val[3] * val[4]) + (other.val[7] * val[5]) + (other.val[11] * val[6]) + val[7];
+			result.val[11] = (other.val[3] * val[8]) + (other.val[7] * val[9]) + (other.val[11] * val[10]) + val[11];
+
 			return result;
 		}
 
-		//Calcul determinant
-		real getDeterminant() const
-		{
+		// Retourne le déterminant de la matrice4
+		real getDeterminant() const {
 			return val[8] * val[5] * val[2] +
 				val[4] * val[9] * val[2] +
 				val[8] * val[1] * val[6] -
@@ -507,10 +471,10 @@ namespace typhon {
 				val[0] * val[5] * val[10];
 		}
 
-		void setInverse(const Matrix4& matrix)
-		{
-			//Critère d'inversibilité ( det(matrix) != 0 )
-			real det = getDeterminant(); 
+		// Inverse la matrice4 actuelle
+		void setInverse(const Matrix4& matrix) {
+			// Critère d'inversibilité ( det(matrix) != 0 )
+			real det = getDeterminant();
 			if (det == 0) return;
 			det = ((real)1.0) / det;
 
@@ -546,23 +510,20 @@ namespace typhon {
 				- matrix.val[0] * matrix.val[5] * matrix.val[11]) * det;
 		}
 
-		//Créée une nouvelle matrice étant l'inverse de la matrice actuelle
-		Matrix4 inverse() const
-		{
+		// Retourne l'inverse de la matrice4 actuelle
+		Matrix4 inverse() const {
 			Matrix4 result;
 			result.setInverse(*this);
 			return result;
 		}
 
-		//Inverse la matrice actuelle
-		void invert()
-		{
+		// Inverse la matrice4 actuelle
+		void invert() {
 			setInverse(*this);
 		}
 
-		//Définie la matrice actuelle comme matrice de rotation du quaternion
-		void setOrientationAndPos(const Quaternion& quaternion, const Vector3& pos)
-		{
+		// Définit la matrice actuelle comme matrice de rotation du quaternion
+		void setOrientationAndPos(const Quaternion& quaternion, const Vector3& pos) {
 			val[0] = 1 - (2 * quaternion.j * quaternion.j + 2 * quaternion.k * quaternion.k);
 			val[1] = 2 * quaternion.i * quaternion.j + 2 * quaternion.k * quaternion.r;
 			val[2] = 2 * quaternion.i * quaternion.k - 2 * quaternion.j * quaternion.r;
@@ -577,11 +538,10 @@ namespace typhon {
 			val[11] = pos.z;
 		}
 
-		//Transformé d'un vecteur par la transposée de la matrice actuelle 
-		//NE FONCTIONNE QUE SI LA MATRICE EST UNE MATRICE DE ROTATION PURE (Transposée == Inverse)
-		//NE FONCTIONNE QUE POUR UN VECTEUR POSITION
-		Vector3 transformInverse(const Vector3& vector) const
-		{
+		// Retourne la transformée du vecteur par la transposée de la matrice4 actuelle 
+		// NE FONCTIONNE QUE SI LA MATRICE EST UNE MATRICE DE ROTATION PURE (c.a.d sa transposée == inverse)
+		// NE FONCTIONNE QUE POUR UN VECTEUR POSITION
+		Vector3 transformInverse(const Vector3& vector) const {
 			Vector3 tmp = vector;
 			tmp.x -= val[3];
 			tmp.y -= val[7];
@@ -599,10 +559,10 @@ namespace typhon {
 			);
 		}
 
-		//Transformé d'un vecteur par la matrice actuelle
-		//NE FONCTIONNE QUE POUR UN VECTEUR DIRECTION
-		Vector3 transformDirection(const Vector3& vector) const
-		{
+		// Retourne la transformée du vecteur par la matrice4 actuelle
+		// Local ==> World
+		// NE FONCTIONNE QUE POUR UN VECTEUR DIRECTION
+		Vector3 transformDirection(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] + vector.y * val[1] + vector.z * val[2],
 				vector.x * val[4] + vector.y * val[5] + vector.z * val[6],
@@ -610,10 +570,10 @@ namespace typhon {
 			);
 		}
 
-		//Transformé d'un vecteur par la transformée inverse de la matrice actuelle
-		//NE FONCTIONNE QUE POUR UN VECTEUR DIRECTION
-		Vector3 transformInverseDirection(const Vector3& vector) const
-		{
+		// Retourne la transformée du vecteur par la transformée inverse de la matrice4 actuelle
+		// World ==> Local
+		// NE FONCTIONNE QUE POUR UN VECTEUR DIRECTION
+		Vector3 transformInverseDirection(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] +
 				vector.y * val[4] +
