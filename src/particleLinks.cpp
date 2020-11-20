@@ -49,7 +49,7 @@ unsigned ParticleRod::addContact(ParticleContact* contact, unsigned limit) const
 		contact->penetration = currentLen - length;
 	}
 	else { // If the ends are too close
-		contact->contactNormal = normal.opposite();
+		contact->contactNormal = normal.invertVec();
 		contact->penetration = length - currentLen;
 	}
 

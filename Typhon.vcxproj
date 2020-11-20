@@ -167,6 +167,7 @@
     <ClInclude Include="include\typhon\particleLinks.h" />
     <ClInclude Include="include\typhon\precision.h" />
     <ClInclude Include="include\typhon\particleWorld.h" />
+    <ClInclude Include="include\typhon\rigidBody.h" />
     <ClInclude Include="include\typhon\time.h" />
     <ClInclude Include="include\typhon\typhon.h" />
     <ClInclude Include="include\gl\freeglut.h" />
