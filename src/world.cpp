@@ -1,5 +1,7 @@
 #include <cstdlib>
+#include <iostream>
 #include <typhon/world.h>
+#include <math.h>
 
 using namespace typhon;
 
@@ -7,10 +9,16 @@ World::World()
 {
 	myCar.body.setMass(2.5f);
 	myCar.body.setDamping(0.8f, 0.8f);
-	myCar.body.setPosition(0, 20, 10);
-	myCar.body.setAcceleration(Vector3::GRAVITY);
+	myCar.body.setPosition(0, 20, 0);
+	myCar.body.setOrientation(1, 0, 0, 0);
+	myCar.body.setRotation(0, 0, 0);
+
+	myCar.body.setInverseInertiaTensor(Matrix3(myCar.body.getMass() / 24.0f, 0, 0, 0, myCar.body.getMass() / 24.0f, 0, 0, 0, myCar.body.getMass() / 24.0f));
 
 	myCar.body.calculateInertiaTensorWS();
+
+
+	
 }
 
 void World::startFrame() {

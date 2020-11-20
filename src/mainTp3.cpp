@@ -31,40 +31,52 @@ void DrawCar(Vector3 massCenter, float r, float g, float b)
 	//Plateforme du haut
 	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
 	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
+
 	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
 	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
+
 	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
 	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
+
 	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
 	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
 	
 	//Plateforme du bas
 	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
 	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
+
 	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
 	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
+
 	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
 	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
+
 	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
 	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
 
 	//Plateforme de gauche
 	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
 	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
+
 	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
 	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
+
 	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
 	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
+
 	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
 	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
 
 	//Plateforme de droite
 	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
 	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
+
 	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
 	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
+
 	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
 	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
+
 	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
 	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
 
@@ -113,6 +125,26 @@ void DrawCar(Vector3 massCenter, float r, float g, float b)
 	glEnd();
 }
 
+void DrawTaGrosseMere()
+{
+	Matrix4 transform = world.myCar.body.getTransform();
+	GLfloat gl_transform[16];
+	transform.fillGLArray(gl_transform);
+	glPushMatrix();
+	glMultMatrixf(gl_transform);
+
+	// Fuselage
+	glPushMatrix();
+	glutWireCube(1);
+	glColor3f(1, 0, 0);
+	glutSolidSphere(0.1,10,10);
+	glPopMatrix();
+
+	
+	glPopMatrix();
+
+}
+
 void update() 
 {
 	world.startFrame();
@@ -127,9 +159,9 @@ void update()
 
 	world.myCar.registry.updateForces(duration);
 
-	world.myCar.body.integrate(duration);
 
-	std::cout << world.myCar.body.getPosition().y << std::endl;
+
+	world.myCar.body.integrate(duration);
 
 	//--------------------------------------------------------
 
@@ -160,7 +192,7 @@ void display()
 
 	massCenter = world.myCar.body.getPosition();
 
-	gluLookAt(massCenter.x - 15, massCenter.y + 10, massCenter.z, massCenter.x, massCenter.y, massCenter.z, 0.0, 1.0, 0.0);
+	gluLookAt(massCenter.x - 50, massCenter.y + 10, massCenter.z, massCenter.x, massCenter.y, massCenter.z, 0.0, 1.0, 0.0);
 
 	// Draw ground
 	glColor3f(0, 1, 0);
@@ -171,8 +203,10 @@ void display()
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
 
-	DrawCar(massCenter, 0, 0, 0);
-	
+	//DrawCar(massCenter, 0, 0, 0);
+	glColor3f(0, 0, 0);
+	DrawTaGrosseMere();
+
 	glutSwapBuffers();
 
 	glClearColor(0.9f, 0.95f, 1.0f, 1.0f);
@@ -189,7 +223,8 @@ void keyboard(unsigned char key, int x, int y) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
 	case 'z':
-		world.myCar.registry.add(&world.myCar.body, new Gravity(Vector3::UP));
+		ForceGenerator * rotationCW = new RotationCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
+		world.myCar.registry.add(&world.myCar.body, rotationCW);
 
 		break;
 	}

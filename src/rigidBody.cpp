@@ -22,7 +22,7 @@ inline void _calculateTransformMatrix(Matrix4& transformMatrix, const Vector3& p
 }
 
 // Transformée du tenseur d'inertie (body space ==> world space)
-inline void _transformInertiaTensor(Matrix3& iitWorld, const Matrix3& iitBody, const Matrix4& rotmat) {
+inline void _transformInertiaTensor(Matrix3& iitWorld, const Quaternion& q, const Matrix3& iitBody, const Matrix4& rotmat) {
 	real t4 = rotmat.val[0] * iitBody.val[0] + rotmat.val[1] * iitBody.val[3] + rotmat.val[2] * iitBody.val[6];
 	real t9 = rotmat.val[0] * iitBody.val[1] + rotmat.val[1] * iitBody.val[4] + rotmat.val[2] * iitBody.val[7];
 	real t14 = rotmat.val[0] * iitBody.val[2] + rotmat.val[1] * iitBody.val[5] + rotmat.val[2] * iitBody.val[8];
@@ -55,7 +55,7 @@ void RigidBody::calculateInertiaTensorWS() {
 
 	// Calcule le tenseur d'inertie (WorldSpace)
 	// N'ayant besoin que de l'orientation de l'objet, on récupère une matrice 3x3
-	_transformInertiaTensor(inverseInertiaTensorWorld, inverseInertiaTensor, transformMatrix);
+	_transformInertiaTensor(inverseInertiaTensorWorld, orientation, inverseInertiaTensor, transformMatrix);
 }
 
 void RigidBody::integrate(real duration) {
@@ -66,9 +66,11 @@ void RigidBody::integrate(real duration) {
 	// Calculer l'accéleration angulaire à partir de torqueAccum
 	Vector3 angularAcceleration = inverseInertiaTensorWorld.transform(torqueAccum);
 
+
 	// MAJ des vélocités
 	velocity.addScaledVector(lastFrameAcceleration, duration);
 	rotation.addScaledVector(angularAcceleration, duration);
+
 
 	// Ajout des ammortissements
 	velocity *= real_pow(linearDamping, duration);
@@ -77,6 +79,7 @@ void RigidBody::integrate(real duration) {
 	// MAJ de l'objet dans l'espace
 	position.addScaledVector(velocity, duration);
 	orientation.addScaledVector(rotation, duration);
+
 
 	// Calculer les "DerivedData" (Matrice de transformation et tenseur d'inertie)
 	calculateInertiaTensorWS();
@@ -366,6 +369,7 @@ void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point) {
 
 	forceAccum += force;
 	torqueAccum += pt % force;
+
 }
 
 void RigidBody::addTorque(const Vector3& torque) {

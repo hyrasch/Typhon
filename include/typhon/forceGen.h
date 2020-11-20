@@ -16,12 +16,13 @@ namespace typhon {
 
 	class ForceRegistry
 	{
-	protected:
+	public:
 		struct ForceRegistration {
 			RigidBody* body;
 			ForceGenerator* fg;
 		};
 
+	public:
 		typedef std::vector<ForceRegistration> Registry;
 		Registry registrations;
 
@@ -66,15 +67,15 @@ namespace typhon {
 
 	class RotationCW : public ForceGenerator
 	{
+	private:
 		Matrix3 tensor;
 
 		Vector3 position;
 
 		Quaternion orientation;
+	public:
 
-		RotationCW(const Matrix3 tensor, const Vector3 position);
-
-		void setOrientation(const Quaternion& quaternion);
+		RotationCW(const Matrix3 tensor, const Vector3 position) : tensor(tensor), position(position) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};

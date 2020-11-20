@@ -7,6 +7,10 @@ void ForceRegistry::updateForces(real duration) {
 
 	for (; i != registrations.end(); i++)
 		i->fg->updateForce(i->body, duration);
+
+	/*for (ForceRegistration r : registrations) {
+		r.fg->updateForce(r.body, duration);
+	}*/
 }
 
 void ForceRegistry::add(RigidBody* body, ForceGenerator* fg) {
@@ -38,5 +42,10 @@ void Spring::updateForce(RigidBody* body, real duration) {
 	force *= -magnitude;
 
 	body->addForceAtPoint(force, p1);
+}
+
+void RotationCW::updateForce(RigidBody* body, real duration)
+{
+	body->addForceAtPoint(Vector3(0, 1, 0)*20,Vector3(0,21,1));
 }
 

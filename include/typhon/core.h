@@ -586,6 +586,29 @@ namespace typhon {
 				vector.z * val[10]
 			);
 		}
+
+		void fillGLArray(float array[16]) const
+		{
+			array[0] = (float)val[0];
+			array[1] = (float)val[4];
+			array[2] = (float)val[8];
+			array[3] = (float)0;
+
+			array[4] = (float)val[1];
+			array[5] = (float)val[5];
+			array[6] = (float)val[9];
+			array[7] = (float)0;
+
+			array[8] = (float)val[2];
+			array[9] = (float)val[6];
+			array[10] = (float)val[10];
+			array[11] = (float)0;
+
+			array[12] = (float)val[3];
+			array[13] = (float)val[7];
+			array[14] = (float)val[11];
+			array[15] = (float)1;
+		}
 	};
 }
 

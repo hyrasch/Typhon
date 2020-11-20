@@ -15,6 +15,8 @@ namespace typhon {
 			BodyRegistration* next;
 		};
 
+		
+
 		struct Car
 		{
 			RigidBody body;
