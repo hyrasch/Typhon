@@ -158,7 +158,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\typhon\rigidBody.h" />
     <ClInclude Include="include\typhon\core.h" />
     <ClInclude Include="include\typhon\forceGen.h" />
     <ClInclude Include="include\typhon\particle.h" />
@@ -192,7 +191,6 @@
     <None Include=".gitattributes" />
     <None Include=".gitignore" />
     <None Include="bin\freeglut.dll" />
-    <None Include="ClassDiagram.cd" />
     <None Include="lib\freeglut.dll" />
     <None Include="README.md" />
   </ItemGroup>
