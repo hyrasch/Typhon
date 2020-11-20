@@ -63,6 +63,21 @@ namespace typhon {
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
+
+	class RotationCW : public ForceGenerator
+	{
+		Matrix3 tensor;
+
+		Vector3 position;
+
+		Quaternion orientation;
+
+		RotationCW(const Matrix3 tensor, const Vector3 position);
+
+		void setOrientation(const Quaternion& quaternion);
+
+		virtual void updateForce(RigidBody* body, real duration);
+	};
 }
 
 #endif	TYPHON_FGEN_H
