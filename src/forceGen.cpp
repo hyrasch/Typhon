@@ -57,8 +57,8 @@ void RotationCCW::updateForce(RigidBody* body, real duration)
 void Carambolage::updateForce(RigidBody* body, real duration)
 {
 	
-	body->addForceAtPoint(Vector3(0.5,0,0)*30, Vector3(body->getPosition().x - 0.5, body->getPosition().y, body->getPosition().z + 0.5 ));
-	body->addForceAtPoint(Vector3(0,0,-1)*30, Vector3(body->getPosition().x - 0.5, body->getPosition().y, body->getPosition().z + 0.5 ));
+	body->addForceAtPoint(Vector3(direction.x,0,0)*30, Vector3(body->getPosition().x - 0.5, body->getPosition().y, body->getPosition().z + 0.5 ));
+	body->addForceAtPoint(Vector3(0,0,direction.z)*30, Vector3(body->getPosition().x + 0.5, body->getPosition().y, body->getPosition().z - 0.5 ));
 }
 
 

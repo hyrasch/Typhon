@@ -105,6 +105,8 @@ namespace typhon {
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
+
+
 }
 
 #endif	TYPHON_FGEN_H

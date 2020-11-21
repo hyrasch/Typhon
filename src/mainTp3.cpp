@@ -158,8 +158,12 @@ void keyboard(unsigned char key, int x, int y) {
 	{
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
-		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1), Vector3(1,0,-0.9));
+
+		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() + Vector3(-0.5, 0, 0.5), Vector3(0.5,0,-1));
 		world.myCar.registry.add(&world.myCar.body, carambolage);
+
+		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), world.myCar2.body.getPosition() + Vector3(0.5, 0, -0.5), Vector3(-0.5,0,1));
+		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
 	}
 		break;
 
