@@ -8,124 +8,9 @@ using namespace typhon;
 
 World world;
 Time time = Time::getInstance();
-Vector3 massCenter = world.myCar.body.getPosition(); 
+Vector3 massCenter1 = world.myCar.body.getPosition(); 
 
-void renderBitmapString(float x, float y, float z, void* font, char* string) {
-
-	char* c;
-	glRasterPos3f(x, y, z);
-	for (c = string; *c != '\0'; c++) {
-		glutBitmapCharacter(font, *c);
-	}
-}
-
-void DrawCar(Vector3 massCenter, float r, float g, float b)
-{
-	float lambda = 0.1;
-
-	//Lignes du cube
-	glBegin(GL_LINES);
-	
-	glColor3f(r, g, b);
-
-	//Plateforme du haut
-	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
-	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
-
-	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
-	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
-
-	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
-	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
-
-	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
-	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
-	
-	//Plateforme du bas
-	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
-	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
-
-	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
-	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
-
-	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
-	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
-
-	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
-	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
-
-	//Plateforme de gauche
-	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
-	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
-
-	glVertex3f(world.myCar.backUpperLeft.x, world.myCar.backUpperLeft.y, world.myCar.backUpperLeft.z);
-	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
-
-	glVertex3f(world.myCar.backLowerLeft.x, world.myCar.backLowerLeft.y, world.myCar.backLowerLeft.z);
-	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
-
-	glVertex3f(world.myCar.frontLowerLeft.x, world.myCar.frontLowerLeft.y, world.myCar.frontLowerLeft.z);
-	glVertex3f(world.myCar.frontUpperLeft.x, world.myCar.frontUpperLeft.y, world.myCar.frontUpperLeft.z);
-
-	//Plateforme de droite
-	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
-	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
-
-	glVertex3f(world.myCar.backUpperRight.x, world.myCar.backUpperRight.y, world.myCar.backUpperRight.z);
-	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
-
-	glVertex3f(world.myCar.backLowerRight.x, world.myCar.backLowerRight.y, world.myCar.backLowerRight.z);
-	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
-
-	glVertex3f(world.myCar.frontLowerRight.x, world.myCar.frontLowerRight.y, world.myCar.frontLowerRight.z);
-	glVertex3f(world.myCar.frontUpperRight.x, world.myCar.frontUpperRight.y, world.myCar.frontUpperRight.z);
-
-
-	glEnd();
-
-	//Centre de masse
-	glBegin(GL_QUADS);
-
-	glColor3f(1, 0, 0);
-
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-
-
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-
-
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-
-
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y + lambda, world.myCar.massCenter.z + lambda);
-
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z - lambda);
-	glVertex3f(world.myCar.massCenter.x + lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-	glVertex3f(world.myCar.massCenter.x - lambda, world.myCar.massCenter.y - lambda, world.myCar.massCenter.z + lambda);
-
-
-	glEnd();
-}
-
-void DrawTaGrosseMere()
+void DrawCar()
 {
 	Matrix4 transform = world.myCar.body.getTransform();
 	GLfloat gl_transform[16];
@@ -133,14 +18,30 @@ void DrawTaGrosseMere()
 	glPushMatrix();
 	glMultMatrixf(gl_transform);
 
-	// Fuselage
+	//Dessine les arretes du cube
+	glColor3f(0, 0, 0);
 	glPushMatrix();
 	glutWireCube(1);
+
+	//Dessine le centre de masse
 	glColor3f(1, 0, 0);
 	glutSolidSphere(0.1,10,10);
 	glPopMatrix();
-
 	
+	Matrix4 transform2 = world.myCar2.body.getTransform();
+	GLfloat gl_transform2[16];
+	transform2.fillGLArray(gl_transform2);
+	glPushMatrix();
+	glMultMatrixf(gl_transform2);
+
+	//Dessine les arretes du cube
+	glColor3f(0, 0, 0);
+	glPushMatrix();
+	glutWireCube(1);
+
+	//Dessine le centre de masse
+	glColor3f(1, 0, 0);
+	glutSolidSphere(0.1,10,10);
 	glPopMatrix();
 
 }
@@ -159,14 +60,19 @@ void update()
 
 	world.myCar.registry.updateForces(duration);
 
-
-
 	world.myCar.body.integrate(duration);
+
+	world.myCar2.body.clearAccumulators();
+
+	world.myCar2.registry.updateForces(duration);
+
+	world.myCar2.body.integrate(duration);
+
+	std::cout << world.myCar2.body.getPosition().z << std::endl;
 
 	//--------------------------------------------------------
 
 	world.runPhysics(duration);
-	world.myCar.updatePos(world);
 	glutPostRedisplay();
 }
 
@@ -190,9 +96,9 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	massCenter = world.myCar.body.getPosition();
+	massCenter1 = world.myCar.body.getPosition();
 
-	gluLookAt(massCenter.x - 50, massCenter.y + 10, massCenter.z, massCenter.x, massCenter.y, massCenter.z, 0.0, 1.0, 0.0);
+	gluLookAt(massCenter1.x - 20, massCenter1.y + 10, massCenter1.z+5, massCenter1.x, massCenter1.y, massCenter1.z+5, 0.0, 1.0, 0.0);
 
 	// Draw ground
 	glColor3f(0, 1, 0);
@@ -203,9 +109,8 @@ void display()
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
 
-	//DrawCar(massCenter, 0, 0, 0);
 	glColor3f(0, 0, 0);
-	DrawTaGrosseMere();
+	DrawCar();
 
 	glutSwapBuffers();
 
@@ -222,11 +127,54 @@ void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
-	case 'z':
-		ForceGenerator * rotationCW = new RotationCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
-		world.myCar.registry.add(&world.myCar.body, rotationCW);
-
 		break;
+
+	case 'z':
+	{
+		ForceGenerator* rotationCCW = new RotationCCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
+		world.myCar.registry.add(&world.myCar.body, rotationCCW);
+		
+	}
+		break;
+
+	case 's':
+	{
+	ForceGenerator* rotationCW = new RotationCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
+	world.myCar.registry.add(&world.myCar.body, rotationCW);
+	}
+		break;
+
+	case 'n':
+	{
+		ForceGenerator* goRight = new Gravity(Vector3(0,0,1));
+		world.myCar.registry.add(&world.myCar.body, goRight);
+		ForceGenerator* goLeft = new Gravity(Vector3(0,0,-1));
+		world.myCar2.registry.add(&world.myCar2.body, goLeft);
+	}
+	break;
+
+
+	case 't':
+	{
+		world.myCar.registry.registrations.clear();
+		world.myCar2.registry.registrations.clear();
+		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1), Vector3(1,0,-0.9));
+		world.myCar.registry.add(&world.myCar.body, carambolage);
+	}
+		break;
+
+	case 'm':
+	{
+		world.myCar.registry.registrations.clear();
+		world.myCar2.registry.registrations.clear();
+	}
+		break;
+
+	case 'r':
+	{
+		world.myCar.reset(0);
+		world.myCar2.reset(10);
+	}
 	}
 }
 

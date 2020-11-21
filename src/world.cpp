@@ -7,21 +7,15 @@ using namespace typhon;
 
 World::World()
 {
-	myCar.body.setMass(2.5f);
-	myCar.body.setDamping(0.8f, 0.8f);
-	myCar.body.setPosition(0, 20, 0);
-	myCar.body.setOrientation(1, 0, 0, 0);
-	myCar.body.setRotation(0, 0, 0);
+	//Inititalisation de la voiture 1
+	myCar.reset(0);
 
-	myCar.body.setInverseInertiaTensor(Matrix3(myCar.body.getMass() / 24.0f, 0, 0, 0, myCar.body.getMass() / 24.0f, 0, 0, 0, myCar.body.getMass() / 24.0f));
-
-	myCar.body.calculateInertiaTensorWS();
-
-
-	
+	//Inititalisation de la voiture 2
+	myCar2.reset(10);
 }
 
-void World::startFrame() {
+void World::startFrame() 
+{
 	BodyRegistration* reg = firstBody;
 
 	while (reg) {
@@ -32,7 +26,8 @@ void World::startFrame() {
 	}
 }
 
-void World::runPhysics(real duration) {
+void World::runPhysics(real duration) 
+{
 	BodyRegistration* reg = firstBody;
 
 	while (reg) {
@@ -42,16 +37,18 @@ void World::runPhysics(real duration) {
 	}
 }
 
-void World::Car::updatePos(World world)
+void World::Car::reset(int z)
 {
-	frontUpperLeft = massCenter - Vector3(0.5, -0.5, 0.5);
-	frontUpperRight = massCenter - Vector3(0.5, -0.5, -0.5);
-	frontLowerRight = massCenter - Vector3(0.5, 0.5, -0.5);
-	frontLowerLeft = massCenter - Vector3(0.5, 0.5, 0.5);
-	backUpperLeft = massCenter - Vector3(-0.5, -0.5, 0.5);
-	backUpperRight = massCenter - Vector3(-0.5, -0.5, -0.5);
-	backLowerRight = massCenter - Vector3(-0.5, 0.5, -0.5);
-	backLowerLeft = massCenter - Vector3(-0.5, 0.5, 0.5);
+	body.setMass(2.5f);
+	body.setDamping(0.8f, 0.8f);
+	body.setPosition(0, 20, z);
+	body.setOrientation(1, 0, 0, 0);
+	body.setRotation(0, 0, 0);
+	body.setAcceleration(0, 0, 0);
+	body.setVelocity(0, 0, 0);
 
-	massCenter = world.myCar.body.getPosition();
+	registry.registrations.clear();
+
+	body.setInverseInertiaTensor(Matrix3(body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f));
+	body.calculateInertiaTensorWS();
 }

@@ -15,37 +15,27 @@ namespace typhon {
 			BodyRegistration* next;
 		};
 
-		
-
 		struct Car
 		{
 			RigidBody body;
 			ForceRegistry registry;
 
-			Vector3 massCenter = Vector3(0, 20, 10);
-
-			Vector3 frontUpperLeft = massCenter - Vector3(0.5, -0.5 , 0.5);
-			Vector3 frontUpperRight = massCenter - Vector3(0.5, -0.5, -0.5);
-			Vector3 frontLowerRight = massCenter - Vector3(0.5, 0.5, -0.5);
-			Vector3 frontLowerLeft = massCenter - Vector3(0.5, 0.5, 0.5);
-			Vector3 backUpperLeft = massCenter - Vector3(-0.5, -0.5, 0.5);
-			Vector3 backUpperRight = massCenter - Vector3(-0.5, -0.5, -0.5);
-			Vector3 backLowerRight = massCenter - Vector3(-0.5, 0.5, -0.5);
-			Vector3 backLowerLeft = massCenter - Vector3(-0.5, 0.5 , 0.5);
-
-			void updatePos(World world);
-
+			void reset(int z);
 		};
 
 		World();
 
 		Car myCar;
 
+		Car myCar2;
+
 		BodyRegistration* firstBody;
 
 		void startFrame();
 
 		void runPhysics(real duration);
+
+		
 
 	};
 }

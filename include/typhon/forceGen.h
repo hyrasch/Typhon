@@ -65,17 +65,43 @@ namespace typhon {
 		virtual void updateForce(RigidBody* body, real duration);
 	};
 
+	class RotationCCW : public ForceGenerator
+	{
+	private:
+		Matrix3 tensor;
+
+		Vector3 position;
+	public:
+
+		RotationCCW(const Matrix3 tensor, const Vector3 position) : tensor(tensor), position(position) {}
+
+		virtual void updateForce(RigidBody* body, real duration);
+	};
+	
 	class RotationCW : public ForceGenerator
 	{
 	private:
 		Matrix3 tensor;
 
 		Vector3 position;
-
-		Quaternion orientation;
 	public:
 
 		RotationCW(const Matrix3 tensor, const Vector3 position) : tensor(tensor), position(position) {}
+
+		virtual void updateForce(RigidBody* body, real duration);
+	};
+
+	class Carambolage : public ForceGenerator
+	{
+	private:
+		Matrix3 tensor;
+
+		Vector3 position;
+
+		Vector3 direction;
+	public:
+
+		Carambolage(const Matrix3 tensor, const Vector3 position, const Vector3 direction) : tensor(tensor), position(position), direction(direction) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
