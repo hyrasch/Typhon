@@ -15,6 +15,10 @@ bool isSim1Running = false;
 bool gonnaFall = false;
 bool isFalling = false;
 
+//Booléens pour l'ancrage.
+bool anchorActivated = false;
+bool anchored = false;
+
 int sim2Timer = 0;
 bool isSim2Running = false;
 
@@ -143,7 +147,15 @@ void update()
 	world.myCar2.body.integrate(duration);
 
 	//Simulation d'une collision entre les 2 voitures
-	if (abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1) < 1)
+
+	float distCarsZ = abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1);
+	float distCarsX = abs(world.myCar.body.position.x - 1 - world.myCar2.body.position.x + 1);
+	float distCarsY = abs(world.myCar.body.position.y - 1 - world.myCar2.body.position.y + 1);
+
+
+	std::cout << distCarsX << std::endl;
+
+	if (distCarsZ <= 1 && distCarsZ >= 0 && distCarsX <= 1 && distCarsX >= 0)
 	{
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
@@ -164,6 +176,34 @@ void update()
 		isSim2Running = true;
 	}
 	//SIM2-----------------------------------------------------------------------------------------------
+
+	//Ancrage des cars si on appuie sur A (désactivable en appuyant à nouveau).
+	if (anchorActivated)
+	{
+		//Détection de la distance à partir de laquelle il faut ancrer.
+		if (distCarsX > 50 || distCarsZ > 50) 
+		{
+			if (!anchored)
+			{
+				anchored = true;
+				ForceGenerator* springHelp1 = new Spring(world.myCar.body.getPosition(), &world.myCar2.body, Vector3(0,0,0), 1, 2);
+				world.myCar.registry.add(&world.myCar.body, springHelp1);
+				ForceGenerator* springHelp2 = new Spring(world.myCar2.body.getPosition(), &world.myCar.body, Vector3(0, 0, 0), 1, 2);
+				world.myCar2.registry.add(&world.myCar2.body, springHelp2);
+
+			}
+		}
+		else
+		{
+			if (anchored)
+			{
+				//Désactivation de l'ancrage si l'on est suffisament rapprochés.
+				anchored = false;
+				world.myCar.registry.registrations.clear();
+				world.myCar2.registry.registrations.clear();
+			}
+		}
+	}
 
 	world.runPhysics(duration);
 	glutPostRedisplay();
@@ -240,6 +280,12 @@ void keyboard(unsigned char key, int x, int y) {
 		exit(EXIT_SUCCESS);
 		break;
 
+	case 'a':
+	{
+		anchorActivated = !anchorActivated;
+		anchored = false;
+	}
+
 	case 'z':
 	{
 		ForceGenerator* rotationCCW = new RotationCCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
@@ -257,9 +303,9 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'n':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(0, 0, 1) * 2);
+		ForceGenerator* goRight = new Gravity(Vector3(0, 0, 1) * 10);
 		world.myCar.registry.add(&world.myCar.body, goRight);
-		ForceGenerator* goLeft = new Gravity(Vector3(0, 0, -1) * 2);
+		ForceGenerator* goLeft = new Gravity(Vector3(0, 0, -1) * 10);
 		world.myCar2.registry.add(&world.myCar2.body, goLeft);
 	}
 	break;
