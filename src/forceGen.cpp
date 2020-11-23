@@ -58,13 +58,13 @@ void Carambolage::updateForce(RigidBody* body, real duration)
 {
 	if (id == 0)
 	{
-		body->addTorque(Vector3(0,1,0)*8);
-		body->addForce(Vector3(0.5, 0, -1)*10);
+		body->addTorque(Vector3(0,1,0)*10);
+		body->addForce(Vector3(0.5, 0, -1)*5);
 	}
 	
 	if (id == 1)
 	{
-		body->addTorque(Vector3(0,-1,0)*8);
+		body->addTorque(Vector3(0,-1,0)*10);
 		body->addForce(Vector3(-0.5, 0, 1)*5);
 	}
 }

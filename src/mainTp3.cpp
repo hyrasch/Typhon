@@ -81,6 +81,25 @@ void update()
 
 	world.myCar2.body.integrate(duration);
 
+	if (abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1) < 1)
+	{
+		world.myCar.registry.registrations.clear();
+		world.myCar2.registry.registrations.clear();
+
+		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z);
+		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z);
+
+		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z);
+		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z);
+
+
+		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), 0);
+		world.myCar.registry.add(&world.myCar.body, carambolage);
+
+		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), 1);
+		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
+	}
+
 	//--------------------------------------------------------
 
 	world.runPhysics(duration);
