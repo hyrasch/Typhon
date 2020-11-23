@@ -2,6 +2,8 @@
 
 using namespace typhon;
 
+
+
 void ForceRegistry::updateForces(real duration) {
 	Registry::iterator i = registrations.begin();
 
@@ -56,12 +58,14 @@ void RotationCCW::updateForce(RigidBody* body, real duration)
 
 void Carambolage::updateForce(RigidBody* body, real duration)
 {
+	//Cas voiture 1
 	if (id == 0)
 	{
 		body->addTorque(Vector3(0,1,0)*10);
 		body->addForce(Vector3(0.5, 0, -1)*5);
 	}
 	
+	//Cas voiture 2
 	if (id == 1)
 	{
 		body->addTorque(Vector3(0,-1,0)*10);
@@ -69,4 +73,9 @@ void Carambolage::updateForce(RigidBody* body, real duration)
 	}
 }
 
+void Trampoline::updateForce(RigidBody* body, real duration)
+{
+	body->addForce(Vector3(0, 1, 0)*5);
+	body->addTorque(Vector3(torque.x, torque.y, torque.z)*10);
+}
 

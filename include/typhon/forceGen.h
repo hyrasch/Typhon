@@ -91,6 +91,20 @@ namespace typhon {
 		virtual void updateForce(RigidBody* body, real duration);
 	};
 
+	class Trampoline : public ForceGenerator
+	{
+	private:
+		Matrix3 tensor;
+
+		Vector3 torque;
+
+	public:
+
+		Trampoline(const Matrix3 tensor, const Vector3 torque) : tensor(tensor), torque(torque) {}
+
+		virtual void updateForce(RigidBody* body, real duration);
+	};
+
 	class Carambolage : public ForceGenerator
 	{
 	private:
@@ -103,8 +117,6 @@ namespace typhon {
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
-
-
 }
 
 #endif	TYPHON_FGEN_H

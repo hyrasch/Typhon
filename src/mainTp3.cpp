@@ -8,7 +8,15 @@ using namespace typhon;
 
 World world;
 Time time = Time::getInstance();
-Vector3 cam = world.myCar.body.getPosition(); 
+Vector3 cam = world.myCar.body.getPosition();
+
+int sim1Timer = 0;
+bool isSim1Running = false;
+bool isFalling = false;
+
+int sim2Timer = 0;
+bool isSim2Running = false;
+
 
 enum TypeCam
 {
@@ -35,7 +43,7 @@ void DrawCar()
 
 	//Dessine le centre de masse
 	glColor3f(1, 0, 0);
-	glutSolidSphere(0.1,10,10);
+	glutSolidSphere(0.1, 10, 10);
 	glPopMatrix();
 	//Voiture 1 -----------------------------------
 
@@ -53,13 +61,20 @@ void DrawCar()
 
 	//Dessine le centre de masse
 	glColor3f(1, 0, 0);
-	glutSolidSphere(0.1,10,10);
+	glutSolidSphere(0.1, 10, 10);
 	glPopMatrix();
 	//Voiture 2 -----------------------------------
 
 }
 
-void update() 
+float RandomFloat(float a, float b) {
+	float random = ((float)rand()) / (float)RAND_MAX;
+	float diff = b - a;
+	float r = random * diff;
+	return a + r;
+}
+
+void update()
 {
 	world.startFrame();
 	time.update();
@@ -67,7 +82,20 @@ void update()
 	float duration = (float)time.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	//--------------------------------------------------------
+	//SIM1-----------------------------------------------------------------------------------------------
+
+	if (isSim1Running)
+	{
+		sim1Timer += 1;
+
+		if (sim1Timer > 500)
+		{
+			world.myCar.registry.registrations.clear();
+
+			sim1Timer = 0;
+			isFalling = true;
+		}
+	}
 
 	world.myCar.body.clearAccumulators();
 
@@ -75,12 +103,42 @@ void update()
 
 	world.myCar.body.integrate(duration);
 
+	if (isFalling)
+	{
+		world.myCar.registry.registrations.clear();
+
+		ForceGenerator* highGravity = new Gravity(Vector3::GRAVITY);
+		world.myCar.registry.add(&world.myCar.body, highGravity);
+
+		isFalling = false;
+
+	}
+
+
+	//SIM1-----------------------------------------------------------------------------------------------
+
+	//SIM2-----------------------------------------------------------------------------------------------
+	if (isSim2Running)
+	{
+		sim2Timer += 1;
+
+		if (sim2Timer > 100)
+		{
+			world.myCar.registry.registrations.clear();
+			world.myCar2.registry.registrations.clear();
+
+			sim2Timer = 0;
+			isSim2Running = false;
+		}
+	}
+
 	world.myCar2.body.clearAccumulators();
 
 	world.myCar2.registry.updateForces(duration);
 
 	world.myCar2.body.integrate(duration);
 
+	//Simulation d'une collision entre les 2 voitures
 	if (abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1) < 1)
 	{
 		world.myCar.registry.registrations.clear();
@@ -98,16 +156,17 @@ void update()
 
 		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), 1);
 		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
-	}
 
-	//--------------------------------------------------------
+		isSim2Running = true;
+	}
+	//SIM2-----------------------------------------------------------------------------------------------
 
 	world.runPhysics(duration);
 	glutPostRedisplay();
 }
 
 
-void reshape(int w, int h) 
+void reshape(int w, int h)
 {
 	if (h == 0)
 		h = 1;
@@ -121,7 +180,7 @@ void reshape(int w, int h)
 	glMatrixMode(GL_MODELVIEW);
 }
 
-void display() 
+void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
@@ -129,24 +188,22 @@ void display()
 	switch (typeCam)
 	{
 	case car1:
-		gluLookAt(world.myCar.body.getPosition().x - 20, world.myCar.body.getPosition().y + 10, world.myCar.body.getPosition().z + 5 ,
+		gluLookAt(world.myCar.body.getPosition().x - 20, world.myCar.body.getPosition().y + 10, world.myCar.body.getPosition().z + 5,
 			world.myCar.body.getPosition().x, world.myCar.body.getPosition().y, world.myCar.body.getPosition().z + 5,
 			0.0, 1.0, 0.0);
 		break;
 	case car2:
-		gluLookAt(world.myCar2.body.getPosition().x - 20, world.myCar2.body.getPosition().y + 10, world.myCar2.body.getPosition().z - 5 ,
-			world.myCar2.body.getPosition().x, world.myCar2.body.getPosition().y, world.myCar2.body.getPosition().z + 5, 
+		gluLookAt(world.myCar2.body.getPosition().x - 20, world.myCar2.body.getPosition().y + 10, world.myCar2.body.getPosition().z - 5,
+			world.myCar2.body.getPosition().x, world.myCar2.body.getPosition().y, world.myCar2.body.getPosition().z + 5,
 			0.0, 1.0, 0.0);
 		break;
 	case global:
-		gluLookAt( - 50, 30, 0 , 0, 0, 0, 0.0, 1.0, 0.0);
+		gluLookAt(-50, 30, 0, 0, 0, 0, 0.0, 1.0, 0.0);
 		break;
 
 	default:
 		break;
 	}
-
-
 
 	// Draw ground
 	glColor3f(0, 1, 0);
@@ -166,15 +223,15 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 }
 
-void special(int key, int xx, int yy) 
+void special(int key, int xx, int yy)
 {
-	
+
 }
 
 void keyboard(unsigned char key, int x, int y) {
 	std::cout << key;
 	switch (key) {
-		
+
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
 		break;
@@ -183,60 +240,48 @@ void keyboard(unsigned char key, int x, int y) {
 	{
 		ForceGenerator* rotationCCW = new RotationCCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
 		world.myCar.registry.add(&world.myCar.body, rotationCCW);
-		
+
 	}
-		break;
+	break;
 
 	case 's':
 	{
-	ForceGenerator* rotationCW = new RotationCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
-	world.myCar.registry.add(&world.myCar.body, rotationCW);
+		ForceGenerator* rotationCW = new RotationCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
+		world.myCar.registry.add(&world.myCar.body, rotationCW);
 	}
-		break;
+	break;
 
 	case 'n':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(0,0,1)*2);
+		ForceGenerator* goRight = new Gravity(Vector3(0, 0, 1) * 2);
 		world.myCar.registry.add(&world.myCar.body, goRight);
-		ForceGenerator* goLeft = new Gravity(Vector3(0,0,-1)*2);
+		ForceGenerator* goLeft = new Gravity(Vector3(0, 0, -1) * 2);
 		world.myCar2.registry.add(&world.myCar2.body, goLeft);
 	}
 	break;
 
-
 	case 't':
 	{
 		world.myCar.registry.registrations.clear();
-		world.myCar2.registry.registrations.clear();
+		world.myCar.body.setVelocity(0, -world.myCar.body.getVelocity().y, 0);
+		world.myCar.body.setAcceleration(0, -world.myCar.body.getVelocity().y, 0);
 
-		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z);
-		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z);
+		ForceGenerator* trampoline = new Trampoline(world.myCar.body.getInverseInertiaTensor(), Vector3(RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9)));
+		world.myCar.registry.add(&world.myCar.body, trampoline);
 
-		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z);
-		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z);
-
-
-		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), 0);
-		world.myCar.registry.add(&world.myCar.body, carambolage);
-
-		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), 1);
-		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
+		isSim1Running = true;
 	}
-		break;
-
-	case 'm':
-	{
-		world.myCar.registry.registrations.clear();
-		world.myCar2.registry.registrations.clear();
-	}
-		break;
+	break;
 
 	case 'r':
 	{
 		world.myCar.reset(-20);
 		world.myCar2.reset(20);
+
+		isSim1Running = false;
+		isSim2Running = false;
 	}
-		break;
+	break;
 
 	case '&':
 		typeCam = car1;
