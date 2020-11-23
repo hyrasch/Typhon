@@ -4,10 +4,28 @@
 #include <vector>
 #include <typhon/typhon.h>
 
+//Phase 3
+//
+//Le but de cette phase est de spécialiser le moteur physique des phases 1 et 2 par l’ajout de la physique rotationnelle, implémentant ainsi les notions vues au chapitres 6, 7 et 8. Ce faisant, le moteur permettra la gestion des corps rigides.Notez toutefois que la gestion des collisions n’est pas à implémenter dans cette phase.En particulier, vous devez :
+//
+//Implémenter une classe CorpsRigide avec les attributs et méthodes pertinentes.
+//
+//Implémenter les classes Matrix3, Matrix4 et Quaternion avec les attributs et méthodes pertinentes.
+//
+//Implémenter un intégrateur physique complet permettant la mise à jour des objets de type CorpsRigide.
+//
+//Réaliser deux courtes démos :
+//
+//une première où un objet de forme irrégulière est lancé en l’air avec des vélocités linéaires et angulaires non nulles.Le centre de masse ainsi que le mouvement de rotation doivent être clairement visibles.
+//
+//Une deuxième où deux boîtes représentant deux voitures entrent en collision.Cette collision doit obligatoirement entraîner une rotation pour au moins une des deux voitures.Vous pouvez « hardcoder » le moment de la collision et le point d’impact.
+//
+
+
 using namespace typhon;
 
 World world;
-Time time = Time::getInstance();
+Time temps = Time::getInstance();
 Vector3 massCenter1 = world.myCar.body.getPosition(); 
 
 void DrawCar()
@@ -49,9 +67,9 @@ void DrawCar()
 void update() 
 {
 	world.startFrame();
-	time.update();
+	temps.update();
 
-	float duration = (float)time.getFrameDuration() * 0.001f;
+	float duration = (float)temps.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
 	//--------------------------------------------------------
@@ -71,6 +89,20 @@ void update()
 	std::cout << world.myCar2.body.getPosition().z << std::endl;
 
 	//--------------------------------------------------------
+
+
+	//Collision hardcodée entre les deux bagnoles
+	if (abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1) < 1)
+	{
+		world.myCar.registry.registrations.clear();
+		world.myCar2.registry.registrations.clear();
+
+		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() + Vector3(-0.5, 0, 0.5), Vector3(0.5, 0, -1));
+		world.myCar.registry.add(&world.myCar.body, carambolage);
+
+		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), world.myCar2.body.getPosition() + Vector3(0.5, 0, -0.5), Vector3(-0.5, 0, 1));
+		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
+	}
 
 	world.runPhysics(duration);
 	glutPostRedisplay();
@@ -185,7 +217,7 @@ void keyboard(unsigned char key, int x, int y) {
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
-	time.init();
+	temps.init();
 
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
