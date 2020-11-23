@@ -7,7 +7,7 @@
 using namespace typhon;
 
 World world;
-Time time = Time::getInstance();
+Time temps = Time::getInstance();
 Vector3 cam = world.myCar.body.getPosition();
 
 int sim1Timer = 0;
@@ -77,9 +77,9 @@ float RandomFloat(float a, float b) {
 void update()
 {
 	world.startFrame();
-	time.update();
+	temps.update();
 
-	float duration = (float)time.getFrameDuration() * 0.001f;
+	float duration = (float)temps.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
 	//SIM1-----------------------------------------------------------------------------------------------
@@ -304,7 +304,7 @@ void keyboard(unsigned char key, int x, int y) {
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
-	time.init();
+	temps.init();
 
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(100, 100);
