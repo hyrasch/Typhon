@@ -12,6 +12,7 @@ Vector3 cam = world.myCar.body.getPosition();
 
 int sim1Timer = 0;
 bool isSim1Running = false;
+bool gonnaFall = false;
 bool isFalling = false;
 
 int sim2Timer = 0;
@@ -88,13 +89,18 @@ void update()
 	{
 		sim1Timer += 1;
 
-		if (sim1Timer > 500)
+		if (world.myCar.body.getPosition().y > 9.8 && world.myCar.body.getPosition().y < 10.2 && !isFalling)
 		{
-			world.myCar.registry.registrations.clear();
+			if (world.myCar.body.getVelocity().y > 0)
+			{
+				world.myCar.registry.registrations.clear();
 
-			sim1Timer = 0;
-			isFalling = true;
+				sim1Timer = 0;
+				isFalling = true;
+			}
 		}
+
+		
 	}
 
 	world.myCar.body.clearAccumulators();
@@ -107,14 +113,12 @@ void update()
 	{
 		world.myCar.registry.registrations.clear();
 
-		ForceGenerator* highGravity = new Gravity(Vector3::GRAVITY);
-		world.myCar.registry.add(&world.myCar.body, highGravity);
+		ForceGenerator* gravity = new Gravity(Vector3::GRAVITY);
+		world.myCar.registry.add(&world.myCar.body, gravity);
 
 		isFalling = false;
 
 	}
-
-
 	//SIM1-----------------------------------------------------------------------------------------------
 
 	//SIM2-----------------------------------------------------------------------------------------------
@@ -262,9 +266,17 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 't':
 	{
+		float impulsion = RandomFloat(1.4, 1.1);
+
 		world.myCar.registry.registrations.clear();
-		world.myCar.body.setVelocity(0, -world.myCar.body.getVelocity().y, 0);
-		world.myCar.body.setAcceleration(0, -world.myCar.body.getVelocity().y, 0);
+		world.myCar.body.setVelocity(0, -world.myCar.body.getVelocity().y*impulsion, 0);
+		world.myCar.body.setAcceleration(0, -world.myCar.body.getVelocity().y*impulsion, 0);
+
+		if (world.myCar.body.getAcceleration().y >= 18.0)
+			world.myCar.body.setAcceleration(0, 18, 0);
+
+		if (world.myCar.body.getVelocity().y >= 18.0)
+			world.myCar.body.setVelocity(0, 18, 0);
 
 		ForceGenerator* trampoline = new Trampoline(world.myCar.body.getInverseInertiaTensor(), Vector3(RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9)));
 		world.myCar.registry.add(&world.myCar.body, trampoline);
