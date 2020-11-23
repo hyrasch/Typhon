@@ -8,10 +8,20 @@ using namespace typhon;
 
 World world;
 Time time = Time::getInstance();
-Vector3 massCenter1 = world.myCar.body.getPosition(); 
+Vector3 cam = world.myCar.body.getPosition(); 
+
+enum TypeCam
+{
+	car1,
+	car2,
+	global,
+};
+
+TypeCam typeCam = global;
 
 void DrawCar()
 {
+	//Voiture 1 -----------------------------------
 	Matrix4 transform = world.myCar.body.getTransform();
 	GLfloat gl_transform[16];
 	transform.fillGLArray(gl_transform);
@@ -27,7 +37,9 @@ void DrawCar()
 	glColor3f(1, 0, 0);
 	glutSolidSphere(0.1,10,10);
 	glPopMatrix();
-	
+	//Voiture 1 -----------------------------------
+
+	//Voiture 2 -----------------------------------
 	Matrix4 transform2 = world.myCar2.body.getTransform();
 	GLfloat gl_transform2[16];
 	transform2.fillGLArray(gl_transform2);
@@ -43,6 +55,7 @@ void DrawCar()
 	glColor3f(1, 0, 0);
 	glutSolidSphere(0.1,10,10);
 	glPopMatrix();
+	//Voiture 2 -----------------------------------
 
 }
 
@@ -67,8 +80,6 @@ void update()
 	world.myCar2.registry.updateForces(duration);
 
 	world.myCar2.body.integrate(duration);
-
-	std::cout << world.myCar2.body.getPosition().z << std::endl;
 
 	//--------------------------------------------------------
 
@@ -96,9 +107,27 @@ void display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();
 
-	massCenter1 = world.myCar.body.getPosition();
+	switch (typeCam)
+	{
+	case car1:
+		gluLookAt(world.myCar.body.getPosition().x - 20, world.myCar.body.getPosition().y + 10, world.myCar.body.getPosition().z + 5 ,
+			world.myCar.body.getPosition().x, world.myCar.body.getPosition().y, world.myCar.body.getPosition().z + 5,
+			0.0, 1.0, 0.0);
+		break;
+	case car2:
+		gluLookAt(world.myCar2.body.getPosition().x - 20, world.myCar2.body.getPosition().y + 10, world.myCar2.body.getPosition().z - 5 ,
+			world.myCar2.body.getPosition().x, world.myCar2.body.getPosition().y, world.myCar2.body.getPosition().z + 5, 
+			0.0, 1.0, 0.0);
+		break;
+	case global:
+		gluLookAt( - 50, 30, 0 , 0, 0, 0, 0.0, 1.0, 0.0);
+		break;
 
-	gluLookAt(massCenter1.x - 20, massCenter1.y + 10, massCenter1.z+5, massCenter1.x, massCenter1.y, massCenter1.z+5, 0.0, 1.0, 0.0);
+	default:
+		break;
+	}
+
+
 
 	// Draw ground
 	glColor3f(0, 1, 0);
@@ -124,7 +153,9 @@ void special(int key, int xx, int yy)
 }
 
 void keyboard(unsigned char key, int x, int y) {
+	std::cout << key;
 	switch (key) {
+		
 	case 27: // Code ASCII de échap
 		exit(EXIT_SUCCESS);
 		break;
@@ -146,9 +177,9 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'n':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(0,0,1));
+		ForceGenerator* goRight = new Gravity(Vector3(0,0,1)*2);
 		world.myCar.registry.add(&world.myCar.body, goRight);
-		ForceGenerator* goLeft = new Gravity(Vector3(0,0,-1));
+		ForceGenerator* goLeft = new Gravity(Vector3(0,0,-1)*2);
 		world.myCar2.registry.add(&world.myCar2.body, goLeft);
 	}
 	break;
@@ -159,10 +190,17 @@ void keyboard(unsigned char key, int x, int y) {
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
 
-		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() + Vector3(-0.5, 0, 0.5), Vector3(0.5,0,-1));
+		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z);
+		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z);
+
+		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z);
+		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z);
+
+
+		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), 0);
 		world.myCar.registry.add(&world.myCar.body, carambolage);
 
-		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), world.myCar2.body.getPosition() + Vector3(0.5, 0, -0.5), Vector3(-0.5,0,1));
+		ForceGenerator* carambolage2 = new Carambolage(world.myCar2.body.getInverseInertiaTensor(), 1);
 		world.myCar2.registry.add(&world.myCar2.body, carambolage2);
 	}
 		break;
@@ -176,9 +214,26 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'r':
 	{
-		world.myCar.reset(0);
-		world.myCar2.reset(10);
+		world.myCar.reset(-20);
+		world.myCar2.reset(20);
 	}
+		break;
+
+	case '&':
+		typeCam = car1;
+
+		break;
+
+	case 'Ú':
+		typeCam = car2;
+
+		break;
+
+	case '"':
+		typeCam = global;
+
+		break;
+
 	}
 }
 

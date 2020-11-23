@@ -8,10 +8,10 @@ using namespace typhon;
 World::World()
 {
 	//Inititalisation de la voiture 1
-	myCar.reset(0);
+	myCar.reset(-20);
 
 	//Inititalisation de la voiture 2
-	myCar2.reset(10);
+	myCar2.reset(20);
 }
 
 void World::startFrame() 
@@ -41,7 +41,7 @@ void World::Car::reset(int z)
 {
 	body.setMass(2.5f);
 	body.setDamping(0.8f, 0.8f);
-	body.setPosition(0, 20, z);
+	body.setPosition(0, 2, z);
 	body.setOrientation(1, 0, 0, 0);
 	body.setRotation(0, 0, 0);
 	body.setAcceleration(0, 0, 0);

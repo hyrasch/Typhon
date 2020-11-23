@@ -96,12 +96,10 @@ namespace typhon {
 	private:
 		Matrix3 tensor;
 
-		Vector3 position;
-
-		Vector3 direction;
+		int id;
 	public:
 
-		Carambolage(const Matrix3 tensor, const Vector3 position, const Vector3 direction) : tensor(tensor), position(position), direction(direction) {}
+		Carambolage(const Matrix3 tensor, const int id) : tensor(tensor), id(id) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};

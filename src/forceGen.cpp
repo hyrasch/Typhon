@@ -46,19 +46,27 @@ void Spring::updateForce(RigidBody* body, real duration) {
 
 void RotationCW::updateForce(RigidBody* body, real duration)
 {
-	body->addForceAtPoint(Vector3(0, -1, 0) * 10, Vector3(body->getPosition().x, body->getPosition().y + 0.5, body->getPosition().z + 0.5));
+	body->addTorque(Vector3(0, -1, 0)*5);
 }
 
 void RotationCCW::updateForce(RigidBody* body, real duration)
 {
-	body->addForceAtPoint(Vector3(0, 1, 0)* 10,Vector3(body->getPosition().x, body->getPosition().y - 0.5 , body->getPosition().z + 0.5));
+	body->addTorque(Vector3(0, 1, 0)*5);
 }
 
 void Carambolage::updateForce(RigidBody* body, real duration)
 {
+	if (id == 0)
+	{
+		body->addTorque(Vector3(0,1,0)*8);
+		body->addForce(Vector3(0.5, 0, -1)*10);
+	}
 	
-	body->addForceAtPoint(Vector3(direction.x,0,0)*30, Vector3(body->getPosition().x - 0.5, body->getPosition().y, body->getPosition().z + 0.5 ));
-	body->addForceAtPoint(Vector3(0,0,direction.z)*30, Vector3(body->getPosition().x + 0.5, body->getPosition().y, body->getPosition().z - 0.5 ));
+	if (id == 1)
+	{
+		body->addTorque(Vector3(0,-1,0)*8);
+		body->addForce(Vector3(-0.5, 0, 1)*5);
+	}
 }
 
 
