@@ -133,16 +133,16 @@ void update()
 	float distCarsX = abs(world.myCar.body.position.x - 1 - world.myCar2.body.position.x + 1);
 	float distCarsY = abs(world.myCar.body.position.y - 1 - world.myCar2.body.position.y + 1);
 
-	if (world.myCar2.body.position.z - world.myCar.body.position.z <= 1.2)
+	if (distCarsZ <= 1)
 	{
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
 
-		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z / 2);
-		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z / 2);
+		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z / 1.7f);
+		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z / 1.7f);
 
-		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z / 2);
-		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z / 2);
+		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z / 1.7f);
+		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z / 1.7f);
 
 		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), 0);
 		world.myCar.registry.add(&world.myCar.body, carambolage);
