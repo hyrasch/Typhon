@@ -10,21 +10,18 @@ World world;
 Time temps = Time::getInstance();
 Vector3 cam = world.myCar.body.getPosition();
 
-int sim1Timer = 0;
-bool isSim1Running = false;
-bool gonnaFall = false;
-bool isFalling = false;
-
-int sim2Timer = 0;
-bool isSim2Running = false;
-
-
 enum TypeCam
 {
 	car1,
 	car2,
 	global,
 };
+
+bool isFalling = false;
+bool isSim1Running = false;
+
+int sim2Timer = 0;
+bool isSim2Running = false;
 
 TypeCam typeCam = global;
 
@@ -83,24 +80,19 @@ void update()
 	float duration = (float)temps.getFrameDuration() * 0.001f;
 	if (duration <= 0.0f) return;
 
-	//SIM1-----------------------------------------------------------------------------------------------
-
+	//Simulation 1
+#pragma region Simulation 1
 	if (isSim1Running)
 	{
-		sim1Timer += 1;
-
 		if (world.myCar.body.getPosition().y > 9.8 && world.myCar.body.getPosition().y < 10.2 && !isFalling)
 		{
 			if (world.myCar.body.getVelocity().y > 0)
 			{
 				world.myCar.registry.registrations.clear();
 
-				sim1Timer = 0;
 				isFalling = true;
 			}
 		}
-
-		
 	}
 
 	world.myCar.body.clearAccumulators();
@@ -119,9 +111,12 @@ void update()
 		isFalling = false;
 
 	}
-	//SIM1-----------------------------------------------------------------------------------------------
 
-	//SIM2-----------------------------------------------------------------------------------------------
+#pragma endregion
+
+
+	//Simulation 2
+#pragma region Simulation 2
 	if (isSim2Running)
 	{
 		sim2Timer += 1;
@@ -163,7 +158,7 @@ void update()
 
 		isSim2Running = true;
 	}
-	//SIM2-----------------------------------------------------------------------------------------------
+#pragma endregion
 
 	world.runPhysics(duration);
 	glutPostRedisplay();
@@ -269,8 +264,8 @@ void keyboard(unsigned char key, int x, int y) {
 		float impulsion = RandomFloat(1.4, 1.1);
 
 		world.myCar.registry.registrations.clear();
-		world.myCar.body.setVelocity(0, -world.myCar.body.getVelocity().y*impulsion, 0);
-		world.myCar.body.setAcceleration(0, -world.myCar.body.getVelocity().y*impulsion, 0);
+		world.myCar.body.setVelocity(0, -world.myCar.body.getVelocity().y * impulsion, 0);
+		world.myCar.body.setAcceleration(0, -world.myCar.body.getVelocity().y * impulsion, 0);
 
 		if (world.myCar.body.getAcceleration().y >= 18.0)
 			world.myCar.body.setAcceleration(0, 18, 0);
