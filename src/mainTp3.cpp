@@ -164,11 +164,10 @@ void update()
 			if (!anchored)
 			{
 				anchored = true;
-				ForceGenerator* springHelp1 = new Spring(world.myCar.body.getPosition(), &world.myCar2.body, Vector3(0, 0, 0), 1, 2);
+				ForceGenerator* springHelp1 = new Spring(Vector3(0, 0, 0), &world.myCar2.body, Vector3(0, 0, 0), 1, 2);
 				world.myCar.registry.add(&world.myCar.body, springHelp1);
-				ForceGenerator* springHelp2 = new Spring(world.myCar2.body.getPosition(), &world.myCar.body, Vector3(0, 0, 0), 1, 2);
+				ForceGenerator* springHelp2 = new Spring(Vector3(0, 0, 0), &world.myCar.body, Vector3(0, 0, 0), 1, 2);
 				world.myCar2.registry.add(&world.myCar2.body, springHelp2);
-
 			}
 		}
 		else
@@ -278,7 +277,7 @@ void keyboard(unsigned char key, int x, int y) {
 	{
 		Vector3 temp = world.myCar.body.getPosition();
 		temp.normalise();
-		
+
 		Vector3 temp2 = world.myCar2.body.getPosition();
 		temp2.normalise();
 

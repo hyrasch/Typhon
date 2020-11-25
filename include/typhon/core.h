@@ -288,32 +288,11 @@ namespace typhon {
 			: val{ m0,m1,m2,m3,m4,m5,m6,m7,m8 } {}
 
 		// Retourne la transformée du vecteur par la matrice3 actuelle
-		Vector3 operator*(const Vector3& vector) const {
+		Vector3 transform(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] + vector.y * val[1] + vector.z * val[2],
 				vector.x * val[3] + vector.y * val[4] + vector.z * val[5],
 				vector.x * val[6] + vector.y * val[7] + vector.z * val[8]
-			);
-		}
-
-		Vector3 transform(const Vector3& vector) const {
-			return (*this) * vector;
-		}
-
-		// Retourne le résultat du produit d'une matrice3 par la matrice3 actuelle
-		Matrix3 operator*(const Matrix3& other) const {
-			return Matrix3(
-				val[0] * other.val[0] + val[1] * other.val[3] + val[2] * other.val[6],
-				val[0] * other.val[1] + val[1] * other.val[4] + val[2] * other.val[7],
-				val[0] * other.val[2] + val[1] * other.val[5] + val[2] * other.val[8],
-
-				val[3] * other.val[0] + val[4] * other.val[3] + val[5] * other.val[6],
-				val[3] * other.val[1] + val[4] * other.val[4] + val[5] * other.val[7],
-				val[3] * other.val[2] + val[4] * other.val[5] + val[5] * other.val[8],
-
-				val[6] * other.val[0] + val[7] * other.val[3] + val[8] * other.val[6],
-				val[6] * other.val[1] + val[7] * other.val[4] + val[8] * other.val[7],
-				val[6] * other.val[2] + val[7] * other.val[5] + val[8] * other.val[8]
 			);
 		}
 
@@ -422,10 +401,6 @@ namespace typhon {
 
 		// Retourne le vecteur transformé par la matrice4
 		Vector3 transform(const Vector3& vector) const {
-			return (*this) * vector;
-		}
-
-		Vector3 operator*(const Vector3& vector) const {
 			return Vector3(
 				vector.x * val[0] +
 				vector.y * val[1] +
@@ -439,26 +414,6 @@ namespace typhon {
 				vector.y * val[9] +
 				vector.z * val[10] + val[11]
 			);
-		}
-
-		// Retourne le produit d'une matrice4 par la matrice4 actuelle
-		Matrix4 operator*(const Matrix4& other) const {
-			Matrix4 result;
-
-			result.val[0] = (other.val[0] * val[0]) + (other.val[4] * val[1]) + (other.val[8] * val[2]);
-			result.val[4] = (other.val[0] * val[4]) + (other.val[4] * val[5]) + (other.val[8] * val[6]);
-			result.val[8] = (other.val[0] * val[8]) + (other.val[4] * val[9]) + (other.val[8] * val[10]);
-			result.val[1] = (other.val[1] * val[0]) + (other.val[5] * val[1]) + (other.val[9] * val[2]);
-			result.val[5] = (other.val[1] * val[4]) + (other.val[5] * val[5]) + (other.val[9] * val[6]);
-			result.val[9] = (other.val[1] * val[8]) + (other.val[5] * val[9]) + (other.val[9] * val[10]);
-			result.val[2] = (other.val[2] * val[0]) + (other.val[6] * val[1]) + (other.val[10] * val[2]);
-			result.val[6] = (other.val[2] * val[4]) + (other.val[6] * val[5]) + (other.val[10] * val[6]);
-			result.val[10] = (other.val[2] * val[8]) + (other.val[6] * val[9]) + (other.val[10] * val[10]);
-			result.val[3] = (other.val[3] * val[0]) + (other.val[7] * val[1]) + (other.val[11] * val[2]) + val[3];
-			result.val[7] = (other.val[3] * val[4]) + (other.val[7] * val[5]) + (other.val[11] * val[6]) + val[7];
-			result.val[11] = (other.val[3] * val[8]) + (other.val[7] * val[9]) + (other.val[11] * val[10]) + val[11];
-
-			return result;
 		}
 
 		// Retourne le déterminant de la matrice4

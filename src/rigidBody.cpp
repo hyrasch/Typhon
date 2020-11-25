@@ -88,10 +88,6 @@ void RigidBody::integrate(real duration) {
 	clearAccumulators();
 }
 
-void RigidBody::addRotation(const Vector3& deltaRotation) {
-	rotation += deltaRotation;
-}
-
 void RigidBody::clearAccumulators() {
 	forceAccum.clear();
 	torqueAccum.clear();
@@ -100,14 +96,6 @@ void RigidBody::clearAccumulators() {
 // Ajoute une force au centre de masse du RigidBody
 void RigidBody::addForce(const Vector3& force) {
 	forceAccum += force;
-}
-
-// Applique une force en un point donné du RigidBody (fixe)
-// Force(WorldSpace) | Point(BodySpace)
-// Idéal pour des forces attachées au RigidBody
-void RigidBody::addForceAtBodyPoint(const Vector3& force, const Vector3& point) {
-	Vector3 pt = getPointInWorldSpace(point);
-	addForceAtPoint(force, pt);
 }
 
 // Applique une force en un point du RigidBody
@@ -154,31 +142,6 @@ bool RigidBody::hasFiniteMass() const {
 	return inverseMass >= 0.0f;
 }
 
-// Initalise le tenseur d'inertie inverse
-void RigidBody::setInertiaTensor(const Matrix3& inertiaTensor) {
-	inverseInertiaTensor.setInverse(inertiaTensor);
-}
-
-void RigidBody::getInertiaTensor(Matrix3* inertiaTensor) const {
-	inertiaTensor->setInverse(inverseInertiaTensor);
-}
-
-Matrix3 RigidBody::getInertiaTensor() const {
-	Matrix3 it;
-	getInertiaTensor(&it);
-	return it;
-}
-
-void RigidBody::getInertiaTensorWorld(Matrix3* inertiaTensor) const {
-	inertiaTensor->setInverse(inverseInertiaTensorWorld);
-}
-
-Matrix3 RigidBody::getInertiaTensorWorld() const {
-	Matrix3 it;
-	getInertiaTensorWorld(&it);
-	return it;
-}
-
 void RigidBody::setInverseInertiaTensor(const Matrix3& inverseInertiaTensor) {
 	RigidBody::inverseInertiaTensor = inverseInertiaTensor;
 }
@@ -189,14 +152,6 @@ void RigidBody::getInverseInertiaTensor(Matrix3* inverseInertiaTensor) const {
 
 Matrix3 RigidBody::getInverseInertiaTensor() const {
 	return inverseInertiaTensor;
-}
-
-void RigidBody::getInverseInertiaTensorWorld(Matrix3* inverseInertiaTensor) const {
-	*inverseInertiaTensor = inverseInertiaTensorWorld;
-}
-
-Matrix3 RigidBody::getInverseInertiaTensorWorld() const {
-	return inverseInertiaTensorWorld;
 }
 
 void RigidBody::setDamping(const real linearDamping, const real angularDamping) {
@@ -220,27 +175,14 @@ real RigidBody::getAngularDamping() const {
 	return angularDamping;
 }
 
-void RigidBody::setPosition(const Vector3& position) {
-	RigidBody::position = position;
-}
-
 void RigidBody::setPosition(const real x, const real y, const real z) {
 	position.x = x;
 	position.y = y;
 	position.z = z;
 }
 
-void RigidBody::getPosition(Vector3* position) const {
-	*position = RigidBody::position;
-}
-
 Vector3 RigidBody::getPosition() const {
 	return position;
-}
-
-void RigidBody::setOrientation(const Quaternion& orientation) {
-	RigidBody::orientation = orientation;
-	RigidBody::orientation.normalise();
 }
 
 void RigidBody::setOrientation(const real r, const real i, const real j, const real k) {
@@ -251,88 +193,16 @@ void RigidBody::setOrientation(const real r, const real i, const real j, const r
 	orientation.normalise();
 }
 
-void RigidBody::getOrientation(Quaternion* orientation) const {
-	*orientation = RigidBody::orientation;
-}
-
 Quaternion RigidBody::getOrientation() const {
 	return orientation;
-}
-
-void RigidBody::getOrientation(Matrix3* matrix) const {
-	getOrientation(matrix->val);
-}
-
-void RigidBody::getOrientation(real matrix[9]) const {
-	matrix[0] = transformMatrix.val[0];
-	matrix[1] = transformMatrix.val[1];
-	matrix[2] = transformMatrix.val[2];
-
-	matrix[3] = transformMatrix.val[4];
-	matrix[4] = transformMatrix.val[5];
-	matrix[5] = transformMatrix.val[6];
-
-	matrix[6] = transformMatrix.val[8];
-	matrix[7] = transformMatrix.val[9];
-	matrix[8] = transformMatrix.val[10];
-}
-
-void RigidBody::getTransform(Matrix4* transform) const {
-	memcpy(transform, &transformMatrix.val, sizeof(Matrix4));
-}
-
-void RigidBody::getTransform(real matrix[16]) const {
-	memcpy(matrix, transformMatrix.val, sizeof(real) * 12);
-	matrix[12] = matrix[13] = matrix[14] = 0;
-	matrix[15] = 1;
-}
-
-void RigidBody::getGLTransform(float matrix[16]) const {
-	matrix[0] = (float)transformMatrix.val[0];
-	matrix[1] = (float)transformMatrix.val[4];
-	matrix[2] = (float)transformMatrix.val[8];
-	matrix[3] = 0;
-
-	matrix[4] = (float)transformMatrix.val[1];
-	matrix[5] = (float)transformMatrix.val[5];
-	matrix[6] = (float)transformMatrix.val[9];
-	matrix[7] = 0;
-
-	matrix[8] = (float)transformMatrix.val[2];
-	matrix[9] = (float)transformMatrix.val[6];
-	matrix[10] = (float)transformMatrix.val[10];
-	matrix[11] = 0;
-
-	matrix[12] = (float)transformMatrix.val[3];
-	matrix[13] = (float)transformMatrix.val[7];
-	matrix[14] = (float)transformMatrix.val[11];
-	matrix[15] = 1;
 }
 
 Matrix4 RigidBody::getTransform() const {
 	return transformMatrix;
 }
 
-
-Vector3 RigidBody::getPointInLocalSpace(const Vector3& point) const {
-	return transformMatrix.transformInverse(point);
-}
-
 Vector3 RigidBody::getPointInWorldSpace(const Vector3& point) const {
 	return transformMatrix.transform(point);
-}
-
-Vector3 RigidBody::getDirectionInLocalSpace(const Vector3& direction) const {
-	return transformMatrix.transformInverseDirection(direction);
-}
-
-Vector3 RigidBody::getDirectionInWorldSpace(const Vector3& direction) const {
-	return transformMatrix.transformDirection(direction);
-}
-
-
-void RigidBody::setVelocity(const Vector3& velocity) {
-	RigidBody::velocity = velocity;
 }
 
 void RigidBody::setVelocity(const real x, const real y, const real z) {
@@ -341,20 +211,8 @@ void RigidBody::setVelocity(const real x, const real y, const real z) {
 	velocity.z = z;
 }
 
-void RigidBody::getVelocity(Vector3* velocity) const {
-	*velocity = RigidBody::velocity;
-}
-
 Vector3 RigidBody::getVelocity() const {
 	return velocity;
-}
-
-void RigidBody::addVelocity(const Vector3& deltaVelocity) {
-	velocity += deltaVelocity;
-}
-
-void RigidBody::setRotation(const Vector3& rotation) {
-	RigidBody::rotation = rotation;
 }
 
 void RigidBody::setRotation(const real x, const real y, const real z) {
@@ -363,34 +221,14 @@ void RigidBody::setRotation(const real x, const real y, const real z) {
 	rotation.z = z;
 }
 
-void RigidBody::getRotation(Vector3* rotation) const {
-	*rotation = RigidBody::rotation;
-}
-
 Vector3 RigidBody::getRotation() const {
 	return rotation;
-}
-
-void RigidBody::getLastFrameAcceleration(Vector3* acceleration) const {
-	*acceleration = lastFrameAcceleration;
-}
-
-Vector3 RigidBody::getLastFrameAcceleration() const {
-	return lastFrameAcceleration;
-}
-
-void RigidBody::setAcceleration(const Vector3& acceleration) {
-	RigidBody::acceleration = acceleration;
 }
 
 void RigidBody::setAcceleration(const real x, const real y, const real z) {
 	acceleration.x = x;
 	acceleration.y = y;
 	acceleration.z = z;
-}
-
-void RigidBody::getAcceleration(Vector3* acceleration) const {
-	*acceleration = RigidBody::acceleration;
 }
 
 Vector3 RigidBody::getAcceleration() const {
