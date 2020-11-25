@@ -42,6 +42,7 @@ void Spring::updateForce(RigidBody* body, real duration) {
 
 	force.normalise();
 	force *= -magnitude;
+	force.y = 0; //Pour éviter que les cubes ne noclipent dans le sol pour rien.
 
 	body->addForceAtPoint(force, p1);
 }
