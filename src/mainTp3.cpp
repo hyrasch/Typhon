@@ -282,9 +282,9 @@ void keyboard(unsigned char key, int x, int y) {
 		Vector3 temp2 = world.myCar2.body.getPosition();
 		temp2.normalise();
 
-		ForceGenerator* goRight = new Gravity((temp2 - temp) * 10);
+		ForceGenerator* goRight = new Gravity((temp2 - temp) * 6);
 		world.myCar.registry.add(&world.myCar.body, goRight);
-		ForceGenerator* goLeft = new Gravity((temp - temp2) * 10);
+		ForceGenerator* goLeft = new Gravity((temp - temp2) * 6);
 		world.myCar2.registry.add(&world.myCar2.body, goLeft);
 	}
 	break;
