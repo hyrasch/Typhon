@@ -62,15 +62,15 @@ void Carambolage::updateForce(RigidBody* body, real duration)
 	//Cas voiture 1
 	if (id == 0)
 	{
-		body->addTorque(Vector3(0,1,0)*10);
-		body->addForce(Vector3(0.5, 0, -1)*5);
+		body->addTorque(Vector3(0,1,0)*20);
+		body->addForce(Vector3(0.5, 0, -1)*2);
 	}
 	
 	//Cas voiture 2
 	if (id == 1)
 	{
-		body->addTorque(Vector3(0,-1,0)*10);
-		body->addForce(Vector3(-0.5, 0, 1)*5);
+		body->addTorque(Vector3(0,-1,0)*20);
+		body->addForce(Vector3(-0.5, 0, 1)*2);
 	}
 }
 

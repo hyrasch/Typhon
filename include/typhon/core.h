@@ -587,6 +587,7 @@ namespace typhon {
 			);
 		}
 
+		//Coordonnées : Gauche droite, Haut bas -> Coordonnées : Haut bas, Gauche droite 
 		void fillGLArray(float array[16]) const
 		{
 			array[0] = (float)val[0];

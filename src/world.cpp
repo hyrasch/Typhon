@@ -1,7 +1,4 @@
-#include <cstdlib>
-#include <iostream>
 #include <typhon/world.h>
-#include <math.h>
 
 using namespace typhon;
 
@@ -14,32 +11,9 @@ World::World()
 	myCar2.reset(20);
 }
 
-void World::startFrame() 
-{
-	BodyRegistration* reg = firstBody;
-
-	while (reg) {
-		reg->body->clearAccumulators();
-		reg->body->calculateInertiaTensorWS();
-
-		reg = reg->next;
-	}
-}
-
-void World::runPhysics(real duration) 
-{
-	BodyRegistration* reg = firstBody;
-
-	while (reg) {
-		reg->body->integrate(duration);
-
-		reg = reg->next;
-	}
-}
-
 void World::Car::reset(int z)
 {
-	body.setMass(2.5f);
+	body.setMass(2.f);
 	body.setDamping(0.8f, 0.8f);
 	body.setPosition(0, 2, z);
 	body.setOrientation(1, 0, 0, 0);
@@ -51,4 +25,15 @@ void World::Car::reset(int z)
 
 	body.setInverseInertiaTensor(Matrix3(body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f));
 	body.calculateInertiaTensorWS();
+}
+
+void World::Update(real duration)
+{
+	myCar.body.clearAccumulators();
+	myCar.registry.updateForces(duration);
+	myCar.body.integrate(duration);
+
+	myCar2.body.clearAccumulators();
+	myCar2.registry.updateForces(duration);
+	myCar2.body.integrate(duration);
 }

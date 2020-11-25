@@ -48,7 +48,7 @@ namespace typhon {
 		void addTorque(const Vector3& torque);
 
 		// Getters & Setters
-#pragma region Get & Set
+		#pragma region Get & Set
 
 		void setMass(const real mass);
 		real getMass() const;
@@ -116,7 +116,6 @@ namespace typhon {
 		void setAcceleration(const real x, const real y, const real z);
 		void getAcceleration(Vector3* acceleration) const;
 		Vector3 getAcceleration() const;
-
 #pragma endregion
 	};
 }

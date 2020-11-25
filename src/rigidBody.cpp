@@ -88,6 +88,46 @@ void RigidBody::integrate(real duration) {
 	clearAccumulators();
 }
 
+void RigidBody::addRotation(const Vector3& deltaRotation) {
+	rotation += deltaRotation;
+}
+
+void RigidBody::clearAccumulators() {
+	forceAccum.clear();
+	torqueAccum.clear();
+}
+
+// Ajoute une force au centre de masse du RigidBody
+void RigidBody::addForce(const Vector3& force) {
+	forceAccum += force;
+}
+
+// Applique une force en un point donné du RigidBody (fixe)
+// Force(WorldSpace) | Point(BodySpace)
+// Idéal pour des forces attachées au RigidBody
+void RigidBody::addForceAtBodyPoint(const Vector3& force, const Vector3& point) {
+	Vector3 pt = getPointInWorldSpace(point);
+	addForceAtPoint(force, pt);
+}
+
+// Applique une force en un point du RigidBody
+// Force(WorldSpace) | Point(WorldSpace)
+void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point) {
+	// On se positionne p/r au centre de masse (BodySpace)
+	Vector3 pt = point - position;
+
+	forceAccum += force;
+	torqueAccum += pt % force;
+
+}
+
+void RigidBody::addTorque(const Vector3& torque) {
+	torqueAccum += torque;
+}
+
+//Getters & Setters
+#pragma region Get & Set
+
 void RigidBody::setMass(const real mass) {
 	assert(mass != 0);
 	RigidBody::inverseMass = ((real)1.0) / mass;
@@ -331,49 +371,12 @@ Vector3 RigidBody::getRotation() const {
 	return rotation;
 }
 
-void RigidBody::addRotation(const Vector3& deltaRotation) {
-	rotation += deltaRotation;
-}
-
 void RigidBody::getLastFrameAcceleration(Vector3* acceleration) const {
 	*acceleration = lastFrameAcceleration;
 }
 
 Vector3 RigidBody::getLastFrameAcceleration() const {
 	return lastFrameAcceleration;
-}
-
-void RigidBody::clearAccumulators() {
-	forceAccum.clear();
-	torqueAccum.clear();
-}
-
-// Ajoute une force au centre de masse du RigidBody
-void RigidBody::addForce(const Vector3& force) {
-	forceAccum += force;
-}
-
-// Applique une force en un point donné du RigidBody (fixe)
-// Force(WorldSpace) | Point(BodySpace)
-// Idéal pour des forces attachées au RigidBody
-void RigidBody::addForceAtBodyPoint(const Vector3& force, const Vector3& point) {
-	Vector3 pt = getPointInWorldSpace(point);
-	addForceAtPoint(force, pt);
-}
-
-// Applique une force en un point du RigidBody
-// Force(WorldSpace) | Point(WorldSpace)
-void RigidBody::addForceAtPoint(const Vector3& force, const Vector3& point) {
-	// On se positionne p/r au centre de masse (BodySpace)
-	Vector3 pt = point - position;
-
-	forceAccum += force;
-	torqueAccum += pt % force;
-
-}
-
-void RigidBody::addTorque(const Vector3& torque) {
-	torqueAccum += torque;
 }
 
 void RigidBody::setAcceleration(const Vector3& acceleration) {
@@ -393,3 +396,5 @@ void RigidBody::getAcceleration(Vector3* acceleration) const {
 Vector3 RigidBody::getAcceleration() const {
 	return acceleration;
 }
+
+#pragma endregion

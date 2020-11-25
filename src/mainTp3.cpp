@@ -8,7 +8,20 @@ using namespace typhon;
 
 World world;
 Time temps = Time::getInstance();
-Vector3 cam = world.myCar.body.getPosition();
+
+//Conditions Simulation 1
+int sim1Timer = 0;
+bool isSim1Running = false;
+bool gonnaFall = false;
+bool isFalling = false;
+
+//Conditions Simulation 2
+int sim2Timer = 0;
+bool isSim2Running = false;
+
+//Booléens pour l'ancrage.
+bool anchorActivated = false;
+bool anchored = false;
 
 enum TypeCam
 {
@@ -16,12 +29,6 @@ enum TypeCam
 	car2,
 	global,
 };
-
-bool isFalling = false;
-bool isSim1Running = false;
-
-int sim2Timer = 0;
-bool isSim2Running = false;
 
 TypeCam typeCam = global;
 
@@ -74,7 +81,6 @@ float RandomFloat(float a, float b) {
 
 void update()
 {
-	world.startFrame();
 	temps.update();
 
 	float duration = (float)temps.getFrameDuration() * 0.001f;
@@ -95,12 +101,6 @@ void update()
 		}
 	}
 
-	world.myCar.body.clearAccumulators();
-
-	world.myCar.registry.updateForces(duration);
-
-	world.myCar.body.integrate(duration);
-
 	if (isFalling)
 	{
 		world.myCar.registry.registrations.clear();
@@ -109,11 +109,8 @@ void update()
 		world.myCar.registry.add(&world.myCar.body, gravity);
 
 		isFalling = false;
-
 	}
-
 #pragma endregion
-
 
 	//Simulation 2
 #pragma region Simulation 2
@@ -131,24 +128,21 @@ void update()
 		}
 	}
 
-	world.myCar2.body.clearAccumulators();
-
-	world.myCar2.registry.updateForces(duration);
-
-	world.myCar2.body.integrate(duration);
-
 	//Simulation d'une collision entre les 2 voitures
-	if (abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1) < 1)
+	float distCarsZ = abs(world.myCar.body.position.z + 1 - world.myCar2.body.position.z - 1);
+	float distCarsX = abs(world.myCar.body.position.x - 1 - world.myCar2.body.position.x + 1);
+	float distCarsY = abs(world.myCar.body.position.y - 1 - world.myCar2.body.position.y + 1);
+
+	if (world.myCar2.body.position.z - world.myCar.body.position.z <= 1.2)
 	{
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
 
-		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z);
-		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z);
+		world.myCar.body.setVelocity(0, 0, -world.myCar.body.getVelocity().z / 2);
+		world.myCar.body.setAcceleration(0, 0, -world.myCar.body.getAcceleration().z / 2);
 
-		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z);
-		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z);
-
+		world.myCar2.body.setVelocity(0, 0, -world.myCar2.body.getVelocity().z / 2);
+		world.myCar2.body.setAcceleration(0, 0, -world.myCar2.body.getAcceleration().z / 2);
 
 		ForceGenerator* carambolage = new Carambolage(world.myCar.body.getInverseInertiaTensor(), 0);
 		world.myCar.registry.add(&world.myCar.body, carambolage);
@@ -160,7 +154,37 @@ void update()
 	}
 #pragma endregion
 
-	world.runPhysics(duration);
+	//Ancrage des cars si on appuie sur A (désactivable en appuyant à nouveau).
+#pragma region AnchoredSpring
+	if (anchorActivated)
+	{
+		//Détection de la distance à partir de laquelle il faut ancrer.
+		if (distCarsX > 50 || distCarsZ > 50)
+		{
+			if (!anchored)
+			{
+				anchored = true;
+				ForceGenerator* springHelp1 = new Spring(world.myCar.body.getPosition(), &world.myCar2.body, Vector3(0, 0, 0), 1, 2);
+				world.myCar.registry.add(&world.myCar.body, springHelp1);
+				ForceGenerator* springHelp2 = new Spring(world.myCar2.body.getPosition(), &world.myCar.body, Vector3(0, 0, 0), 1, 2);
+				world.myCar2.registry.add(&world.myCar2.body, springHelp2);
+
+			}
+		}
+		else
+		{
+			if (anchored)
+			{
+				//Désactivation de l'ancrage si l'on est suffisament rapprochés.
+				anchored = false;
+				world.myCar.registry.registrations.clear();
+				world.myCar2.registry.registrations.clear();
+			}
+		}
+	}
+#pragma endregion 
+
+	world.Update(duration);
 	glutPostRedisplay();
 }
 
@@ -199,9 +223,6 @@ void display()
 	case global:
 		gluLookAt(-50, 30, 0, 0, 0, 0, 0.0, 1.0, 0.0);
 		break;
-
-	default:
-		break;
 	}
 
 	// Draw ground
@@ -213,6 +234,7 @@ void display()
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
 
+	//Draw Cars
 	glColor3f(0, 0, 0);
 	DrawCar();
 
@@ -222,24 +244,26 @@ void display()
 	glEnable(GL_DEPTH_TEST);
 }
 
-void special(int key, int xx, int yy)
-{
-
-}
-
 void keyboard(unsigned char key, int x, int y) {
-	std::cout << key;
 	switch (key) {
 
-	case 27: // Code ASCII de échap
+	case 27:
+	{
 		exit(EXIT_SUCCESS);
-		break;
+	}
+	break;
+
+	case 'a':
+	{
+		anchorActivated = !anchorActivated;
+		anchored = false;
+	}
+	break;
 
 	case 'z':
 	{
 		ForceGenerator* rotationCCW = new RotationCCW(world.myCar.body.getInverseInertiaTensor(), world.myCar.body.getPosition() - Vector3(0, 1, 1));
 		world.myCar.registry.add(&world.myCar.body, rotationCCW);
-
 	}
 	break;
 
@@ -252,9 +276,15 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 'n':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(0, 0, 1) * 2);
+		Vector3 temp = world.myCar.body.getPosition();
+		temp.normalise();
+		
+		Vector3 temp2 = world.myCar2.body.getPosition();
+		temp2.normalise();
+
+		ForceGenerator* goRight = new Gravity((temp2 - temp) * 10);
 		world.myCar.registry.add(&world.myCar.body, goRight);
-		ForceGenerator* goLeft = new Gravity(Vector3(0, 0, -1) * 2);
+		ForceGenerator* goLeft = new Gravity((temp - temp2) * 10);
 		world.myCar2.registry.add(&world.myCar2.body, goLeft);
 	}
 	break;
@@ -322,7 +352,6 @@ int main(int argc, char** argv)
 	glutReshapeFunc(reshape);
 	glutIdleFunc(update);
 	glutKeyboardFunc(keyboard);
-	glutSpecialFunc(special);
 
 	glutMainLoop();
 	return EXIT_SUCCESS;

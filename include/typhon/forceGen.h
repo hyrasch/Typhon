@@ -27,7 +27,6 @@ namespace typhon {
 		Registry registrations;
 
 	public:
-		// Ajoute une entrée
 		void add(RigidBody* body, ForceGenerator* fg);
 
 		void updateForces(real duration);
@@ -39,7 +38,6 @@ namespace typhon {
 		Vector3 gravity;
 
 	public:
-		// Constructeur
 		Gravity(const Vector3& gravity) : gravity(gravity) {}
 
 		virtual void updateForce(RigidBody* body, real duration);
@@ -57,7 +55,6 @@ namespace typhon {
 		real restLength;
 
 	public:
-		// Constructeur
 		Spring(const Vector3& localConnectionPt, RigidBody* other, const Vector3& otherConnectionPt, real springConstant, real restLength)
 			: connectionPoint(localConnectionPt), otherConnectionPoint(otherConnectionPt),
 			other(other), springConstant(springConstant), restLength(restLength) {}

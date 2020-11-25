@@ -9,11 +9,6 @@ namespace typhon {
 	class World
 	{
 	public:
-		struct BodyRegistration
-		{
-			RigidBody* body;
-			BodyRegistration* next;
-		};
 
 		struct Car
 		{
@@ -25,18 +20,11 @@ namespace typhon {
 
 		World();
 
+		void Update(real duration);
+
 		Car myCar;
 
 		Car myCar2;
-
-		BodyRegistration* firstBody;
-
-		void startFrame();
-
-		void runPhysics(real duration);
-
-		
-
 	};
 }
 
