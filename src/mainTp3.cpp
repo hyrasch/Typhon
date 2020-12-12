@@ -36,10 +36,10 @@ void DrawCar()
 {
 	//Voiture 1 -----------------------------------
 	Matrix4 transform = world.myCar.body.getTransform();
-	GLfloat gl_transform[16];
-	transform.fillGLArray(gl_transform);
+	GLfloat glutMatrix[16];
+	transform.fillGLArray(glutMatrix);
 	glPushMatrix();
-	glMultMatrixf(gl_transform);
+	glMultMatrixf(glutMatrix);
 
 	//Dessine les arretes du cube
 	glColor3f(0, 0, 0);
@@ -54,10 +54,10 @@ void DrawCar()
 
 	//Voiture 2 -----------------------------------
 	Matrix4 transform2 = world.myCar2.body.getTransform();
-	GLfloat gl_transform2[16];
-	transform2.fillGLArray(gl_transform2);
+	GLfloat glutMatrix2[16];
+	transform2.fillGLArray(glutMatrix2);
 	glPushMatrix();
-	glMultMatrixf(gl_transform2);
+	glMultMatrixf(glutMatrix2);
 
 	//Dessine les arretes du cube
 	glColor3f(0, 0, 0);
@@ -133,7 +133,7 @@ void update()
 	float distCarsX = abs(world.myCar.body.position.x - 1 - world.myCar2.body.position.x + 1);
 	float distCarsY = abs(world.myCar.body.position.y - 1 - world.myCar2.body.position.y + 1);
 
-	if (distCarsZ <= 1)
+	if (distCarsZ <= 1.5)
 	{
 		world.myCar.registry.registrations.clear();
 		world.myCar2.registry.registrations.clear();
