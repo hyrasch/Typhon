@@ -5,7 +5,6 @@
 #include "forceGen.h"
 
 namespace typhon {
-
 	class World
 	{
 	public:

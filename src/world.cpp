@@ -2,8 +2,7 @@
 
 using namespace typhon;
 
-World::World()
-{
+World::World() {
 	//Inititalisation de la voiture 1
 	myCar.reset(-20);
 
@@ -11,8 +10,7 @@ World::World()
 	myCar2.reset(20);
 }
 
-void World::Car::reset(int z)
-{
+void World::Car::reset(int z) {
 	body.setMass(2.f);
 	body.setDamping(0.8f, 0.8f);
 	body.setPosition(0, 2, z);
@@ -27,8 +25,7 @@ void World::Car::reset(int z)
 	body.calculateInertiaTensorWS();
 }
 
-void World::Update(real duration)
-{
+void World::Update(real duration) {
 	myCar.body.clearAccumulators();
 	myCar.registry.updateForces(duration);
 	myCar.body.integrate(duration);

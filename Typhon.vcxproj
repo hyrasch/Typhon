@@ -158,8 +158,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\typhon\collision.h" />
+    <ClInclude Include="include\typhon\contacts.h" />
     <ClInclude Include="include\typhon\core.h" />
     <ClInclude Include="include\typhon\forceGen.h" />
+    <ClInclude Include="include\typhon\intersection.h" />
     <ClInclude Include="include\typhon\particle.h" />
     <ClInclude Include="include\typhon\particleContacts.h" />
     <ClInclude Include="include\typhon\particleForceGen.h" />
@@ -176,6 +179,8 @@
     <ClInclude Include="include\typhon\world.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\collision.cpp" />
+    <ClCompile Include="src\intersection.cpp" />
     <ClCompile Include="src\rigidBody.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\forceGen.cpp" />

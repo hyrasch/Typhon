@@ -69,7 +69,6 @@ void DrawCar()
 	glutSolidSphere(0.1, 10, 10);
 	glPopMatrix();
 	//Voiture 2 -----------------------------------
-
 }
 
 float RandomFloat(float a, float b) {
@@ -181,12 +180,11 @@ void update()
 			}
 		}
 	}
-#pragma endregion 
+#pragma endregion
 
 	world.Update(duration);
 	glutPostRedisplay();
 }
-
 
 void reshape(int w, int h)
 {
@@ -245,7 +243,6 @@ void display()
 
 void keyboard(unsigned char key, int x, int y) {
 	switch (key) {
-
 	case 27:
 	{
 		exit(EXIT_SUCCESS);
@@ -333,7 +330,6 @@ void keyboard(unsigned char key, int x, int y) {
 		typeCam = global;
 
 		break;
-
 	}
 }
 

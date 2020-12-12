@@ -2,8 +2,6 @@
 
 using namespace typhon;
 
-
-
 void ForceRegistry::updateForces(real duration) {
 	Registry::iterator i = registrations.begin();
 
@@ -30,7 +28,6 @@ void Gravity::updateForce(RigidBody* body, real duration) {
 }
 
 void Spring::updateForce(RigidBody* body, real duration) {
-
 	Vector3 p1 = body->getPointInWorldSpace(connectionPoint);
 	Vector3 p2 = other->getPointInWorldSpace(otherConnectionPoint);
 
@@ -47,36 +44,31 @@ void Spring::updateForce(RigidBody* body, real duration) {
 	body->addForceAtPoint(force, p1);
 }
 
-void RotationCW::updateForce(RigidBody* body, real duration)
-{
-	body->addTorque(Vector3(0, -1, 0)*5);
+void RotationCW::updateForce(RigidBody* body, real duration) {
+	body->addTorque(Vector3(0, -1, 0) * 5);
 }
 
-void RotationCCW::updateForce(RigidBody* body, real duration)
-{
-	body->addTorque(Vector3(0, 1, 0)*5);
+void RotationCCW::updateForce(RigidBody* body, real duration) {
+	body->addTorque(Vector3(0, 1, 0) * 5);
 }
 
-void Carambolage::updateForce(RigidBody* body, real duration)
-{
+void Carambolage::updateForce(RigidBody* body, real duration) {
 	//Cas voiture 1
 	if (id == 0)
 	{
-		body->addTorque(Vector3(0,1,0)*20);
-		body->addForce(Vector3(0.5, 0, -1)*2);
+		body->addTorque(Vector3(0, 1, 0) * 20);
+		body->addForce(Vector3(0.5, 0, -1) * 2);
 	}
-	
+
 	//Cas voiture 2
 	if (id == 1)
 	{
-		body->addTorque(Vector3(0,-1,0)*20);
-		body->addForce(Vector3(-0.5, 0, 1)*2);
+		body->addTorque(Vector3(0, -1, 0) * 20);
+		body->addForce(Vector3(-0.5, 0, 1) * 2);
 	}
 }
 
-void Trampoline::updateForce(RigidBody* body, real duration)
-{
-	body->addForce(Vector3(0, 1, 0)*5);
-	body->addTorque(Vector3(torque.x, torque.y, torque.z)*10);
+void Trampoline::updateForce(RigidBody* body, real duration) {
+	body->addForce(Vector3(0, 1, 0) * 5);
+	body->addTorque(Vector3(torque.x, torque.y, torque.z) * 10);
 }
-

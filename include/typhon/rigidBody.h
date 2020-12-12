@@ -4,7 +4,6 @@
 #include "core.h"
 
 namespace typhon {
-
 	class RigidBody
 	{
 	public:
@@ -22,7 +21,7 @@ namespace typhon {
 		// Matrice4 de transformation (body space <==> world space)
 		Matrix4 transformMatrix;
 
-		// Tenseurs 
+		// Tenseurs
 		Matrix3 inverseInertiaTensor; // Tenseur d'intertie inverse (body space)
 		Matrix3 inverseInertiaTensorWorld; // Tenseur d'intertie inverse (world space)
 
@@ -33,7 +32,6 @@ namespace typhon {
 		// Amortissements
 		real linearDamping; // Ammortissement linéaire
 		real angularDamping; // Ammortissement angulaire
-
 
 		void calculateInertiaTensorWS();
 		void integrate(real duration);

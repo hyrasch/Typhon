@@ -6,7 +6,6 @@
 #include <vector>
 
 namespace typhon {
-
 	// Générateur de forces pour les corps
 	class ForceGenerator
 	{
@@ -74,7 +73,7 @@ namespace typhon {
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
-	
+
 	class RotationCW : public ForceGenerator
 	{
 	private:

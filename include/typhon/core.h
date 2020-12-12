@@ -5,7 +5,6 @@
 #include "precision.h"
 
 namespace typhon {
-
 	class Vector3 {
 	public:
 		real x;
@@ -30,6 +29,7 @@ namespace typhon {
 		const static Vector3 X;
 		const static Vector3 Y;
 		const static Vector3 Z;
+		const static Vector3 ONE;
 
 		real operator[](unsigned i) const {
 			if (i == 0) return x;
@@ -127,7 +127,6 @@ namespace typhon {
 
 		// Vectorsquared magnitude
 		real squareMagnitude() const {
-
 			return x * x + y * y + z * z;
 		}
 
@@ -197,7 +196,6 @@ namespace typhon {
 	public:
 		union {
 			struct {
-
 				// Partie réelle
 				real r;
 
@@ -493,7 +491,7 @@ namespace typhon {
 			val[11] = pos.z;
 		}
 
-		// Retourne la transformée du vecteur par la transposée de la matrice4 actuelle 
+		// Retourne la transformée du vecteur par la transposée de la matrice4 actuelle
 		// NE FONCTIONNE QUE SI LA MATRICE EST UNE MATRICE DE ROTATION PURE (c.a.d sa transposée == inverse)
 		// NE FONCTIONNE QUE POUR UN VECTEUR POSITION
 		Vector3 transformInverse(const Vector3& vector) const {
@@ -542,7 +540,7 @@ namespace typhon {
 			);
 		}
 
-		//Coordonnées : Gauche droite, Haut bas -> Coordonnées : Haut bas, Gauche droite 
+		//Coordonnées : Gauche droite, Haut bas -> Coordonnées : Haut bas, Gauche droite
 		void fillGLArray(float array[16]) const
 		{
 			array[0] = (float)val[0];
@@ -564,6 +562,11 @@ namespace typhon {
 			array[13] = (float)val[7];
 			array[14] = (float)val[11];
 			array[15] = (float)1;
+		}
+
+		// Retourne une colonne de la matrice sous forme de "Vector3"
+		Vector3 getAxisVector(unsigned i) const {
+			return Vector3(val[i], val[i + 4], val[i + 8]);
 		}
 	};
 }

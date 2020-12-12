@@ -66,6 +66,15 @@
     <ClInclude Include="include\typhon\rigidBody.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="include\typhon\contacts.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\collision.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\typhon\intersection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -98,6 +107,12 @@
     <ClCompile Include="src\rigidBody.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\collision.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\intersection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="lib\freeglut.dll" />
@@ -105,7 +120,6 @@
     <None Include=".gitattributes" />
     <None Include="README.md" />
     <None Include=".gitignore" />
-    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="lib\freeglut.lib" />
