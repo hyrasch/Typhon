@@ -180,11 +180,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\collision.cpp" />
+    <ClCompile Include="src\contacts.cpp" />
     <ClCompile Include="src\intersection.cpp" />
+    <ClCompile Include="src\mainTp4.cpp" />
     <ClCompile Include="src\rigidBody.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="src\forceGen.cpp" />
-    <ClCompile Include="src\mainTp3.cpp" />
     <ClCompile Include="src\particle.cpp" />
     <ClCompile Include="src\particleContacts.cpp" />
     <ClCompile Include="src\particleForceGen.cpp" />

@@ -1,4 +1,4 @@
-#include <gl/freeglut.h>
+/*#include <gl/freeglut.h>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -350,4 +350,4 @@ int main(int argc, char** argv)
 
 	glutMainLoop();
 	return EXIT_SUCCESS;
-}
+}*/

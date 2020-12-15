@@ -3,6 +3,72 @@
 
 using namespace typhon;
 
+BoundingSphere::BoundingSphere()
+{
+	BoundingSphere::centre = Vector3(0,0,0);
+	BoundingSphere::radius = 1;
+}
+
+BoundingSphere::BoundingSphere(const Vector3& centre, real radius)
+{
+	BoundingSphere::centre = centre;
+	BoundingSphere::radius = radius;
+}
+
+BoundingSphere::BoundingSphere(const BoundingSphere& one,
+	const BoundingSphere& two)
+{
+	Vector3 centreOffset = two.centre - one.centre;
+	real distance = centreOffset.squareMagnitude();
+	real radiusDiff = two.radius - one.radius;
+
+	if (radiusDiff * radiusDiff >= distance)
+	{
+		if (one.radius > two.radius)
+		{
+			centre = one.centre;
+			radius = one.radius;
+		}
+		else
+		{
+			centre = two.centre;
+			radius = two.radius;
+		}
+	}
+
+	else
+	{
+		distance = real_sqrt(distance);
+		radius = (distance + one.radius + two.radius) * ((real)0.5);
+
+		centre = one.centre;
+		if (distance > 0)
+		{
+			centre += centreOffset * ((radius - one.radius) / distance);
+		}
+	}
+
+}
+
+bool BoundingSphere::overlaps(const BoundingSphere* other) const
+{
+	real distanceSquared = (centre - other->centre).squareMagnitude();
+	return distanceSquared < (radius + other->radius)* (radius + other->radius);
+}
+
+bool BoundingSphere::overlaps(const BoundingSphere* first, const BoundingSphere* sec) const
+{
+	real distanceSquared = (first->centre - sec->centre).squareMagnitude();
+	return distanceSquared < (first->radius + sec->radius)* (first->radius + sec->radius);
+}
+
+real BoundingSphere::getGrowth(const BoundingSphere& other) const
+{
+	BoundingSphere newSphere(*this, other);
+
+	return newSphere.radius * newSphere.radius - radius * radius;
+}
+
 unsigned CollisionDetector::sphereXsphere(const ColSphere& first, const ColSphere& sec, CollisionData* data) {
 	// S'il y a bien des contacts
 	if (data->contactsLeft <= 0) return 0;
@@ -52,7 +118,7 @@ unsigned CollisionDetector::sphereXhalfSpace(const ColSphere& sphere, const ColP
 	// Point de contact p/r à l'intersection rayon-plan
 	contact->contactPoint = position - plane.normal * (dist - sphere.radius);
 	contact->penetration = -dist;
-	contact->setBodyData(sphere.body, NULL, data->friction, data->restitution);
+	contact->setBodyData(sphere.body, plane.body , data->friction, data->restitution);
 
 	// Mise à jour du pointeur
 	data->addContacts(1);
@@ -93,7 +159,7 @@ unsigned CollisionDetector::boxXhalfSpace(const ColBox& box, const ColPlane& pla
 			contact->contactPoint = vertexPos + plane.normal * (dist - plane.offset);
 			contact->penetration = plane.offset - dist;
 
-			contact->setBodyData(box.body, NULL, data->friction, data->restitution);
+			contact->setBodyData(box.body, plane.body , data->friction, data->restitution);
 
 			// Prochain contact
 			contact++;

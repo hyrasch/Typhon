@@ -4,12 +4,37 @@
 #include "contacts.h"
 
 namespace typhon {
+
+	struct BoundingSphere
+	{
+		Vector3 centre;
+		real radius;
+
+	public:
+		BoundingSphere();
+
+		BoundingSphere(const Vector3& centre, real radius);
+
+		BoundingSphere(const BoundingSphere& one, const BoundingSphere& two);
+
+		bool overlaps(const BoundingSphere* other) const;
+		
+		bool overlaps(const BoundingSphere* first, const BoundingSphere* sec) const;
+
+		real getGrowth(const BoundingSphere& other) const;
+
+		real getSize() const
+		{
+			return ((real)1.333333) * 3.14 * radius * radius * radius;
+		}
+	};
+
 	// Primitive des collisions
 	class ColPrimitive
 	{
 	public:
 		// Le rigidbody associé à la collision
-		RigidBody* body;
+		RigidBody body;
 		// La matrice d'offset à partir de la matrice du rigidbody
 		Matrix4 offset;
 
