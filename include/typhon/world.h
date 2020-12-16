@@ -26,6 +26,7 @@ namespace typhon {
 		struct Object {
 			BoundingSphere bSphere;
 			ColPrimitive colPrimitive;
+			Vector3 GridPos;
 		};
 
 		struct Box : public Object
@@ -47,20 +48,22 @@ namespace typhon {
 
 		struct Grid
 		{
-			Vector3 origin = Vector3(0, 0, 0);
+			Vector3 origin = Vector3(-40, 0, 40);
 
-			unsigned int xExtent = 20;
-			unsigned int yExtent = 20;
-			unsigned int zExtent = 20;
+			unsigned int xExtent = 40;
+			unsigned int yExtent = 40;
+			unsigned int zExtent = 40;
 
 			Object* locations;
-			Vector3 oneOverCellSize = Vector3(0.5,0.5,0.5 );
+			Vector3 oneOverCellSize = Vector3(1,1,1);
 
 			unsigned int getLocationIndex(const Vector3& bSphere)
 			{
 				Vector3 square = bSphere.componentProduct(oneOverCellSize);
 				return (unsigned int)(square.x) + xExtent * (unsigned int)(square.z) + xExtent * zExtent * (unsigned int)(square.y);
 			}
+
+
 		};
 
 		World();
@@ -89,6 +92,7 @@ namespace typhon {
 
 		std::vector<int> CheckPotentialCollision();
 		void generateContacts();
+		Vector3 getGridPos(BoundingSphere bsphere);
 
 		void Update(real duration);
 	};

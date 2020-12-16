@@ -83,8 +83,9 @@ std::vector<int> World::CheckPotentialCollision()
 
 	for (int i = 1; i < listObject.size(); i++)
 	{
-		if (grid.getLocationIndex(listObject[i].bSphere.centre) == grid.getLocationIndex(listObject[0].bSphere.centre))
+		if (getGridPos(listObject[i].bSphere) == getGridPos(listObject[0].bSphere))
 		{
+			std::cout << "On est là hein" << std::endl;
 			potentialCollision.push_back(i);
 		}
 	}
@@ -106,10 +107,17 @@ void World::generateContacts()
 			{
 				if (collisionDetector.boxXhalfSpace(myBox.colBox, myWall.colPlane, &collisionData) != 0)
 				{
-					myBox.stop();
+					//myBox.stop();
 					outOfSim = true;
-					std::cout << "Point d'impact" << std::endl;
-					std::cout << "x :" << collisionData.contacts[0].contactPoint.x << "y :" << collisionData.contacts[0].contactPoint.y << "z :" << collisionData.contacts[0].contactPoint.z <<std::endl;
+					for (int i = 0; i < collisionData.contactCount; i++)
+					{
+						std::cout << "Point d'impact" << std::endl;
+						std::cout << "x :" << collisionData.contacts[i].contactPoint.x << 
+							"y :" << collisionData.contacts[i].contactPoint.y << 
+							"z :" << collisionData.contacts[i].contactPoint.z << std::endl;
+
+						std::cout << "Distance penetration :" << collisionData.contacts[i].penetration << std::endl;
+					}
 				}
 			}
 			break;
@@ -118,11 +126,17 @@ void World::generateContacts()
 			{
 				if (collisionDetector.boxXhalfSpace(myBox.colBox, myWall2.colPlane, &collisionData) != 0)
 				{
-					myBox.stop();
+					//myBox.stop();
 					outOfSim = true;
-					std::cout << "Point d'impact" << std::endl;
-					std::cout << "x :" << collisionData.contacts[0].contactPoint.x << "y :" << collisionData.contacts[0].contactPoint.y << "z :" << collisionData.contacts[0].contactPoint.z << std::endl;
-					std::cout << "Distance penetration :" << collisionData.contacts[1].penetration << std::endl;
+					for (int i = 0; i < collisionData.contactCount; i++)
+					{
+						std::cout << "Point d'impact" << std::endl;
+						std::cout << "x :" << collisionData.contacts[i].contactPoint.x <<
+							"y :" << collisionData.contacts[i].contactPoint.y <<
+							"z :" << collisionData.contacts[i].contactPoint.z << std::endl;
+
+						std::cout << "Distance penetration :" << collisionData.contacts[i].penetration << std::endl;
+					}
 				}
 			}
 			break;
@@ -131,7 +145,7 @@ void World::generateContacts()
 			{
 				if (collisionDetector.boxXhalfSpace(myBox.colBox, myWall3.colPlane, &collisionData) != 0)
 				{
-					myBox.stop();
+					//myBox.stop();
 					outOfSim = true;
 					std::cout << "Point d'impact" << std::endl;
 					std::cout << "x :" << collisionData.contacts[0].contactPoint.x << "y :" << collisionData.contacts[0].contactPoint.y << "z :" << collisionData.contacts[0].contactPoint.z << std::endl;
@@ -143,7 +157,7 @@ void World::generateContacts()
 			{
 				if (collisionDetector.boxXhalfSpace(myBox.colBox, myWall4.colPlane, &collisionData) != 0)
 				{
-					myBox.stop();
+					//myBox.stop();
 					outOfSim = true;
 					std::cout << "Point d'impact" << std::endl;
 					std::cout << "x :" << collisionData.contacts[0].contactPoint.x << "y :" << collisionData.contacts[0].contactPoint.y << "z :" << collisionData.contacts[0].contactPoint.z << std::endl;
@@ -153,6 +167,11 @@ void World::generateContacts()
 			}
 		}
 	}
+}
+
+Vector3 World::getGridPos(BoundingSphere bSphere)
+{
+	return Vector3((int)(bSphere.centre.x * grid.oneOverCellSize.x), (int)(bSphere.centre.y / grid.oneOverCellSize.y), (int)(bSphere.centre.z / grid.oneOverCellSize.z));
 }
 
 void World::Update(real duration) {
@@ -168,9 +187,4 @@ void World::Update(real duration) {
 	myBox.colBox.body.clearAccumulators();
 	myBox.registry.updateForces(duration);
 	myBox.colBox.body.integrate(duration);
-
-	/*std::cout << "x1: " << myWall.bSphere.centre.x << "z1: " << myWall.bSphere.centre.z << std::endl;
-	std::cout << "x2: " << myWall2.bSphere.centre.x << "z2: " << myWall2.bSphere.centre.z << std::endl;
-	std::cout << "x3: " << myWall3.bSphere.centre.x << "z3: " << myWall3.bSphere.centre.z << std::endl;
-	std::cout << "x4: " << myWall4.bSphere.centre.x << "z4: " << myWall4.bSphere.centre.z << std::endl;*/
 }

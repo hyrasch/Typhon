@@ -153,7 +153,6 @@ unsigned CollisionDetector::boxXhalfSpace(const ColBox& box, const ColPlane& pla
 
 		// Si le sommet est dans le plan
 		if (dist <= plane.offset) {
-			std::cout << "On est dans le plan" << std::endl;
 			// Génération du contact
 			contact->contactNormal = plane.normal;
 			// Point de contact à mis-chemin entre le sommet et le plan

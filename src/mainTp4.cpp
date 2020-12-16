@@ -173,6 +173,7 @@ void keyboard(unsigned char key, int x, int y) {
 	case 'r':
 	{
 		world.myBox.reset();
+		world.outOfSim = false;
 	}
 	break;
 
