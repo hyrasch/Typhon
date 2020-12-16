@@ -79,16 +79,16 @@ void Draw()
 	glBegin(GL_QUADS);
 	glVertex3f(-world.wallSize, world.wallSize, -world.wallSize);
 	glVertex3f(world.wallSize, world.wallSize, -world.wallSize);
-	glVertex3f(-world.wallSize, -world.wallSize, -world.wallSize);
 	glVertex3f(world.wallSize, -world.wallSize, -world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, -world.wallSize);
 	glEnd();
 
 	glColor3f(1, 1, 0.5);
 	glBegin(GL_QUADS);
 	glVertex3f(-world.wallSize, world.wallSize, world.wallSize);
 	glVertex3f(world.wallSize, world.wallSize, world.wallSize);
-	glVertex3f(-world.wallSize, -world.wallSize, world.wallSize);
 	glVertex3f(world.wallSize, -world.wallSize, world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, world.wallSize);
 	glEnd();
 
 	//Walls ---------------------------------
@@ -148,7 +148,7 @@ void display()
 		break;
 
 	case global:
-		gluLookAt(-50, 30, 0, 0, 0, 0, 0.0, 1.0, 0.0);
+		gluLookAt(50, 30, 0, 0, 0, 0, 0.0, 1.0, 0.0);
 		break;
 	}
 
@@ -197,7 +197,7 @@ void keyboard(unsigned char key, int x, int y) {
 
 	case 't':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(0,0,1) * 6);
+		ForceGenerator* goRight = new Gravity(Vector3(-1,0,0) * 6);
 		world.myBox.registry.add(&world.myBox.colBox.body, goRight);
 	}
 	break;
