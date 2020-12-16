@@ -42,6 +42,7 @@ namespace typhon {
 		{
 			ColPlane colPlane;
 
+			void init(Vector3 normal, real offset);
 			void reset(int index);
 		};
 
@@ -67,10 +68,19 @@ namespace typhon {
 
 		std::vector<Object> listObject;
 
+		int wallSize = 20;
+
 		Box myBox;
 		Box myBox2;
+
+		Wall myWall;
+		Wall myWall2;
+		Wall myWall3;
+		Wall myWall4;
 		
 		Grid grid;
+
+		CollisionData collisionData;
 
 		/*Car myCar;
 		Car myCar2;*/

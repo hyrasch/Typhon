@@ -57,6 +57,44 @@ void Draw()
 	glPopMatrix();
 	//Box -----------------------------------
 
+	//Walls---------------------------------
+
+	glColor3f(1, 1, 0.5);
+	glBegin(GL_QUADS);
+	glVertex3f(-world.wallSize, world.wallSize, -world.wallSize);
+	glVertex3f(-world.wallSize, world.wallSize, world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, -world.wallSize);
+	glEnd();
+
+	glColor3f(1, 1, 0.5);
+	glBegin(GL_QUADS);
+	glVertex3f(world.wallSize, world.wallSize, -world.wallSize);
+	glVertex3f(world.wallSize, world.wallSize, world.wallSize);
+	glVertex3f(world.wallSize, -world.wallSize, world.wallSize);
+	glVertex3f(world.wallSize, -world.wallSize, -world.wallSize);
+	glEnd();
+
+	glColor3f(1, 1, 0.5);
+	glBegin(GL_QUADS);
+	glVertex3f(-world.wallSize, world.wallSize, -world.wallSize);
+	glVertex3f(world.wallSize, world.wallSize, -world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, -world.wallSize);
+	glVertex3f(world.wallSize, -world.wallSize, -world.wallSize);
+	glEnd();
+
+	glColor3f(1, 1, 0.5);
+	glBegin(GL_QUADS);
+	glVertex3f(-world.wallSize, world.wallSize, world.wallSize);
+	glVertex3f(world.wallSize, world.wallSize, world.wallSize);
+	glVertex3f(-world.wallSize, -world.wallSize, world.wallSize);
+	glVertex3f(world.wallSize, -world.wallSize, world.wallSize);
+	glEnd();
+
+	//Walls ---------------------------------
+
+
+
 }
 
 float RandomFloat(float a, float b) {
@@ -122,6 +160,16 @@ void display()
 	glVertex3f(50, 0.0f, 50);
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
+
+
+
+	/*glColor3f(1, 0, 0);
+	glBegin(GL_QUADS);
+	glVertex3f(50, 50, -50);
+	glVertex3f(50, 50, 50);
+	glVertex3f(50, -50, -50);
+	glVertex3f(50, -50, 50);
+	glEnd;*/
 
 	//Draw Box
 	glColor3f(0, 0, 0);

@@ -6,13 +6,22 @@ World::World() {
 	myBox.init();
 	myBox2.init();
 
-	myBox2.colBox.body.position = Vector3(0, 2, 21.2);
+	myWall.init(Vector3(1, 0, 0), wallSize);
+	myWall2.init(Vector3(-1, 0, 0), wallSize);
+	myWall3.init(Vector3(0, 0, 1), wallSize);
+	myWall4.init(Vector3(0, 0, -1), wallSize);
+
+	myBox2.colBox.body.position = Vector3(0, 2, 200);
 	myBox2.bSphere.centre = myBox2.colBox.body.getPosition();
 	myBox2.colPrimitive = myBox2.colBox;
 
 	listObject.clear();
 	listObject.push_back(myBox);
 	listObject.push_back(myBox2);
+	listObject.push_back(myWall);
+	listObject.push_back(myWall2);
+	listObject.push_back(myWall3);
+	listObject.push_back(myWall4);
 }
 
 /*void World::Car::reset(int z) {
@@ -76,6 +85,14 @@ void World::Box::stop() {
 	colBox.body.calculateInertiaTensorWS();
 }
 
+void World::Wall::init(Vector3 normal, real offset)
+{
+	colPlane.normal = normal;
+	colPlane.offset = offset;
+
+	bSphere.centre = Vector3(-normal.x*offset, -normal.y*offset, -normal.z*offset);
+}
+
 void World::Wall::reset(int index) {
 
 	switch (index)
@@ -126,6 +143,7 @@ std::vector<std::vector<World::Object>> World::CheckPotentialCollision()
 			{
 				if (grid.getLocationIndex(listObject[i].bSphere.centre) == grid.getLocationIndex(listObject[j].bSphere.centre))
 				{
+					std::cout << i << j << std::endl;
 					myBox.stop();
 					myBox2.stop();
 					bodyPair.push_back(listObject[i]);
@@ -144,6 +162,10 @@ void World::Update(real duration) {
 	listObject.clear();
 	listObject.push_back(myBox);
 	listObject.push_back(myBox2);
+	listObject.push_back(myWall);
+	listObject.push_back(myWall2);
+	listObject.push_back(myWall3);
+	listObject.push_back(myWall4);
 
 	myBox.bSphere.centre = myBox.colBox.body.getPosition();
 	myBox.colPrimitive = myBox.colBox;
