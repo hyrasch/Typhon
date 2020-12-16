@@ -43,6 +43,8 @@ void Draw()
 	glPopMatrix();
 	//Box -----------------------------------
 
+
+
 	//Walls---------------------------------
 
 	glColor3f(1, 1, 0.5);
@@ -78,6 +80,19 @@ void Draw()
 	glEnd();
 
 	//Walls ---------------------------------
+
+
+	for (int i = 0; i < world.collisionData.contactCount; i++)
+	{
+		if (world.outOfSim == true)
+		{
+			glColor3f(0, 0, 1);
+			glTranslatef(world.collisionData.firstContact[i].contactPoint.x, world.collisionData.firstContact[i].contactPoint.y, world.collisionData.firstContact[i].contactPoint.z);
+			glutSolidSphere(0.25, 10, 10);
+			glTranslatef(-world.collisionData.firstContact[i].contactPoint.x, -world.collisionData.firstContact[i].contactPoint.y, -world.collisionData.firstContact[i].contactPoint.z);
+		}
+	}
+
 }
 
 float RandomFloat(float a, float b) {
