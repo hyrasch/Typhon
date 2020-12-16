@@ -57,11 +57,11 @@ namespace typhon {
 			Object* locations;
 			Vector3 oneOverCellSize = Vector3(1,1,1);
 
-			unsigned int getLocationIndex(const Vector3& bSphere)
+			/*unsigned int getLocationIndex(const Vector3& bSphere)
 			{
 				Vector3 square = bSphere.componentProduct(oneOverCellSize);
 				return (unsigned int)(square.x) + xExtent * (unsigned int)(square.z) + xExtent * zExtent * (unsigned int)(square.y);
-			}
+			}*/
 
 
 		};

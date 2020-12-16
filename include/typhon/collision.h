@@ -45,7 +45,7 @@ namespace typhon {
 		}
 
 		const Matrix4& getTransform()const {
-			return transform;
+			return body.getTransform();
 		}
 
 	private:
