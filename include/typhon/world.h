@@ -42,20 +42,19 @@ namespace typhon {
 		{
 			ColPlane colPlane;
 
-			void init(Vector3 normal, real offset);
-			void reset(int index);
+			void init(Vector3 normal, real offset, Vector3 centre);
 		};
 
 		struct Grid
 		{
 			Vector3 origin = Vector3(0, 0, 0);
 
-			unsigned int xExtent = 100;
-			unsigned int yExtent = 100;
-			unsigned int zExtent = 100;
+			unsigned int xExtent = 20;
+			unsigned int yExtent = 20;
+			unsigned int zExtent = 20;
 
 			Object* locations;
-			Vector3 oneOverCellSize = Vector3(0.1, 0.1, 0.1);
+			Vector3 oneOverCellSize = Vector3(0.5,0.5,0.5 );
 
 			unsigned int getLocationIndex(const Vector3& bSphere)
 			{
@@ -71,7 +70,6 @@ namespace typhon {
 		int wallSize = 20;
 
 		Box myBox;
-		Box myBox2;
 
 		Wall myWall;
 		Wall myWall2;
@@ -80,12 +78,17 @@ namespace typhon {
 		
 		Grid grid;
 
+		const static unsigned maxContacts = 256;
 		CollisionData collisionData;
+		CollisionDetector collisionDetector;
+		Contact contacts[maxContacts];
 
-		/*Car myCar;
-		Car myCar2;*/
+		std::vector<int> potentialContact;
+		
+		bool outOfSim;
 
-		std::vector<std::vector<Object>> CheckPotentialCollision();
+		std::vector<int> CheckPotentialCollision();
+		void generateContacts();
 
 		void Update(real duration);
 	};

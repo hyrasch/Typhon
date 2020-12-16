@@ -14,7 +14,6 @@ float phi = 15.0f;
 int last_x;
 int last_y;
 
-std::vector<std::vector<World::Object>> potentialContact;
 
 enum TypeCam
 {
@@ -22,7 +21,7 @@ enum TypeCam
 	global,
 };
 
-TypeCam typeCam = box;
+TypeCam typeCam = global;
 
 void Draw()
 {
@@ -32,24 +31,6 @@ void Draw()
 	transform.fillGLArray(glutMatrix);
 	glPushMatrix();
 	glMultMatrixf(glutMatrix);
-
-	//Dessine les arretes du cube
-	glColor3f(0, 0, 0);
-	glPushMatrix();
-	glutWireCube(1);
-
-	//Dessine le centre de masse
-	glColor3f(1, 0, 0);
-	glutSolidSphere(0.1, 10, 10);
-	glPopMatrix();
-	//Box -----------------------------------
-	
-	//Box  -----------------------------------
-	Matrix4 transform2 = world.myBox2.colBox.body.getTransform();
-	GLfloat glutMatrix2[16];
-	transform2.fillGLArray(glutMatrix2);
-	glPushMatrix();
-	glMultMatrixf(glutMatrix2);
 
 	//Dessine les arretes du cube
 	glColor3f(0, 0, 0);
@@ -97,9 +78,6 @@ void Draw()
 	glEnd();
 
 	//Walls ---------------------------------
-
-
-
 }
 
 float RandomFloat(float a, float b) {
@@ -118,7 +96,12 @@ void update()
 
 	//------------------------------------
 
-	potentialContact = world.CheckPotentialCollision();
+	if (!world.outOfSim)
+	{
+		world.potentialContact = world.CheckPotentialCollision();
+
+		world.generateContacts();
+	}
 
 	//------------------------------------
 	world.Update(duration);
@@ -169,16 +152,6 @@ void display()
 	glVertex3f(50, 0.0f, -50);
 	glEnd();
 
-
-
-	/*glColor3f(1, 0, 0);
-	glBegin(GL_QUADS);
-	glVertex3f(50, 50, -50);
-	glVertex3f(50, 50, 50);
-	glVertex3f(50, -50, -50);
-	glVertex3f(50, -50, 50);
-	glEnd;*/
-
 	//Draw Box
 	glColor3f(0, 0, 0);
 	Draw();
@@ -197,15 +170,39 @@ void keyboard(unsigned char key, int x, int y) {
 	}
 	break;
 
-	case 'r': //Reset
+	case 'r':
 	{
-		
+		world.myBox.reset();
 	}
 	break;
 
-	case 't':
+	case 's':
 	{
-		ForceGenerator* goRight = new Gravity(Vector3(-1,0,0) * 6);
+		//ForceGenerator* goFront = new Gravity(Vector3(1,0,0) * 6);
+		//world.myBox.registry.add(&world.myBox.colBox.body, goFront);
+		
+		ForceGenerator* goFront = new Oui(Vector3(1, 0, 0) * 6, Vector3(RandomFloat(0.9,-0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9))*3);
+		world.myBox.registry.add(&world.myBox.colBox.body, goFront);
+	}
+	break;
+
+	case 'q':
+	{
+		ForceGenerator* goLeft = new Oui(Vector3(0,0,1) * 6, Vector3(RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9)) * 3);
+		world.myBox.registry.add(&world.myBox.colBox.body, goLeft);
+	}
+	break;
+
+	case 'z':
+	{
+		ForceGenerator* goBack = new Oui(Vector3(-1,0,0) * 6, Vector3(RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9)) * 3);
+		world.myBox.registry.add(&world.myBox.colBox.body, goBack);
+	}
+	break;
+
+	case 'd':
+	{
+		ForceGenerator* goRight = new Oui(Vector3(0,0,-1) * 6, Vector3(RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9), RandomFloat(0.9, -0.9)) * 3);
 		world.myBox.registry.add(&world.myBox.colBox.body, goRight);
 	}
 	break;
@@ -224,22 +221,18 @@ void keyboard(unsigned char key, int x, int y) {
 
 void mouse(int button, int state, int x, int y)
 {
-	// Set the position
 	last_x = x;
 	last_y = y;
 }
 
 void mouseDrag(int x, int y)
 {
-	// Update the camera
 	theta += (x - last_x) * 0.25f;
 	phi += (y - last_y) * 0.25f;
 
-	// Keep it in bounds
 	if (phi < -20.0f) phi = -20.0f;
 	else if (phi > 80.0f) phi = 80.0f;
 
-	// Remember the position
 	last_x = x;
 	last_y = y;
 }

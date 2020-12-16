@@ -113,6 +113,19 @@ namespace typhon {
 
 		virtual void updateForce(RigidBody* body, real duration);
 	};
+
+	class Oui : public ForceGenerator
+	{
+	private:
+		Vector3 direction;
+
+		Vector3 point;
+	public:
+
+		Oui(const Vector3 direction, const Vector3 point) : direction(direction), point(point) {}
+
+		virtual void updateForce(RigidBody* body, real duration);
+	};
 }
 
 #endif	TYPHON_FGEN_H

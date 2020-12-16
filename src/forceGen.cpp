@@ -72,3 +72,7 @@ void Trampoline::updateForce(RigidBody* body, real duration) {
 	body->addForce(Vector3(0, 1, 0) * 5);
 	body->addTorque(Vector3(torque.x, torque.y, torque.z) * 10);
 }
+
+void Oui::updateForce(RigidBody* body, real duration) {
+	body->addForceAtPoint(direction, point);
+}

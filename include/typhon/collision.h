@@ -3,6 +3,8 @@
 
 #include "contacts.h"
 
+#include <iostream>
+
 namespace typhon {
 
 	struct BoundingSphere
@@ -100,6 +102,13 @@ namespace typhon {
 
 			// Déplacement dans le tableau
 			contacts += nb;
+		}
+
+		void reset(unsigned maxContacts)
+		{
+			contactsLeft = maxContacts;
+			contactCount = 0;
+			contacts = firstContact;
 		}
 	};
 
