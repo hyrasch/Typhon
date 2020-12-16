@@ -9,6 +9,11 @@ using namespace typhon;
 World world;
 Time temps = Time::getInstance();
 
+float theta = 0.0f;
+float phi = 15.0f;
+int last_x;
+int last_y;
+
 std::vector<std::vector<World::Object>> potentialContact;
 
 enum TypeCam
@@ -152,6 +157,9 @@ void display()
 		break;
 	}
 
+	glRotatef(-phi, 0, 0, 1);
+	glRotatef(theta, 0, 1, 0);
+
 	// Draw ground
 	glColor3f(0, 1, 0);
 	glBegin(GL_QUADS);
@@ -214,6 +222,30 @@ void keyboard(unsigned char key, int x, int y) {
 	}
 }
 
+void mouse(int button, int state, int x, int y)
+{
+	// Set the position
+	last_x = x;
+	last_y = y;
+}
+
+void mouseDrag(int x, int y)
+{
+	// Update the camera
+	theta += (x - last_x) * 0.25f;
+	phi += (y - last_y) * 0.25f;
+
+	// Keep it in bounds
+	if (phi < -20.0f) phi = -20.0f;
+	else if (phi > 80.0f) phi = 80.0f;
+
+	// Remember the position
+	last_x = x;
+	last_y = y;
+}
+
+
+
 int main(int argc, char** argv)
 {
 	glutInit(&argc, argv);
@@ -227,6 +259,8 @@ int main(int argc, char** argv)
 	glutDisplayFunc(display);
 	glutReshapeFunc(reshape);
 	glutIdleFunc(update);
+	glutMouseFunc(mouse);
+	glutMotionFunc(mouseDrag);
 	glutKeyboardFunc(keyboard);
 
 	glutMainLoop();

@@ -24,21 +24,6 @@ World::World() {
 	listObject.push_back(myWall4);
 }
 
-/*void World::Car::reset(int z) {
-	body.setMass(2.f);
-	body.setDamping(0.8f, 0.8f);
-	body.setPosition(0, 2, z);
-	body.setOrientation(1, 0, 0, 0);
-	body.setRotation(0, 0, 0);
-	body.setAcceleration(0, 0, 0);
-	body.setVelocity(0, 0, 0);
-
-	registry.registrations.clear();
-
-	body.setInverseInertiaTensor(Matrix3(body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f, 0, 0, 0, body.getMass() / 24.0f));
-	body.calculateInertiaTensorWS();
-}*/
-
 void World::Box::init() {
 	
 	colBox.body.setMass(2.f);
