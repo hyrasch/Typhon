@@ -69,62 +69,6 @@ real BoundingSphere::getGrowth(const BoundingSphere& other) const
 	return newSphere.radius * newSphere.radius - radius * radius;
 }
 
-unsigned CollisionDetector::sphereXsphere(const ColSphere& first, const ColSphere& sec, CollisionData* data) {
-	// S'il y a bien des contacts
-	if (data->contactsLeft <= 0) return 0;
-
-	// Positions
-	Vector3 posFirst = first.getAxis(3);
-	Vector3 posSec = sec.getAxis(3);
-
-	// Vecteur séparant les 2 sphères
-	Vector3 between = posFirst - posSec;
-	real magn = between.magnitude();
-
-	// Si la séparation des 2 sphères est trop petite ou trop grande
-	if (magn <= 0.0f || magn >= first.radius + sec.radius) return 0;
-
-	// Génération de la normale
-	Vector3 normal = between * (((real)1.0) / magn);
-
-	// Génération du contact
-	Contact* contact = data->contacts;
-	contact->contactNormal = normal;
-	contact->contactPoint = between * (real)0.5 + posFirst;
-	contact->penetration = first.radius + sec.radius - magn;
-	contact->setBodyData(first.body, sec.body, data->friction, data->restitution);
-
-	// Mise à jour du pointeur
-	data->addContacts(1);
-	return 1;
-}
-
-unsigned CollisionDetector::sphereXhalfSpace(const ColSphere& sphere, const ColPlane& plane, CollisionData* data) {
-	// S'il y a bien des contacts
-	if (data->contactsLeft <= 0) return 0;
-
-	// Position de la sphère
-	Vector3 position = sphere.getAxis(3);
-
-	// Distance de la sphère p/r au plan
-	real dist = plane.normal * position - sphere.radius;
-
-	// Si la sphère ne touche pas le plan
-	if (dist >= plane.offset) return 0;
-
-	// Génération du contact
-	Contact* contact = data->contacts;
-	contact->contactNormal = plane.normal;
-	// Point de contact p/r à l'intersection rayon-plan
-	contact->contactPoint = position - plane.normal * (dist - sphere.radius);
-	contact->penetration = -dist;
-	contact->setBodyData(sphere.body, plane.body , data->friction, data->restitution);
-
-	// Mise à jour du pointeur
-	data->addContacts(1);
-	return 1;
-}
-
 unsigned CollisionDetector::boxXhalfSpace(const ColBox& box, const ColPlane& plane, CollisionData* data) {
 	// S'il y a bien des contacts
 	if (data->contactsLeft <= 0) return 0;

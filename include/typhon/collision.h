@@ -52,14 +52,6 @@ namespace typhon {
 		Matrix4 transform;
 	};
 
-	// Primitive sphérique
-	class ColSphere : public ColPrimitive
-	{
-	public:
-		// Rayon de la sphère
-		real radius;
-	};
-
 	class ColPlane :public ColPrimitive
 	{
 	public:
@@ -117,10 +109,6 @@ namespace typhon {
 	class CollisionDetector
 	{
 	public:
-		// Collision entre 2 sphères
-		unsigned sphereXsphere(const ColSphere& first, const ColSphere& sec, CollisionData* data);
-		// Collision entre sphère et semi plan
-		unsigned sphereXhalfSpace(const ColSphere& sphere, const ColPlane& plane, CollisionData* data);
 		// Collision entre boîte et semi plan
 		unsigned boxXhalfSpace(const ColBox& box, const ColPlane& plane, CollisionData* data);
 	};
